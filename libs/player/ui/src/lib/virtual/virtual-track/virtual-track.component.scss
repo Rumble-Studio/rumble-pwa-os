@@ -1,0 +1,50 @@
+:host {
+	display: block;
+	position: relative;
+	width: 100%;
+}
+.virtual-track-container {
+	display: flex;
+	align-items: center;
+	width: 100%;
+	height: 100%;
+	padding-right: 7px;
+
+	.seekbar-and-transcript {
+		flex: 1;
+	}
+	.actions {
+		height: 100%;
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		justify-content: center;
+	}
+}
+
+.red-btn {
+	&:hover {
+		color: #e63946;
+		opacity: 1;
+	}
+}
+.blue-btn {
+	color: #a8dadc;
+	&:hover {
+		color: #457b9d;
+	}
+}
+
+.unactive {
+	opacity: 0.25;
+}
+
+.checkbox {
+	margin: 5px;
+}
+
+.video-placeholder {
+	background-color: green;
+	width: 150px;
+	height: 150px;
+}

@@ -1,0 +1,15 @@
+<!-- MENU FOR OTHER ITEMS  -->
+<div
+	[matMenuTriggerFor]="otherItemMenu"
+	#otherItemMenuTrigger="matMenuTrigger"></div>
+<mat-menu #otherItemMenu="matMenu">
+	<button
+		mat-menu-item
+		*ngFor="let domain of domains"
+		[value]="domain.id"
+		(click)="selectDomain(domain.id)">
+		{{ domain.name }}
+	</button>
+</mat-menu>
+
+<rumble-pwa-domain-item [domainId]="domain$$$.id"></rumble-pwa-domain-item>

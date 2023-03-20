@@ -1,0 +1,179 @@
+<h3>Import multiple steps</h3>
+
+<!-- <div
+	class="divider-container"
+	*ngIf="(stepsToAppend?.length || 0) > 0">
+	<p>Your steps</p>
+	<mat-divider class="rs-full-width"></mat-divider>
+</div>
+
+<ng-container *ngFor="let step of stepsToAppend; let stepIndex = index">
+	<div class="question-container">
+		<div class="infos-actions">
+			<span>{{ stepIndex + 1 }}.</span>
+			<mat-icon
+				class="rs-clickable"
+				(click)="deleteStepToAppend(stepIndex)"
+				>delete</mat-icon
+			>
+		</div>
+
+		<mat-form-field
+			appearance="outline"
+			class="rs-full-width">
+			<mat-label>{{ step.attribute.label ?? 'Your text' }}</mat-label>
+			<input
+				[required]="true"
+				matInput
+				[(ngModel)]="step.inputText" />
+		</mat-form-field>
+		<mat-form-field appearance="outline">
+			<mat-label>Step</mat-label>
+			<mat-select
+				(selectionChange)="step.attribute = step.stepInstance.stepDetail.attributes[0]"
+				[(value)]="step.stepInstance"
+				[required]="true">
+				<mat-option
+					[value]="stepCandidate"
+					*ngFor="
+						let stepCandidate of isUniqueStepInstance(undefined, step.stepInstance)
+							? stepCandidates
+							: getStepCandidatesFiltered()
+					"
+					>{{ stepCandidate.stepDetail.menuText }}</mat-option
+				>
+			</mat-select>
+		</mat-form-field>
+		<mat-form-field appearance="outline">
+			<mat-label>Property</mat-label>
+			<mat-select
+				[(value)]="step.attribute"
+				[required]="true">
+				<mat-option
+					[value]="attribute"
+					*ngFor="let attribute of step.stepInstance?.stepDetail?.attributes"
+					>{{ attribute.label }}</mat-option
+				>
+			</mat-select>
+		</mat-form-field>
+	</div>
+</ng-container> -->
+<!-- 
+<section class="bottom-actions">
+	<button
+		*ngIf="stepsToAppend.length > 0"
+		mat-stroked-button
+		(click)="dismiss()">
+		Cancel
+	</button>
+	<button
+		*ngIf="stepsToAppend.length"
+		[disabled]="!stepsToAppendValid()"
+		mat-raised-button
+		(click)="appendQuestions()">
+		Append {{ stepsToAppend.length }} question{{ stepsToAppend.length > 1 ? 's' : '' }}
+	</button>
+</section> -->
+
+<!-- <div class="divider-container">
+	<p>Paste/type some text</p>
+	<mat-divider class="rs-full-width"></mat-divider>
+</div> -->
+
+<div class="new-question">
+	<form
+		class="question"
+		[formGroup]="globalForm">
+		<mat-form-field
+			appearance="outline"
+			class="rs-full-width">
+			<!-- <mat-label>{{ newMultiImportStepFrom.get('attribute')?.value?.label ?? 'Your text' }}</mat-label> -->
+			<mat-label>Paste/type some text</mat-label>
+			<textarea
+				rows="5"
+				class="rs-full-width"
+				matInput
+				formControlName="inputText"></textarea>
+		</mat-form-field>
+
+		<!-- <div class="rs-full-width">
+			<mat-slide-toggle formControlName="splitLinesToggle">Create one step from each line </mat-slide-toggle
+			><explanation [msg]="'If you switch on this toggle, each new line will be converted to one step'"></explanation>
+		</div> -->
+
+		<ng-container *ngFor="let stepPendingForm of stepPendingForms; let stepPendingFormsIndex = index">
+			<form [formGroup]="stepPendingForm">
+				<div class="selector-container">
+					<div
+						*ngIf="globalForm.get('splitLinesToggle')?.value"
+						class="rs-full-width step-title">
+						<span class="step-index">{{ stepPendingFormsIndex + 1 }}.</span>
+						<mat-form-field
+							appearance="outline"
+							class="rs-full-width">
+							<mat-label>{{ stepPendingForm.get('attribute')?.value.label ?? 'Your text' }}</mat-label>
+							<input
+								[required]="true"
+								matInput
+								formControlName="inputText" />
+						</mat-form-field>
+						<!-- <span class="title">{{ stepPendingForm.get('inputText')?.value }}</span> -->
+					</div>
+					<mat-form-field
+						appearance="outline"
+						class="rs-full-width">
+						<mat-label>Step</mat-label>
+						<mat-select
+							formControlName="stepInstance"
+							(selectionChange)="autoSetFirstAttribute(stepPendingForm, $event)">
+							<mat-option
+								[value]="stepCandidateUniqueStepFiltered"
+								*ngFor="
+									let stepCandidateUniqueStepFiltered of isUniqueStepInstance(stepPendingForm)
+										? stepCandidatesFiltered
+										: getStepCandidatesFiltered()
+								"
+								>{{ stepCandidateUniqueStepFiltered.stepDetail.menuText }}</mat-option
+							>
+						</mat-select>
+					</mat-form-field>
+					<mat-form-field
+						appearance="outline"
+						class="rs-full-width">
+						<mat-label>Property</mat-label>
+						<mat-select formControlName="attribute">
+							<ng-container *ngIf="stepPendingForm.get('stepInstance')?.value">
+								<mat-option
+									[value]="attribute"
+									*ngFor="let attribute of stepPendingForm.get('stepInstance')?.value.stepDetail?.attributes"
+									>{{ attribute.label }}</mat-option
+								>
+							</ng-container>
+						</mat-select>
+					</mat-form-field>
+				</div>
+			</form>
+		</ng-container>
+	</form>
+
+	<div class="actions">
+		<button
+			*ngIf="stepsToAppend.length === 0"
+			mat-stroked-button
+			type="button"
+			(click)="dismiss()">
+			Cancel
+		</button>
+		<button
+			mat-raised-button
+			(click)="submit()"
+			type="submit"
+			[disabled]="!allStepPendingFormsValid()">
+			<span class="add-button-text"
+				><mat-icon>add</mat-icon>Add<span *ngIf="numberOfStepsPending"
+					>&nbsp;{{ numberOfStepsPending }} steps to the interview</span
+				>
+			</span>
+		</button>
+	</div>
+</div>

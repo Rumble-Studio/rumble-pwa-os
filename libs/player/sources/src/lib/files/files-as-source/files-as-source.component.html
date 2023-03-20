@@ -1,0 +1,32 @@
+<todo-open
+	[todo]="{
+		id: 'todo:how-to-use-file-as-source',
+		title: 'Drag a file',
+		description: 'Search for the file you need, expand it and drag the seekbar you need.'
+	}">
+</todo-open>
+
+<ng-template #uploadBtnTpl>
+	<button
+		mat-raised-button
+		(click)="browseFileBtn.click()">
+		Upload a new file
+	</button>
+	<input
+		hidden
+		#browseFileBtn
+		multiple
+		type="file"
+		[accept]="acceptedFileExtensionsString"
+		name="publicname" />
+</ng-template>
+
+<rumble-pwa-file-table
+	[middleActionTpl]="uploadBtnTpl"
+	[searchValue]="searchValue"
+	[files]="files"
+	[displayKindTags]="displayKindTags"
+	[hideColumns]="hideColumns"
+	[elevatedClass]="false"
+	[connectDropTo]="connectDropTo"
+	(tableClickEvent)="processTableClickEvent($event)"></rumble-pwa-file-table>

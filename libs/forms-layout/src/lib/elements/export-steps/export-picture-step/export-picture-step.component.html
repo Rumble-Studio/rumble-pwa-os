@@ -1,0 +1,23 @@
+<div class="export-picture-step-container">
+	<span class="step-kind">Image request</span>
+	<span class="step-title">{{ steptitle }}</span>
+	<span
+		*ngIf="stepdescription"
+		class="step-hint"
+		>{{ stepdescription }}</span
+	>
+
+	<div *ngIf="imagePath; else noAnswerTpl">
+		<div class="image-container">
+			<img [src]="imagePath" />
+		</div>
+	</div>
+	<ng-template #noAnswerTpl><span class="no-answer"> No image uploaded </span></ng-template>
+</div>
+<button
+	*ngIf="imagePath"
+	(click)="downloadImage()"
+	[matTooltip]="'Download this image'"
+	mat-raised-button>
+	<mat-icon>download</mat-icon>
+</button>

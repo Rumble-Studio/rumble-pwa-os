@@ -1,0 +1,250 @@
+<object-list
+	[objects]="recordingSessions"
+	[topRightActionTpl]="downloadAllTpl"
+	[middleActionTpl]="includeArchivedToggleTpl"
+	[expandedTemplate]="expandedTpl"
+	[convertObjectToSearchableString]="convertObjectToSearchableString"
+	[convertObjectToSortableElement]="convertObjectToSortableElement">
+	<object-column
+		[columnId]="'play'"
+		[template]="playColumnTpl"
+		[sortable]="false">
+	</object-column>
+	<ng-template
+		#playColumnTpl
+		let-object="object">
+		<button
+			[matTooltip]="'Listen'"
+			(click)="$event.stopImmediatePropagation(); listenTo(object.recordingSession.id)"
+			mat-flat-button>
+			<mat-icon class="clickable blue-btn">play_arrow</mat-icon>
+		</button>
+	</ng-template>
+
+	<!-- download one session -->
+	<object-column
+		[columnId]="'download-data'"
+		[header]="'Download audio'"
+		[template]="downloadDataColumnTpl"
+		[sortable]="false">
+	</object-column>
+	<ng-template
+		#downloadDataColumnTpl
+		let-object="object">
+		<button
+			[matTooltip]="'Download ' + object.user?.fullName + '\'s elements'"
+			(click)="$event.stopPropagation(); downloadData(object.recordingSession.id)"
+			mat-flat-button>
+			<mat-icon class="clickable blue-btn">download</mat-icon>
+		</button>
+	</ng-template>
+
+	<!-- download DOCX session -->
+	<object-column
+		[columnId]="'download-data-docx'"
+		[header]="'Download DOCX'"
+		[template]="downloadDataDocxColumnTpl"
+		[sortable]="false">
+	</object-column>
+	<ng-template
+		#downloadDataDocxColumnTpl
+		let-object="object">
+		<button
+			[matTooltip]="'Download ' + object.user?.fullName + '\'s text content'"
+			(click)="$event.stopImmediatePropagation(); exportToDOCX(object.recordingSession)"
+			mat-flat-button>
+			<mat-icon class="clickable blue-btn">download</mat-icon> DOCX
+		</button>
+	</ng-template>
+
+	<!-- start a mix -->
+	<object-column
+		*ngIf="isDesktop"
+		[columnId]="'custom-export'"
+		[header]="'Start a mix'"
+		[template]="customExportColumnTpl"
+		[sortable]="false">
+	</object-column>
+	<ng-template
+		#customExportColumnTpl
+		let-object="object">
+		<button
+			[matTooltip]="'Mix creation'"
+			(click)="$event.stopImmediatePropagation(); openCreateMixFromRecordingSessionModal(object)"
+			mat-flat-button>
+			<mat-icon class="clickable blue-btn">blender</mat-icon>
+		</button>
+	</ng-template>
+
+	<object-column
+		*ngIf="isDesktop && displayFormName"
+		[columnId]="'formName'"
+		[header]="'Interview'"
+		[template]="formNameTpl">
+	</object-column>
+	<ng-template
+		#formNameTpl
+		let-object="object">
+		<div
+			class="rs-clickable"
+			[routerLink]="['/forms/editor/' + object.form?.id]"
+			[queryParams]="{ drawer: 'step', action: 'listen' }"
+			(click)="$event.stopPropagation()">
+			{{ object.form?.title }}
+		</div>
+	</ng-template>
+
+	<object-column
+		[columnId]="'participant'"
+		[header]="'Participant'"
+		[flex]="3"
+		[template]="participantTpl">
+	</object-column>
+	<ng-template
+		#participantTpl
+		let-object="object">
+		<span class="user-line">
+			<span class="user-avatar">
+				<img
+					[src]="filesRepository.convertRSurlToUrl$(getUserAvatar(object.user)) | async"
+					[style.width]="'40px'"
+					[style.height]="'40px'"
+					[style.borderRadius]="'7px'" />
+			</span>
+			<span
+				*ngIf="!object.user.anonymous; else anonymousNameTpl"
+				class="participant">
+				{{ convertUserToDisplayableName(object.user) }} ({{ object.user.email }}
+				<span class="material-icons"> {{ object.user.emailValidated ? 'how_to_reg' : '' }} </span>)</span
+			>
+			<ng-template #anonymousNameTpl>
+				<span class="participant"> Anonymous participant <span class="material-icons">no_accounts</span> </span>
+			</ng-template>
+		</span>
+	</ng-template>
+
+	<object-column
+		*ngIf="isDesktop"
+		[columnId]="'timeUpdate'"
+		[header]="'Last update'"
+		[template]="lastUpdateTpl">
+	</object-column>
+	<ng-template
+		#lastUpdateTpl
+		let-object="object">
+		{{ object.recordingSession.timeUpdate * 1000 | date: 'short' }}
+	</ng-template>
+
+	<object-column
+		*ngIf="isDesktop"
+		[columnId]="'answer-duration'"
+		[header]="'Answer duration'"
+		[template]="answerDurationTpl">
+	</object-column>
+	<ng-template
+		#answerDurationTpl
+		let-object="object">
+		<div
+			class="duration-container"
+			*ngIf="object.duration > 0"
+			[matTooltip]="'Audio duration from the guest only and before trimming silences.'">
+			{{ object.duration | duration }}
+			<explanation [msg]="'This duration does not take into account the host audio.'"> </explanation>
+		</div>
+	</ng-template>
+
+	<object-column
+		[columnId]="'option'"
+		[template]="optionTpl"
+		[sortable]="false">
+	</object-column>
+	<ng-template
+		#optionTpl
+		let-object="object">
+		<button
+			mat-icon-button
+			[matMenuTriggerFor]="menu"
+			(click)="$event.stopPropagation()">
+			<mat-icon>more_vert</mat-icon>
+		</button>
+		<mat-menu #menu="matMenu">
+			<button
+				mat-menu-item
+				(click)="exportToCSV(object.recordingSession)">
+				<mat-icon class="material-icons-outlined"> download </mat-icon>
+				<span>Export to CSV</span>
+			</button>
+			<button
+				mat-menu-item
+				(click)="
+					object.recordingSession.state === 'archived'
+						? restoreRecordingSession(object.recordingSession)
+						: archiveRecordingSession(object.recordingSession)
+				">
+				<mat-icon>{{ object.recordingSession.state === 'archived' ? 'unarchive' : 'archive' }}</mat-icon>
+				<span>{{ object.recordingSession.state === 'archived' ? 'Restore' : 'Archive' }}</span>
+			</button>
+			<button
+				mat-menu-item
+				(click)="deleteRecordingSession(object.recordingSession)">
+				<mat-icon class="material-icons-outlined"> delete</mat-icon>
+				<span>Delete</span>
+			</button>
+		</mat-menu>
+	</ng-template>
+</object-list>
+
+<!-- template EXPANDED -->
+<ng-template
+	#expandedTpl
+	let-object="object">
+	<rumble-pwa-recording-session-short-preview
+		[selectedRecordedSessionId]="object.recordingSession.id"
+		[formId]="object.recordingSession.formId"></rumble-pwa-recording-session-short-preview>
+</ng-template>
+
+<!-- template DOWNLOAD ALL -->
+<ng-template #downloadAllTpl>
+	<button
+		*ngIf="recordingSessions && recordingSessions.length > 0 && displayDownloadAllButton"
+		class="download-button"
+		[ngClass]="{ mobile: isMobile }"
+		mat-raised-button
+		(click)="exportAllToCSV()">
+		<mat-icon class="clickable blue-btn">download</mat-icon> CSV (all)
+	</button>
+
+	<button
+		*ngIf="recordingSessions && recordingSessions.length > 0 && displayDownloadAllButton"
+		class="download-button"
+		[ngClass]="{ mobile: isMobile }"
+		mat-raised-button
+		(click)="exportAllToDOCX()">
+		<mat-icon class="clickable blue-btn">download</mat-icon> DOCX (all)
+	</button>
+
+	<button
+		*ngIf="recordingSessions && recordingSessions.length > 0 && displayDownloadAllButton"
+		class="download-button"
+		[ngClass]="{ mobile: isMobile }"
+		mat-raised-button
+		(click)="downloadAllData()">
+		<mat-icon class="clickable blue-btn">download</mat-icon> AUDIO (all)
+	</button>
+</ng-template>
+
+<!-- template ARCHIVE TOGGLE -->
+<ng-template #includeArchivedToggleTpl>
+	<div class="toogle-container">
+		<mat-slide-toggle
+			*ngIf="displayArchivedToggle"
+			[(ngModel)]="displayArchivedSessions"
+			>Include archived answers</mat-slide-toggle
+		>
+		<mat-slide-toggle
+			*ngIf="hideAnswersWithoutAudioToggle"
+			[(ngModel)]="displaySessionsWithAudioOnly"
+			>Hide answers without audio</mat-slide-toggle
+		>
+	</div>
+</ng-template>

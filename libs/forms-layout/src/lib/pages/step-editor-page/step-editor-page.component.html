@@ -1,0 +1,11 @@
+<ng-container *ngIf="step$$$.$ | async as step; else noFormStep">
+	<rumble-pwa-form-editable-step
+		[details]="{
+		step,
+		index: step$$$.value?.rank || 0,
+		formId: step$$$.value?.formId || ''
+	}">
+	</rumble-pwa-form-editable-step>
+</ng-container>
+
+<ng-template #noFormStep>Can't render this step.</ng-template>

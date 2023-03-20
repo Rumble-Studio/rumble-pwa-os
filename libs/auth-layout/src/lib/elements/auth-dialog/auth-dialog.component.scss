@@ -1,0 +1,32 @@
+.dialog-container {
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+}
+
+.anonymous-info {
+	margin-bottom: 10px;
+	text-align: center;
+	color: white;
+}
+
+::ng-deep .mat-progress-spinner circle,
+.mat-spinner circle {
+	stroke: #000000;
+}
+
+.spinner {
+	display: inline-block;
+	margin-right: 8px;
+}
+
+.submitBtn {
+	width: 100%;
+	padding: 15px;
+	margin: 10px 0px 10px 0px;
+	background-color: var(--rs-yellow);
+}
+
+.bottom-link {
+	margin-left: 8px;
+}

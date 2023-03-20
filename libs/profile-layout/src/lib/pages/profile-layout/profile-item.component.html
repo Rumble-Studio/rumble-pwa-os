@@ -1,0 +1,169 @@
+<ng-container *transloco="let t; read: 'profileLayout.profileItem'">
+	<ng-container *ngIf="profile; else noProfileTpl">
+		<header class="rs-header">
+			<button
+				class="rs-goback"
+				mat-stroked-button
+				[routerLink]="'/'">
+				<mat-icon>arrow_back</mat-icon>
+			</button>
+			<section class="title">
+				<h2>
+					<span class="domain-category">{{ t('Profile') }}</span
+					>&nbsp;<em>{{ profile.fullName }}</em>
+				</h2>
+			</section>
+		</header>
+
+		<div class="rs-editor-container">
+			<!-- page fav icon  -->
+			<div class="header">
+				<h3>Profile picture</h3>
+			</div>
+			<div class="body">
+				<image
+					[imageUrl]="profilePictureThumbnail?.imageUrl"
+					[displaySelectButton]="true"
+					[selectButtonText]="'Edit'"
+					(imageSelectionEvent)="updateAvatar()"
+					[displayDeleteButton]="profilePictureThumbnail?.imageUrl !== '/assets/avatar.png'"
+					(deleteImageEvent)="removeAvatar()"
+					[displayPaletteButton]="false"
+					[borderRadius]="'50%'">
+				</image>
+			</div>
+			<br />
+			<hr />
+
+			<!-- email -->
+			<div class="header">
+				<h3>Login details</h3>
+			</div>
+			<div class="body">
+				<span
+					class="rs-clickable"
+					(click)="openChangeEmailPrompt()">
+					{{ profile.email }}
+					<span class="material-icons-outlined rs-text-smaller rs-clickable"> edit </span>
+				</span>
+
+				<ng-container
+					*ngIf="!profile.emailValidated"
+					class="validate-email">
+					<p><em>You have not validated your email</em></p>
+
+					<button
+						mat-raised-button
+						(click)="sendValidationEmail()"
+						type="button"
+						data-cy="send-validation-email">
+						<mat-label> Send a new validation email </mat-label>
+					</button>
+				</ng-container>
+
+				<p *ngIf="!profile.hasPassword">You should set a password.</p>
+				<p>
+					<button
+						*ngIf="!profile.hasPassword; else passwordIsSetTpl"
+						type="button"
+						mat-raised-button
+						(click)="openChangePasswordPrompt()"
+						data-cy="open-modal-change-password">
+						Set a password
+					</button>
+					<ng-template #passwordIsSetTpl>
+						<span
+							class="rs-clickable"
+							(click)="openChangePasswordPrompt()"
+							>**********************
+							<span class="material-icons-outlined rs-text-smaller rs-clickable"> edit </span></span
+						>
+					</ng-template>
+				</p>
+			</div>
+
+			<hr />
+
+			<!-- firstName -->
+			<div class="header">
+				<h3>Display name</h3>
+			</div>
+			<div class="body">
+				{{ profile.fullName }}
+				<span
+					class="material-icons-outlined rs-text-smaller rs-clickable"
+					(click)="updateProfile()">
+					edit
+				</span>
+			</div>
+			<hr />
+			<!-- firstName -->
+
+			<div class="header">
+				<h3>First name</h3>
+			</div>
+			<div class="body">
+				{{ profile.firstName }}
+				<span
+					class="material-icons-outlined rs-text-smaller rs-clickable"
+					(click)="updateProfile()">
+					edit
+				</span>
+			</div>
+			<hr />
+
+			<!-- lastName -->
+			<div class="header">
+				<h3>Last name</h3>
+			</div>
+			<div class="body">
+				{{ profile.lastName }}
+				<span
+					class="material-icons-outlined rs-text-smaller rs-clickable"
+					(click)="updateProfile()">
+					edit
+				</span>
+			</div>
+			<hr />
+
+			<!-- newsletter subscription -->
+			<div class="header">
+				<h3>Newsletter subscription</h3>
+			</div>
+			<div class="body">
+				{{
+					profile.newsletterSubscribed
+						? 'You wish to receive our newsletter.'
+						: 'You are not subscribed to our newsletter.'
+				}}
+
+				<span
+					(click)="updateProfile()"
+					class="material-icons-outlined rs-text-smaller rs-clickable">
+					edit
+				</span>
+			</div>
+
+			<hr />
+
+			<!-- newsletter subscription -->
+			<div class="header">
+				<h3>KYC</h3>
+			</div>
+			<div class="body">
+				<button
+					mat-raised-button
+					(click)="launchKYCForm()">
+					Launch KYC form
+				</button>
+				<br /><br />
+				<button
+					mat-raised-button
+					(click)="launchKYCForm(true)">
+					Update KYC form
+				</button>
+			</div>
+		</div>
+	</ng-container>
+	<ng-template #noProfileTpl> Profile not available. </ng-template>
+</ng-container>

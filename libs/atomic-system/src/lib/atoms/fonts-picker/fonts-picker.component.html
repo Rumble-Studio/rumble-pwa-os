@@ -1,0 +1,29 @@
+<div class="fonts-picker-container rs-full-width">
+	<div
+		*ngIf="(fonts?.length || 0) === 0"
+		class="body">
+		No fonts added yet. Click on the add button bellow to add some
+	</div>
+
+	<div class="font-list rs-full-width">
+		<ng-container *ngFor="let font of fonts; let i = index">
+			<div
+				class="font"
+				*ngIf="font !== 'empty' && canYouEdit"
+				(click)="deleteFont(i)">
+				<span
+					class="font-preview"
+					[style.font-family]="getFontStyle(font)">
+					{{ fonts[i] }}
+				</span>
+				<mat-icon class="font-delete">delete</mat-icon>
+			</div>
+		</ng-container>
+		<div
+			*ngIf="canYouEdit"
+			(click)="openFontModal()"
+			class="font rs-clickable">
+			<mat-icon class="add-icon">add</mat-icon>
+		</div>
+	</div>
+</div>

@@ -1,0 +1,45 @@
+:host {
+	padding: 20px;
+	padding-bottom: 105px; // avoid hubspot widget
+}
+
+.active-pill {
+	background-color: var(--rs-yellow);
+	border-radius: 25px;
+	padding: 0px 5px;
+	margin: 3px;
+	font-size: smaller;
+	border: 1px solid var(--rs-yellow-dark);
+	display: none;
+}
+
+.plan-card {
+	margin: 5px 5px 20px 5px;
+	width: 250px;
+
+	&.activeSub {
+		background-color: var(--rs-yellow-light);
+		.active-pill {
+			display: unset;
+		}
+	}
+}
+
+// .or-price {
+//   font-size: 1.1em;
+//   font-weight: bold;
+//   color: #ccc;
+//   margin: 10px;
+// }
+
+.plans-container {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.price-btn-container {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}

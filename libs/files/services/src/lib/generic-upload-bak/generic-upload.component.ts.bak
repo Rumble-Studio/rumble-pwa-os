@@ -1,0 +1,517 @@
+/* eslint-disable @typescript-eslint/no-inferrable-types */
+import { CommonModule } from '@angular/common';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, Inject } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { ActivatedRoute } from '@angular/router';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { CanCheck, ExplanationComponent, LayoutService, LayoutSizeAndCheck } from '@rumble-pwa/atomic-system';
+import { NotificationsService } from '@rumble-pwa/client-notifications';
+import {
+	// convertExtensionToMacroFileKind,
+	EntityFile,
+} from '@rumble-pwa/files/state';
+// import { FileTableComponent, FileTagsEditorComponent } from '@rumble-pwa/files/ui';
+import { MacroFileKind } from '@rumble-pwa/objects/prompt';
+
+import { merge } from 'rxjs';
+import { filter, tap } from 'rxjs/operators';
+
+export interface UploadDetails {
+	title?: string; // title of the modal
+	description?: string; // description under title
+
+	askForPublicName?: boolean; // let user change the public name
+	acceptedMacroTypes: MacroFileKind[]; // ex. ['audio', 'video']
+	files?: File[]; // if there is already some files to process
+	// autoClickBrowserBtn?: boolean; // should we click on the browser button to open the file dialog
+	allowExistingFile?: boolean; // display table of existing files
+	allowMultipleFilesUpload?: boolean; // allow bunch upload
+	// editAudioPackItemMode?: boolean;
+	// audioPackItem?: AudioPackItem;
+	// fileId?: string;
+	// tagsEditor?: boolean;
+	// inputMaxLength?: number; // default is 64
+}
+
+export const IMAGE_UPLOAD_DETAILS: UploadDetails = {
+	description: 'Select an image',
+	askForPublicName: true,
+	allowExistingFile: true,
+	acceptedMacroTypes: ['image'],
+};
+
+export const AUDIO_UPLOAD_DETAILS: UploadDetails = {
+	description: 'Select an audio file',
+	askForPublicName: true,
+	allowExistingFile: true,
+	acceptedMacroTypes: ['audio'],
+};
+
+export const VIDEO_UPLOAD_DETAILS: UploadDetails = {
+	description: 'Select a video',
+	askForPublicName: true,
+	allowExistingFile: true,
+	acceptedMacroTypes: ['video'],
+};
+
+export const MEDIA_UPLOAD_DETAILS: UploadDetails = {
+	description: 'Import a file',
+	askForPublicName: true,
+	acceptedMacroTypes: ['audio', 'image', 'video'],
+};
+
+export interface UploadStyle {
+	height?: string;
+	maxHeight?: string;
+	minWidth?: string;
+	width: string;
+	maxWidth: string;
+}
+
+export interface UploadResult {
+	entityFiles: EntityFile[];
+}
+
+@UntilDestroy()
+@Component({
+	selector: 'rumble-pwa-generic-upload',
+	templateUrl: './generic-upload.component.html',
+	styleUrls: ['./generic-upload.component.scss'],
+	standalone: true,
+	imports: [
+		//
+		CommonModule,
+		MatProgressSpinnerModule,
+		FormsModule,
+		MatFormFieldModule,
+		ReactiveFormsModule,
+		MatIconModule,
+		// FileTableComponent,
+		MatInputModule,
+		MatButtonModule,
+		ExplanationComponent,
+		// FileTagsEditorComponent,
+	],
+	changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class GenericUploadComponent extends LayoutSizeAndCheck implements CanCheck, AfterViewInit {
+	// // when the user clicks on the file table, we fill this $$$
+	// entityFile$$$ = new DataObsViaId<EntityFile>((fileId: string) => this._filesRepository.get$(fileId));
+
+	// // from store for file table
+	// entityFiles: EntityFile[] = [];
+
+	// // from selection or data (only first one is used today)
+	// private _files: FileWithData[] = [];
+	// public get files() {
+	// 	return this._files;
+	// }
+	// public set files(newFiles) {
+	// 	newFiles.forEach((newFile) => {
+	// 		if (!newFile) return;
+	// 		// getting the macroFileKindToUseForPreview
+	// 		const extension = newFile.file.name.split('.').pop();
+	// 		newFile.macroFileKindToUseForPreview = convertExtensionToMacroFileKind(extension ?? '');
+
+	// 		// setting the publicName
+	// 		const fileNameWithoutExtension = newFile.file.name
+	// 			.slice(0, -(extension?.length ? extension.length + 1 : 0))
+	// 			.substring(0, this.inputMaxLength - (extension?.length ? extension.length + 1 : 0));
+	// 		const newFileName = fileNameWithoutExtension + '.' + extension;
+	// 		const result = newFile.file.name.length > this.inputMaxLength ? newFileName : newFile.file.name;
+	// 		newFile.publicName = newFile.publicName ?? result;
+
+	// 		// getting src
+	// 		this.readFile(newFile.file, (fileAsStr) => {
+	// 			newFile.src = fileAsStr;
+	// 			this._check();
+	// 		});
+	// 	});
+	// 	this._files = newFiles;
+	// 	this._check();
+	// }
+
+	// private _entityFilePublicName?: string;
+	// public set entityFilePublicName(newEntityFilePublicName) {
+	// 	const newEntityFilePublicNameTrimmed = newEntityFilePublicName?.substring(0, this.inputMaxLength);
+	// 	this._entityFilePublicName = newEntityFilePublicNameTrimmed;
+	// }
+	// public get entityFilePublicName() {
+	// 	return this._entityFilePublicName;
+	// }
+
+	// entityFileSrc?: string | undefined;
+	// entityFileTags?: Filetag[];
+
+	// /** for UX/UI behaviour */
+	// currentlyUploadingFile = false;
+	// acceptedFileType: string = '/*';
+
+	// @ViewChild('browseFileBtn', { static: false })
+	// browseFileBtn?: ElementRef;
+
+	// entityFileMacroFileKindToUseForPreview: MacroFileKind;
+
+	// loadingMessage?: string;
+	// globalUploadPercentage?: number;
+
+	// // audioPackItemTitle?: string;
+	// // audioPackItemDescription?: string;
+
+	// inputMaxLength = FILE_PUBLIC_NAME_MAX_LENGTH;
+
+	constructor(
+		_cdr: ChangeDetectorRef,
+		_layoutService: LayoutService,
+		_activatedRoute: ActivatedRoute,
+		private _dialogRef: MatDialogRef<GenericUploadComponent, UploadResult>,
+		public dialog: MatDialog,
+		private _notificationsService: NotificationsService,
+		@Inject(MAT_DIALOG_DATA)
+		public uploadDetails: UploadDetails
+	) {
+		super(_cdr, _layoutService, _activatedRoute);
+
+		// handle closing
+		_dialogRef.disableClose = true;
+		merge(this._dialogRef.keydownEvents().pipe(filter((e) => e.key === 'Escape')), this._dialogRef.backdropClick())
+			.pipe(
+				untilDestroyed(this),
+				tap(() => {
+					this._notificationsService.confirm('Are you sure to close this dialog?').subscribe((confirmation) => {
+						if (confirmation) {
+							this.dismiss({ entityFiles: [] });
+						}
+						this._check();
+					});
+				})
+			)
+			.subscribe();
+
+		// constructor(
+		// 	_cdr: ChangeDetectorRef,
+		// 	private _dialogRef: MatDialogRef<GenericUploadComponent, UploadResult[]>,
+		// 	// private _filesRepository: FilesRepository,
+		// 	// 	private notificationsService: NotificationsService,
+		// 	// 	private sanitizer: DomSanitizer,
+		// 	@Inject(MAT_DIALOG_DATA)
+		// 	public dialogDataUploadDetails: UploadDetails // 	private _usersRepository: UsersRepository, // 	private _fileUploadService: FileUploadService
+		// ) {
+		// 	super(_cdr);
+
+		// 	this.inputMaxLength = dialogDataUploadDetails.inputMaxLength ?? this.inputMaxLength;
+
+		// 	// fill or clear src if we use a file from existing files
+		// 	if (this.dialogDataUploadDetails.allowExistingFile) {
+		// 		this.entityFile$$$.id$
+		// 			.pipe(
+		// 				tap((fileId) => {
+		// 					if (!fileId) this.entityFileSrc = undefined;
+		// 				}),
+		// 				switchMap((fileId) => {
+		// 					if (!fileId) return of(undefined);
+		// 					return this._filesRepository.get$(fileId);
+		// 				}),
+		// 				switchMap((entityFile: undefined | EntityFile) => {
+		// 					if (!entityFile) return of(undefined);
+		// 					this.entityFileMacroFileKindToUseForPreview = entityFile.kind;
+		// 					this.entityFilePublicName = entityFile.publicName ?? entityFile.fileName;
+		// 					return this._filesRepository.convertEntityFileIdToUrl$(entityFile.id);
+		// 				}),
+		// 				tap((fileAsStr) => {
+		// 					this.entityFileSrc = fileAsStr;
+		// 					this._check();
+		// 				}),
+		// 				untilDestroyed(this)
+		// 			)
+		// 			.subscribe();
+		// 	}
+
+		// 	// handle closing
+		// 	_dialogRef.disableClose = true;
+		// 	merge(this._dialogRef.keydownEvents().pipe(filter((e) => e.key === 'Escape')), this._dialogRef.backdropClick())
+		// 		.pipe(
+		// 			untilDestroyed(this),
+		// 			tap(() => {
+		// 				if (this.files.length > 0 || this.entityFilePublicName || this.entityFile$$$.id) {
+		// 					this.notificationsService.confirm('Are you sure to close this dialog?').subscribe((confirmation) => {
+		// 						if (confirmation) {
+		// 							this.close();
+		// 						}
+		// 						this._check();
+		// 					});
+		// 				} else {
+		// 					this.close();
+		// 				}
+		// 			})
+		// 		)
+		// 		.subscribe();
+
+		// 	// handle specific file type
+		// 	if (dialogDataUploadDetails.acceptedMacroTypes) {
+		// 		this.acceptedFileType = dialogDataUploadDetails.acceptedMacroTypes
+		// 			.filter((child): child is MacroFileKindDefined => !!child)
+		// 			.map((macroType) => MACRO_FILE_KIND_TO_ALLOWED_EXTENSIONS[macroType].map((extension) => `.${extension}`))
+		// 			.join(',');
+		// 		console.log('acceptedFileType', this.acceptedFileType);
+		// 	}
+
+		// 	if (dialogDataUploadDetails.files) {
+		// 		const filesFromUploadDetails = Object.values(dialogDataUploadDetails.files).map((file) => {
+		// 			const fileWithData: FileWithData = { file };
+		// 			return fileWithData;
+		// 		});
+
+		// 		this.files = dialogDataUploadDetails.allowMultipleFilesUpload
+		// 			? filesFromUploadDetails
+		// 			: [filesFromUploadDetails[0]];
+		// 	}
+
+		// 	// list all files (to keep because later will check if file is already uploaded)
+		// 	this._filesRepository.accessibleEntityFiles$
+		// 		.pipe(
+		// 			untilDestroyed(this),
+		// 			tap((accessibleEntityFiles) => {
+		// 				this.entityFiles = accessibleEntityFiles;
+		// 				this._check();
+		// 			})
+		// 		)
+		// 		.subscribe();
+
+		// 	if (dialogDataUploadDetails.fileId) {
+		// 		this.selectedFileFromExisting(dialogDataUploadDetails.fileId);
+		// 	}
+
+		// 	// this.audioPackItemTitle = dialogDataUploadDetails.audioPackItem?.audioTitle;
+		// 	// this.audioPackItemDescription = dialogDataUploadDetails.audioPackItem?.audioDescription;
+
+		// 	this.entityFile$$$.$.pipe().subscribe();
+	}
+
+	ngAfterViewInit() {
+		console.log();
+
+		// 	if (this.dialogDataUploadDetails.autoClickBrowserBtn) {
+		// 		this.browseFileBtn?.nativeElement.click();
+		// 	}
+		// 	this._check();
+	}
+
+	// selectedFileFromExisting(fileId: string) {
+	// 	this.files = [];
+	// 	this.entityFile$$$.id = fileId;
+	// 	this._check();
+	// }
+
+	// readFile(fileObject: File, callback: (fileAsStr: string | undefined) => void) {
+	// 	const reader = new FileReader();
+	// 	reader.onload = (e) => {
+	// 		const result = this.sanitizer.bypassSecurityTrustUrl(e.target?.result as string) as string;
+	// 		// const result = e.target?.result as string;
+	// 		callback(result);
+	// 	};
+	// 	reader.onerror = () => {
+	// 		this.notificationsService.error("Can't read file " + fileObject?.name, 'Error');
+	// 	};
+	// 	reader.readAsDataURL(fileObject);
+	// }
+
+	// onFileChanged(event: any) {
+	// 	if (event.target['files'].length > 0) {
+	// 		this.entityFile$$$.id = undefined;
+	// 		const fileList = event.target['files'] as FileList;
+	// 		const fileArray = Array.from(fileList);
+	// 		const fileArrayDataFormat: FileWithData[] = fileArray.map((file) => {
+	// 			const fileWithData: FileWithData = {
+	// 				file,
+	// 			};
+	// 			return fileWithData;
+	// 		});
+	// 		if (this.dialogDataUploadDetails.allowMultipleFilesUpload) {
+	// 			const newFiles = [...this.files, ...fileArrayDataFormat];
+	// 			this.files = newFiles;
+	// 		} else {
+	// 			this.files = fileArrayDataFormat;
+	// 		}
+	// 	}
+	// 	event.target.value = '';
+	// }
+
+	// async saveFileAndReturnResult() {
+	// 	if (!this.entityFile$$$.id && this.files.length == 0) {
+	// 		this.notificationsService.warning('No file selected', 'Error');
+	// 		return;
+	// 	}
+
+	// 	// If entityFile
+	// 	if (this.entityFile$$$.id) {
+	// 		const uploadResults: UploadResult[] = [
+	// 			{
+	// 				fileId: this.entityFile$$$.id,
+	// 				// fileName: this.entityFilePublicName ?? this.entityFile$$$.value?.fileName,
+	// 				// audioPackItem: {
+	// 				// 	audioPackItemTitle: this.audioPackItemTitle,
+	// 				// 	audioPackItemDescription: this.audioPackItemDescription,
+	// 				// },
+	// 			},
+	// 		];
+
+	// 		if (this.entityFile$$$.value && this.entityFileTags)
+	// 			this.processFileTags(this.entityFile$$$.value, this.entityFileTags);
+	// 		this._dialogRef.close(uploadResults);
+	// 		return;
+	// 	}
+
+	// 	this.files.forEach((file) => {
+	// 		if (this.dialogDataUploadDetails.askForPublicName && !file.publicName) {
+	// 			file.publicName = 'Upload (' + Date.now().toString() + ')';
+	// 		}
+	// 	});
+
+	// 	const ownerId = this._usersRepository.connectedUser$$.getValue()?.id;
+	// 	if (!ownerId) return;
+
+	// 	// If imported file(s)
+	// 	if (this.files.length > 0) {
+	// 		this.files.forEach((file) => {
+	// 			if (file.file.size > FILE_MAX_SIZE_MB * 1024 * 1024) {
+	// 				this.notificationsService.warning('This file is too big (' + FILE_MAX_SIZE_MB + 'Mb max)');
+	// 				console.log('This file is too big (' + FILE_MAX_SIZE_MB + 'Mb max), file size: ' + file.file.size);
+
+	// 				return;
+	// 			}
+	// 		});
+
+	// 		// this.uploading = this.files.map(() => true);
+	// 		this._check();
+
+	// 		const entityFileIdsTagsAlreadyUpdated: string[] = [];
+
+	// 		const uploadResults$: Observable<UploadResult>[] = this.files
+	// 			.map((file) => {
+	// 				const uploadResult$ = this._fileUploadService
+	// 					.pleaseUploadThisFile$(file.file, ownerId, uniqueId(), file.publicName)
+	// 					.$$.pipe(
+	// 						untilDestroyed(this),
+	// 						map((uploadableFile) => {
+	// 							file.loadingMessage = uploadableFile.state;
+	// 							file.uploading = Object.values(UploadingState).indexOf(uploadableFile.state) < 10;
+	// 							file.uploaded = Object.values(UploadingState).indexOf(uploadableFile.state) > 9;
+	// 							file.uploadPercentage = Math.round(uploadableFile.progress * 100);
+
+	// 							this.updateGlobalPercentage();
+	// 							this.checkIfCurrentlyUploading();
+	// 							this._check();
+
+	// 							if (uploadableFile.entityFile?.fileOnServer) {
+	// 								const uploadResult: UploadResult = {
+	// 									fileId: uploadableFile.entityFile.id,
+	// 									// fileName: uploadableFile.entityFile.publicName ?? uploadableFile.entityFile.fileName,
+	// 									// audioPackItem: {
+	// 									// 	audioPackItemTitle: this.audioPackItemTitle,
+	// 									// 	audioPackItemDescription: this.audioPackItemDescription,
+	// 									// },
+	// 								};
+	// 								if (file.tags && !entityFileIdsTagsAlreadyUpdated.includes(uploadableFile.entityFile.id)) {
+	// 									this.processFileTags(uploadableFile.entityFile, file.tags);
+	// 									entityFileIdsTagsAlreadyUpdated.push(uploadableFile.entityFile.id);
+	// 								}
+	// 								return uploadResult;
+	// 							}
+
+	// 							return undefined;
+	// 						})
+	// 					);
+	// 				return uploadResult$;
+	// 			})
+	// 			.filter((uploadResults): uploadResults is Observable<UploadResult> => !!uploadResults);
+
+	// 		combineLatest(uploadResults$)
+	// 			.pipe(
+	// 				untilDestroyed(this),
+	// 				tap((uploadResults) => {
+	// 					if (!uploadResults) return;
+
+	// 					// UploadResults could contains undefined item, so we need to wait for each to be defined
+	// 					if (uploadResults.some((uploadResult) => !uploadResult || !uploadResult.fileId)) return;
+
+	// 					if (!this.currentlyUploadingFile) {
+	// 						this._dialogRef.close(uploadResults);
+	// 					}
+	// 					this._check();
+	// 				})
+	// 			)
+	// 			.subscribe();
+	// 		return;
+	// 	}
+	// }
+
+	// processFileTags(entityFile: EntityFile, tags: Filetag[]) {
+	// 	this._filesRepository.updateFileTags(entityFile, tags);
+	// }
+
+	// close(result?: UploadResult[]) {
+	// 	this._dialogRef.close(result);
+	// }
+
+	dismiss(object?: UploadResult) {
+		this._dialogRef.close(object);
+	}
+
+	save() {
+		const uploadResult: UploadResult = {
+			entityFiles: [],
+		};
+		if (uploadResult.entityFiles.length == 0) {
+			this._notificationsService
+				.confirm('No file selected', 'Are you sure to close this dialog without selected a file?')
+				.subscribe((confirm) => {
+					if (confirm) this.dismiss();
+				});
+		} else {
+			this._dialogRef.close(uploadResult);
+		}
+	}
+
+	// clearFile(index?: number) {
+	// 	if (index !== undefined) {
+	// 		this.files.splice(index, 1);
+	// 		this._check();
+	// 		return;
+	// 	}
+	// 	this.entityFilePublicName = undefined;
+	// 	this.files = [];
+	// 	this.entityFile$$$.id = undefined;
+	// 	this.entityFileSrc = undefined;
+	// 	this._check();
+	// }
+
+	// @HostListener('window:keydown.enter', ['$event'])
+	// handleKeyDown() {
+	// 	this.saveFileAndReturnResult();
+	// }
+
+	// processTableClick(tableClickEvent: TableClickEvent<any>) {
+	// 	if (tableClickEvent) {
+	// 		this.selectedFileFromExisting(tableClickEvent.object.id);
+	// 	}
+	// }
+
+	// openBrowser() {
+	// 	this.browseFileBtn?.nativeElement.click();
+	// }
+
+	// checkIfCurrentlyUploading() {
+	// 	this.currentlyUploadingFile = this.files.some((file) => !!file.uploading);
+	// }
+
+	// updateGlobalPercentage() {
+	// 	this.globalUploadPercentage = sum(this.files.map((file) => file.uploadPercentage)) / this.files.length;
+	// }
+}

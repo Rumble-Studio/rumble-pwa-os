@@ -1,0 +1,24 @@
+:host {
+	margin: 10px;
+	padding-bottom: 105px; // avoid hubspot widget
+}
+
+.add-more-section {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-around;
+}
+
+.rs-file-drop-area {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.fake-btn {
+	border: 1px solid #4f4f4f;
+	border-radius: 3px;
+	padding: 8px 15px;
+	margin-right: 8px;
+	font-size: 12px;
+	text-transform: uppercase;
+}

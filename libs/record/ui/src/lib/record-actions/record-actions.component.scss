@@ -1,0 +1,153 @@
+:host {
+	display: block;
+	width: 100%;
+	--width: 300px;
+}
+
+.grant-requests,
+.device-choices {
+	display: flex;
+	align-items: center;
+	justify-content: space-around;
+	flex-wrap: wrap;
+	width: 100%;
+
+	.grant-request {
+		border: 1px solid var(--rs-green);
+		border-radius: 7px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-direction: column;
+		padding: 7px 3px;
+		background-color: rgb(193, 218, 194);
+		margin: 5px;
+
+		.grant-request-msg {
+			text-align: center;
+		}
+	}
+
+	// .cancel-action {
+	// 	background-color: rgb(231, 211, 211);
+	// }
+
+	.device-menu {
+		display: inline-block;
+	}
+}
+
+.preview-container {
+	border: 1px solid var(--rs-red);
+	border-radius: 7px;
+	padding: 3px;
+	margin: 2px;
+	position: relative;
+	min-width: 300px;
+
+	.exit {
+		position: absolute;
+		top: 0px;
+		right: 0px;
+		transform: translate(50%, -50%);
+	}
+}
+
+/**
+*
+*
+* Video & audio preview
+*
+*/
+
+.record-preview {
+	position: relative;
+	height: calc(var(--width) * 0.5625);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.video-player {
+	height: 100%;
+}
+
+.media-mode-choice-container {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-wrap: wrap;
+
+	.media-mode-btn {
+		width: 80px;
+		height: 80px;
+		display: inline-flex;
+		justify-content: center;
+		align-items: center;
+		flex-direction: column;
+		border-radius: 13px;
+		border: 1px solid;
+		border-color: inherit;
+		margin: 2px;
+		span {
+			margin-top: 15px;
+		}
+
+		&.selected {
+			border-width: 3px;
+		}
+
+		&:hover {
+			background-color: rgba(0, 0, 0, 0.1);
+			// border-color: black;
+		}
+
+		&.compact {
+			width: 50px;
+			height: 50px;
+		}
+	}
+}
+
+.audio-meter {
+	position: absolute;
+	bottom: 0px;
+	width: 100%;
+	height: 50px;
+	margin: 0 auto;
+}
+
+.device-index {
+	margin: 0 5px;
+}
+
+// RECORD ACTIONS
+
+.record-actions {
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin: 3px;
+
+	.record-btn {
+		background-color: var(--rs-red);
+		color: white;
+	}
+
+	.delete-btn {
+		position: absolute;
+		right: 5px;
+		margin: 0 5px 0 14px;
+		background-color: var(--rs-pink-light);
+		&:hover {
+			background-color: var(--rs-pink);
+		}
+	}
+
+	.duration {
+		position: absolute;
+		left: 5px;
+		margin: 0 5px 0 14px;
+	}
+}

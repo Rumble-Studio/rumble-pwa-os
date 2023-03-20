@@ -1,0 +1,54 @@
+<div
+	class="full-width"
+	id="dismiss-container">
+	<button
+		type="button"
+		mat-flat-button
+		class="mat-elevation-z1"
+		id="dismiss"
+		(click)="dismiss()">
+		<mat-icon>close</mat-icon>
+	</button>
+</div>
+<br />
+<div class="full-width">
+	<h2>Delete subscription</h2>
+	<p>
+		Are you sure to delete the subscription
+		<strong
+			><em>{{ title }}</em></strong
+		>
+		?
+	</p>
+	<p>Once deleted, all the subscription data will be lost.</p>
+	<p>If you are sure, please type the name of the subscription in the box below</p>
+
+	<mat-form-field
+		class="full-width"
+		appearance="outline">
+		<mat-label>Subscription Name</mat-label>
+		<input
+			type="text"
+			matInput
+			[placeholder]="title"
+			[(ngModel)]="typedName" />
+	</mat-form-field>
+</div>
+<div class="full-width horizontal custom-bottom">
+	<button
+		type="button"
+		mat-flat-button
+		class="mat-elevation-z1"
+		(click)="delete()">
+		<mat-icon>delete_forever</mat-icon>
+		Delete
+	</button>
+	<button
+		type="button"
+		mat-flat-button
+		class="mat-elevation-z1"
+		(click)="archive()">
+		<mat-icon>archive</mat-icon>
+		Archive
+	</button>
+</div>

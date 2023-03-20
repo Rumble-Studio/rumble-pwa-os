@@ -1,0 +1,61 @@
+<ng-container *ngIf="playlistState">
+	<div
+		class="mode-selector rs-clickable rs-no-select"
+		(click)="toggleRecordingMode()"
+		[matTooltip]="'Toggle recording mode: last recording only vs multiple segments'"
+		[matTooltipHideDelay]="0"
+		[matTooltipPosition]="'right'"
+		[matTooltipShowDelay]="1000">
+		<div
+			class="logo-container"
+			[ngClass]="{ inactive: recordingProps.recordingMode === RecordingModeOptions.replace }">
+			<div class="bar yellow"></div>
+			<div class="bar yellow"></div>
+			<div class="bar yellow"></div>
+			<div class="bar yellow"></div>
+		</div>
+
+		<div
+			class="logo-container"
+			[ngClass]="{ inactive: recordingProps.recordingMode === RecordingModeOptions.append }">
+			<div class="bar inactive"></div>
+			<div class="bar inactive"></div>
+			<div class="bar inactive"></div>
+			<div class="bar inactive"></div>
+			<div class="bar inactive"></div>
+			<div class="bar yellow"></div>
+		</div>
+	</div>
+	<rumble-pwa-virtual-playlist
+		[state]="playlistState"
+		[displayUnactiveTracks]="true"
+		[displayTrackActions]="true"
+		[displayTrackPlayerActions]="true"
+		[formCustomisationDetails]="formCustomisationDetails"
+		(dropTrackEvent)="processDropTrackEvent($event)"
+		(deleteTrackEvent)="processDeleteTrackEvent($event)"
+		(toggleActiveTrackEvent)="processToggleActiveTrackEvent($event)"
+		(newTextOnTrackEvent)="processNewTextOnTrackEvent($event)">
+	</rumble-pwa-virtual-playlist>
+
+	<!-- playbar -->
+	<!-- <rumble-pwa-virtual-playbar
+		*ngIf="playlistState.representativeState.nbOfActiveTracks > 0"
+		[formCustomisationDetails]="formCustomisationDetails"
+		[state]="playlistState"></rumble-pwa-virtual-playbar> -->
+</ng-container>
+
+<rumble-pwa-record-actions
+	*ngIf="recordingProps.recordActionsPosition === 'default'"
+	(entityFileEvent)="processEntityFileEvent($event)"
+	[recordingTargetName]="playlistId ?? undefined"
+	[previewMode]="previewMode"
+	(clearAudioClickEvent)="processClearAudioClickEvent()"
+	[hasActiveTracks]="!!(hasActiveTracks | async)"
+	[displayVideoBtn]="displayVideoBtn"
+	[displayAudiodBtn]="displayAudiodBtn"
+	[displayUploadBtn]="displayUploadBtn"
+	[backgroundColor]="formCustomisationDetails?.actionBtnBackgroundColor || 'transparent'"
+	[fontColor]="formCustomisationDetails?.actionBtnFontColor || 'inherit'"
+	[borderColor]="formCustomisationDetails?.actionBtnFontColor || 'inherit'">
+</rumble-pwa-record-actions>

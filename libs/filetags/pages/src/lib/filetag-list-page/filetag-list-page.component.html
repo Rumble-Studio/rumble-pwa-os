@@ -1,0 +1,15 @@
+<object-list [objects]="filetags">
+	<ng-template
+		let-object="object"
+		#idColumn>
+		{{ object.id.substring(0, 5) }}
+	</ng-template>
+	<object-column
+		[columnId]="'id'"
+		[header]="'The id'"
+		[template]="idColumn">
+	</object-column>
+	<object-column
+		[columnId]="'publicName'"
+		[header]="'Name'"></object-column>
+</object-list>

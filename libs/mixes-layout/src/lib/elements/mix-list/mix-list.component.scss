@@ -1,0 +1,6 @@
+.description {
+	text-overflow: ellipsis;
+	overflow: hidden;
+	width: calc(100% - 15px);
+	white-space: nowrap;
+}

@@ -1,0 +1,69 @@
+<!-- MENU FOR OTHER ITEMS  -->
+<div
+	[matMenuTriggerFor]="otherItemMenu"
+	#otherItemMenuTrigger="matMenuTrigger"></div>
+<mat-menu #otherItemMenu="matMenu">
+	<button
+		mat-menu-item
+		*ngFor="let note of notes"
+		[value]="note.id"
+		(click)="selectNote(note.id)">
+		{{ note.title }}
+	</button>
+</mat-menu>
+
+<ng-container *ngIf="note$$$.$ | async as note; else noNote">
+	<header class="rs-header">
+		<button
+			*ngIf="layoutSize < 1"
+			class="rs-goback"
+			mat-stroked-button
+			[routerLink]="'/notes'">
+			<mat-icon>arrow_back</mat-icon>
+		</button>
+		<section class="title">
+			<h2>
+				<span class="object-note">Note:</span>&nbsp;<em>{{ note.title }}</em>
+			</h2>
+		</section>
+
+		<button
+			mat-raised-button
+			(click)="editNote()"
+			class="rs-btn-new btn-edit-note">
+			<mat-icon>edit</mat-icon>
+		</button>
+	</header>
+	<div class="note-editor-container">
+		<section class="note-property">
+			<div class="note-title">
+				<h3>{{ note.title }}</h3>
+			</div>
+
+			<div class="property">
+				<span class="property-title">Description:</span>
+				<span>
+					{{ note.description }}
+				</span>
+			</div>
+
+			<div class="property">
+				<span class="property-title">Body:</span>
+				<span>
+					{{ note.body }}
+				</span>
+			</div>
+		</section>
+	</div>
+</ng-container>
+
+<ng-template #noNote>
+	<button
+		mat-raised-button
+		[routerLink]="'/notes'">
+		<mat-icon>arrow_back</mat-icon>
+		Go back to all notes
+	</button>
+
+	<div class="note-editor-container">Note not loaded yet.</div>
+</ng-template>

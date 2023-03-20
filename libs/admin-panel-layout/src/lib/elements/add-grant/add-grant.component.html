@@ -1,0 +1,125 @@
+<div>
+	<div class="header">
+		<h2>{{ !data ? 'Create a grant' : 'Edit the grant' }}</h2>
+	</div>
+	<form
+		[formGroup]="grantForm"
+		class="grant-form">
+		<mat-form-field
+			class="full-width"
+			appearance="outline">
+			<mat-label>Method name</mat-label>
+			<mat-select
+				formControlName="methodName"
+				name="methodName">
+				<mat-option [value]="null">None</mat-option>
+				<mat-option
+					*ngFor="let method of methods"
+					[value]="method">
+					{{ method }}
+				</mat-option>
+			</mat-select>
+		</mat-form-field>
+
+		<mat-form-field
+			class="full-width"
+			appearance="outline">
+			<mat-label>Parameters</mat-label>
+			<textarea
+				matInput
+				placeholder="Ex. {'target':'def456','limit':5}"
+				formControlName="parameters"
+				name="parameters"></textarea>
+		</mat-form-field>
+		<mat-form-field
+			class="selected-groups full-width"
+			appearance="outline">
+			<mat-label>
+				Shared with
+				{{
+					selectedGroups.length > 1 ? selectedGroups.length + ' groups:' : selectedGroups.length + ' group:'
+				}}</mat-label
+			>
+			<mat-chip-list
+				#chipList
+				aria-label="Group selection">
+				<mat-chip
+					*ngFor="let group of selectedGroups"
+					(removed)="removeGroup(group)">
+					<div class="group-container">
+						<rumble-pwa-group-item-generic [groupId]="group.id"></rumble-pwa-group-item-generic>
+					</div>
+					<button matChipRemove>
+						<mat-icon>cancel</mat-icon>
+					</button>
+				</mat-chip>
+				<input
+					placeholder="New group..."
+					#groupInput
+					[formControl]="groupCtrl"
+					[matAutocomplete]="auto"
+					[matChipInputFor]="chipList"
+					[matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+					(matChipInputTokenEnd)="addGroupWithInput()" />
+			</mat-chip-list>
+			<mat-autocomplete
+				#auto="matAutocomplete"
+				(optionSelected)="selectGroup($event)">
+				<mat-option
+					*ngFor="let group of filteredGroups | async"
+					[value]="group">
+					<div class="group-container">
+						<rumble-pwa-group-item-generic [groupId]="group.id"></rumble-pwa-group-item-generic>
+					</div>
+				</mat-option>
+			</mat-autocomplete>
+		</mat-form-field>
+		<mat-form-field
+			class="full-width"
+			appearance="outline">
+			<mat-label>Permission</mat-label>
+			<mat-select
+				formControlName="permission"
+				name="permission"
+				required>
+				<mat-option
+					*ngFor="let permission of permissions$$ | async"
+					[value]="permission.id">
+					{{ permission.name }} ({{ permission.key }})
+				</mat-option>
+			</mat-select>
+			<div
+				class="formError"
+				*ngIf="!grantForm.get('permission')?.valid && grantForm.get('permission')?.touched">
+				Please select a permission
+			</div>
+		</mat-form-field>
+	</form>
+
+	<div class="full-width horizontal">
+		<button
+			type="button"
+			mat-stroked-button
+			(click)="dismiss()">
+			<mat-icon>close</mat-icon>
+			Cancel
+		</button>
+
+		<button
+			type="button"
+			mat-stroked-button
+			(click)="delete()"
+			[disabled]="!data">
+			<mat-icon>delete</mat-icon>
+			Delete
+		</button>
+
+		<button
+			type="submit"
+			mat-raised-button
+			(click)="save()">
+			<mat-icon>{{ !data ? 'save' : 'check' }}</mat-icon>
+			{{ !data ? 'Create' : 'Update' }}
+		</button>
+	</div>
+</div>

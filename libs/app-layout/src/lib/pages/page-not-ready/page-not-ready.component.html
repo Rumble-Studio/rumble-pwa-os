@@ -1,0 +1,21 @@
+<div
+	class="container"
+	[ngClass]="{ 'yellow-background': pageFetched }">
+	<ng-container *ngIf="pageFetched; else loadingTpl">
+		<span class="text">Page not ready</span>
+		<button
+			*ngIf="isOwner"
+			(click)="processClick()"
+			mat-raised-button
+			class="go-back-btn"
+			type="submit"
+			value="Go back to pages">
+			Go back to pages
+		</button>
+	</ng-container>
+	<ng-template #loadingTpl>
+		<mat-spinner
+			diameter="100"
+			class="spinner"></mat-spinner>
+	</ng-template>
+</div>

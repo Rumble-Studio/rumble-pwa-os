@@ -1,0 +1,212 @@
+<!-- MENU FOR OTHER ITEMS  -->
+<div
+	[matMenuTriggerFor]="otherItemMenu"
+	#otherItemMenuTrigger="matMenuTrigger"></div>
+<mat-menu #otherItemMenu="matMenu">
+	<button
+		mat-menu-item
+		*ngFor="let collection of collectionsForTopMenu"
+		[value]="collection.id"
+		(click)="selectCollection(collection.id)">
+		{{ collection.title }}
+	</button>
+</mat-menu>
+
+<ng-container *ngIf="collection$$$.$ | async as collection; else noCollection">
+	<header class="rs-header">
+		<button
+			*ngIf="layoutSize < 1"
+			class="rs-goback"
+			mat-stroked-button
+			[routerLink]="'/collections'">
+			<mat-icon>arrow_back</mat-icon>
+		</button>
+		<section class="title">
+			<h2>
+				<span class="object-category">Collection:</span>&nbsp;<em>{{ collection.title }}</em>
+			</h2>
+		</section>
+
+		<button
+			mat-raised-button
+			(click)="editCollection()"
+			class="rs-btn-new btn-edit-collection">
+			<mat-icon>edit</mat-icon>
+		</button>
+
+		<button
+			mat-raised-button
+			*ngIf="collection.customWebsite"
+			(click)="openCollectionPublicPage(collection.customWebsite)"
+			class="rs-btn-new">
+			<mat-icon>launch</mat-icon> Open public page
+		</button>
+
+		<button
+			mat-raised-button
+			*ngIf="collection.typeId === 'podcast' && rssFeedLink"
+			[cdkCopyToClipboard]="rssFeedLink"
+			(cdkCopyToClipboardCopied)="processCopyToClipboardEvent($event, 'RSS feed link copied to clipboard!')"
+			(click)="getRSSFeedXMLLink()"
+			class="rs-btn-new">
+			<mat-icon>rss_feed</mat-icon> Copy RSS Feed link
+		</button>
+	</header>
+	<div class="collection-editor-container">
+		<section class="collection-property">
+			<div class="collection-title">
+				<mat-chip-list>
+					<mat-chip>{{ displayValueType(collection) }}</mat-chip>
+					<mat-chip
+						*ngFor="let category of collection.categoryIds"
+						class="yellow-chip"
+						>{{ displayValueCaterogy(category) }}</mat-chip
+					>
+				</mat-chip-list>
+			</div>
+
+			<div class="header">
+				<h3>Artwork</h3>
+			</div>
+			<div class="body">
+				<image
+					*ngIf="artworkUrl; else noArtworkTpl"
+					[imageUrl]="artworkUrl"
+					[displaySelectButton]="false"
+					[displayDeleteButton]="true"
+					[objectFit]="'contain'"
+					(deleteImageEvent)="deleteArtwork()">
+				</image>
+				<ng-template #noArtworkTpl>
+					<div class="rs-file-drop-area">
+						<span>Choose an image</span>
+						<input
+							class="rs-drop-btn"
+							[multiple]="false"
+							[accept]="acceptedFileExtensionsString"
+							(change)="handleArtworkFileList($event)"
+							(click)="$event.preventDefault(); handleArtworkFileList(undefined)"
+							type="file" /></div
+				></ng-template>
+			</div>
+
+			<div class="header">
+				<h3>Description</h3>
+			</div>
+			<div class="body">
+				<span *ngIf="(collection.description ?? '').length > 0; else noDescriptionTpl">
+					{{ collection.description }}
+				</span>
+				<ng-template #noDescriptionTpl>
+					<span>
+						No description defined yet.
+						<button
+							mat-stroked-button
+							(click)="editCollection()">
+							Edit
+						</button>
+					</span>
+				</ng-template>
+			</div>
+
+			<div class="header">
+				<h3>Author name</h3>
+			</div>
+			<div class="body">
+				<span>
+					{{ collection.publicAuthorName }}
+				</span>
+			</div>
+
+			<div class="header">
+				<h3>Language</h3>
+			</div>
+			<div class="body">
+				<span *ngIf="currentLanguage; else noLanguageTpl">
+					{{ currentLanguage.fullName }}
+				</span>
+				<ng-template #noLanguageTpl>
+					<p>
+						No description defined yet.
+						<button
+							mat-stroked-button
+							(click)="editCollection()">
+							Edit
+						</button>
+					</p>
+				</ng-template>
+			</div>
+			<div class="header">
+				<h3>Explicit content</h3>
+			</div>
+			<div class="body">
+				<span>
+					{{ collection.isExplicit ? 'Yes' : 'No' }}
+				</span>
+			</div>
+		</section>
+
+		<section class="collection-property">
+			<div class="item-header">
+				<h3>Item list</h3>
+				<mat-menu #itemCandidatesMenu="matMenu">
+					<button
+						mat-menu-item
+						*ngFor="let itemCandidate of candidateItemsToAddToCollection"
+						(click)="addItemToCollection(itemCandidate.id)">
+						{{ itemCandidate.title }}
+					</button>
+					<button
+						mat-menu-item
+						(click)="createNewItemForCollection()">
+						Create a new item
+					</button>
+				</mat-menu>
+			</div>
+			<div
+				class="item-container"
+				cdkDropList
+				(cdkDropListDropped)="drop($event)">
+				<!-- 
+				[cdkDropListData]="itemsWithRanks"
+			 -->
+
+				<ng-container *ngFor="let itemRank of collection.ranks">
+					<div
+						class="item-with-rank"
+						[cdkDragStartDelay]="{ touch: 200, mouse: 0 }"
+						cdkDrag>
+						<span
+							class="rank rs-clickable rs-flex-center"
+							cdkDragHandle
+							><mat-icon>drag_handle</mat-icon>{{ itemRank[1] + 1 }}.</span
+						>
+						<div class="item rs-no-select">
+							<rumble-pwa-item
+								[canEdit]="true"
+								[itemId]="itemRank[0]"
+								[collectionId]="collection$$$.id"
+								[rank]="itemRank[1]"></rumble-pwa-item>
+						</div>
+					</div>
+				</ng-container>
+				<div
+					class="item-with-rank add-item rs-clickable"
+					[matMenuTriggerFor]="itemCandidatesMenu">
+					Add a new item to this collection
+				</div>
+			</div>
+		</section>
+	</div>
+</ng-container>
+
+<ng-template #noCollection>
+	<button
+		mat-raised-button
+		[routerLink]="'/collections'">
+		<mat-icon>arrow_back</mat-icon>
+		Go back to all collections
+	</button>
+
+	<div class="collection-editor-container">Collection not loaded yet.</div>
+</ng-template>

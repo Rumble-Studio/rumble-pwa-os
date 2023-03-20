@@ -1,0 +1,36 @@
+:host {
+	display: flex;
+	justify-content: left;
+	align-items: center;
+}
+.todo-item-title {
+	font-weight: bolder;
+	margin-right: 10px;
+
+	position: relative;
+
+	&::before {
+		/* Highlight color */
+		background-color: var(--rs-yellow-light);
+
+		content: '';
+		position: absolute;
+		width: calc(100% + 4px);
+		height: 60%;
+		left: -2px;
+		bottom: 0;
+		z-index: -1;
+		transform: rotate(-2deg);
+	}
+}
+
+.action-btn {
+	color: var(--rs-yellow-light);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+
+	&:hover {
+		color: var(--rs-yellow);
+	}
+}

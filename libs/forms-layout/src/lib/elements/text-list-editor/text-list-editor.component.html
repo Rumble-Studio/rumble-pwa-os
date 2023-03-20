@@ -1,0 +1,50 @@
+<div *ngIf="textList?.length || 0 > 0; else noItemTpl">
+	<span class="item-list-label">Options:</span>
+	<ul
+		cdkDropList
+		(cdkDropListDropped)="drop($event)">
+		<li
+			class="handle"
+			cdkDrag
+			*ngFor="let item of (textList || '').split(';'); let itemIndex = index">
+			<div
+				*ngIf="item.length > 0"
+				class="item">
+				<p>{{ item }}</p>
+				<p
+					class="delete-item"
+					(click)="deleteItemFromList(itemIndex)">
+					<mat-icon>delete</mat-icon>
+				</p>
+			</div>
+		</li>
+	</ul>
+	<ng-container *ngTemplateOutlet="addNewItem"></ng-container>
+</div>
+
+<ng-template #noItemTpl>
+	<ng-container *ngTemplateOutlet="addNewItem"></ng-container>
+</ng-template>
+
+<ng-template #addNewItem>
+	<ul class="custom-list-container">
+		<li class="custom-list">
+			<mat-form-field
+				class="attribute text rs-full-width"
+				appearance="outline">
+				<mat-label>Add a new option</mat-label>
+				<input
+					#addItemInput
+					matInput
+					[(ngModel)]="inputValue" />
+			</mat-form-field>
+			<button
+				mat-raised-button
+				(click)="addItemToList(addItemInput.value)"
+				(keyup.enter)="addItemToList(addItemInput.value)"
+				[disabled]="!addItemInput.value">
+				<mat-icon>add_circle_outline</mat-icon>
+			</button>
+		</li>
+	</ul>
+</ng-template>

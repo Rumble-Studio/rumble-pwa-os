@@ -1,0 +1,149 @@
+<div *ngIf="dataSource.data.length; else noDataSourceTpl">
+	<div class="table-header rs-full-width">
+		<mat-form-field appearance="outline">
+			<mat-label>Filter</mat-label>
+			<input
+				matInput
+				(keyup)="applyFilter($event)"
+				placeholder="Ex. My Company"
+				#input />
+		</mat-form-field>
+		<div
+			class="header-actions"
+			*ngIf="layoutSize > 0">
+			<button
+				type="button"
+				mat-raised-button
+				[disabled]="notificationIdsChecked.length < 1"
+				(click)="toggleSeenAll(true)">
+				<mat-icon>mail_outline</mat-icon>
+				Mark as seen
+			</button>
+
+			<button
+				type="button"
+				mat-raised-button
+				[disabled]="notificationIdsChecked.length < 1"
+				(click)="toggleSeenAll(false)">
+				<mat-icon>email</mat-icon>
+				Mark as unseen
+			</button>
+		</div>
+	</div>
+
+	<div class="mat-elevation-z8">
+		<mat-table
+			[dataSource]="dataSource"
+			matSort
+			matSortActive="timeCreation"
+			matSortDirection="desc">
+			<!-- checkbox column -->
+			<ng-container matColumnDef="checkbox">
+				<mat-header-cell *matHeaderCellDef
+					><mat-checkbox
+						class="example-margin"
+						[checked]="notificationIdsChecked.length === notifications.length"
+						(change)="notificationsCheckedAllUpdate($event.checked)"></mat-checkbox
+				></mat-header-cell>
+				<mat-cell
+					*matCellDef="let row"
+					(click)="$event.stopPropagation()">
+					<div class="cell-container">
+						<mat-checkbox
+							class="example-margin"
+							[checked]="notificationIdsChecked.includes(row.id)"
+							(change)="notificationsCheckedUpdate(row.id, $event.checked)"></mat-checkbox>
+					</div>
+				</mat-cell>
+			</ng-container>
+
+			<!-- name Column -->
+			<ng-container matColumnDef="title">
+				<mat-header-cell
+					*matHeaderCellDef
+					mat-sort-header>
+					Title
+				</mat-header-cell>
+				<mat-cell *matCellDef="let row">
+					<div class="cell-container">
+						<div class="title-container">
+							<mat-icon>{{ getNotificationIcon(row) }}</mat-icon
+							>{{ row.title }}
+						</div>
+					</div>
+				</mat-cell>
+			</ng-container>
+
+			<!-- description Column -->
+			<ng-container matColumnDef="description">
+				<mat-header-cell
+					*matHeaderCellDef
+					mat-sort-header>
+					Description
+				</mat-header-cell>
+				<mat-cell *matCellDef="let row">
+					<div class="cell-container">{{ row.description }}</div>
+				</mat-cell>
+			</ng-container>
+
+			<ng-container matColumnDef="timeCreation">
+				<mat-header-cell
+					*matHeaderCellDef
+					mat-sort-header>
+					<mat-icon>date_range</mat-icon>
+				</mat-header-cell>
+				<mat-cell *matCellDef="let row">
+					<div class="cell-container">
+						{{ row.timeCreation * 1000 | date: 'short' }}
+					</div>
+				</mat-cell>
+			</ng-container>
+
+			<ng-container matColumnDef="options">
+				<mat-header-cell *matHeaderCellDef></mat-header-cell>
+				<mat-cell
+					*matCellDef="let row"
+					(click)="$event.stopImmediatePropagation()">
+					<button
+						mat-icon-button
+						[matMenuTriggerFor]="menu">
+						<mat-icon>more_vert</mat-icon>
+					</button>
+					<mat-menu #menu="matMenu">
+						<button
+							mat-menu-item
+							(click)="toggleSeen(row)">
+							<mat-icon>{{ userId && row.hasSeenByIds[userId] ? 'email' : 'mail_outline' }}</mat-icon
+							>Mark as {{ userId && row.hasSeenByIds[userId] ? 'unread' : 'read' }}
+						</button>
+					</mat-menu>
+				</mat-cell>
+			</ng-container>
+
+			<mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+			<mat-row
+				class="notification-row rs-clickable"
+				[ngClass]="{ unseen: !(userId && row.hasSeenByIds[userId]) }"
+				*matRowDef="let row; columns: displayedColumns"
+				[routerLink]="row.id"></mat-row>
+
+			<!-- Row shown when there is no matching data. -->
+			<tr
+				class="mat-row"
+				*matNoDataRow>
+				<td
+					class="mat-cell"
+					colspan="4">
+					No notifications matching the filter "{{ input.value }}"
+				</td>
+			</tr>
+		</mat-table>
+
+		<mat-paginator
+			pageSize="25"
+			[pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+	</div>
+</div>
+<ng-template #noDataSourceTpl>
+	<mat-card> No notifications. </mat-card>
+</ng-template>

@@ -1,0 +1,115 @@
+:host {
+	display: block;
+}
+
+.pricing-table {
+	max-width: 500px;
+	width: calc(100% - 40px);
+	margin: 20px;
+	border-radius: 7px;
+
+	background: #fff;
+	box-shadow: 0px 1px 10px -6px rgba(0, 0, 0, 0.15);
+	padding: 2rem;
+	border-radius: 4px;
+	transition: 0.3s;
+
+	&:hover {
+		box-shadow: 0px 1px 10px -4px rgba(0, 0, 0, 0.15);
+	}
+
+	.pricing-label {
+		border-radius: 2px;
+		padding: 0.25rem 0.5rem;
+		margin: 1rem;
+		display: inline-block;
+		font-size: 12px;
+		font-weight: 500;
+		// background: #cad2ff;
+		// color: #627afe;
+
+		color: black;
+		background-color: var(--rs-yellow-light);
+	}
+
+	h2 {
+		color: #3b3b3b;
+		font-size: 24px;
+		font-weight: 500;
+	}
+
+	h5 {
+		color: #b3b3b3;
+		font-size: 14px;
+		font-weight: 400;
+	}
+
+	.pricing-features {
+		margin-top: 2rem;
+		.feature {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			font-size: 14px;
+			margin: 0.5rem 0;
+			color: #b3b3b3;
+
+			// background-color: blue;
+
+			.feature-unit {
+				display: inline-block;
+				color: #3b3b3b;
+				font-weight: 500;
+			}
+
+			&.notAvailable {
+				color: #b3b3b3;
+				text-decoration: line-through black;
+			}
+		}
+	}
+
+	.price-tag {
+		margin-top: 2rem;
+		text-align: center;
+		font-weight: 500;
+		color: #627afe;
+		color: var(--rs-yellow);
+		.symbol {
+			font-size: 24px;
+		}
+
+		.amount {
+			letter-spacing: -2px;
+			font-size: 64px;
+		}
+
+		.after {
+			color: #3b3b3b;
+			font-weight: 500;
+		}
+	}
+
+	.price-button {
+		display: block;
+		color: #fff;
+		margin-top: 2rem;
+		padding: 0.75rem;
+		border-radius: 2px;
+		text-align: center;
+		font-weight: 500;
+		transition: 0.3s;
+		// background: #627afe;
+		background-color: var(--rs-yellow-light);
+		color: black;
+		&:hover {
+			text-decoration: none;
+			// background: #546dfe;
+			background-color: var(--rs-yellow);
+		}
+	}
+}
+
+.bigTaco {
+	font-size: 100px;
+}

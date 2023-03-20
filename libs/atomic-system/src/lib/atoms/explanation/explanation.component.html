@@ -1,0 +1,7 @@
+<div (click)="tooltip.toggle()">
+	<span class="question-mark">?</span>
+</div>
+<span
+	#tooltip="matTooltip"
+	[matTooltip]="msg"
+	[matTooltipHideDelay]="5000"></span>

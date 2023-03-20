@@ -1,0 +1,15 @@
+<!-- MENU FOR OTHER ITEMS  -->
+<div
+	[matMenuTriggerFor]="otherItemMenu"
+	#otherItemMenuTrigger="matMenuTrigger"></div>
+<mat-menu #otherItemMenu="matMenu">
+	<button
+		mat-menu-item
+		*ngFor="let page of pages"
+		[value]="page.id"
+		(click)="selectPage(page.id)">
+		{{ page.name }}
+	</button>
+</mat-menu>
+
+<rumble-pwa-page-item [pageId]="page$$$.id"></rumble-pwa-page-item>

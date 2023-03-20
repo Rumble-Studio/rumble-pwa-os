@@ -1,0 +1,50 @@
+<header class="header">
+	<h1>Users dashboard (admin 🛠️)</h1>
+</header>
+<mat-tab-group
+	#matTabGroup
+	mat-align-tabs="start"
+	(selectedTabChange)="tabChanged($event)">
+	<mat-tab label="Users">
+		<ng-container *ngTemplateOutlet="users"></ng-container>
+	</mat-tab>
+	<!-- <mat-tab label="Tasks">
+		<ng-container *ngTemplateOutlet="tasks"></ng-container>
+	</mat-tab>
+	<mat-tab label="Groups">
+		<ng-container *ngTemplateOutlet="groups"></ng-container>
+	</mat-tab>
+	<mat-tab label="Permissions">
+		<ng-container *ngTemplateOutlet="permissions"></ng-container>
+	</mat-tab>
+	<mat-tab label="Operations">
+		<ng-container *ngTemplateOutlet="operations"></ng-container>
+	</mat-tab>
+	<mat-tab label="Grants">
+		<ng-container *ngTemplateOutlet="grants"></ng-container>
+	</mat-tab> -->
+</mat-tab-group>
+
+<ng-template #users>
+	<rumble-pwa-users-list class="module"></rumble-pwa-users-list>
+</ng-template>
+
+<!-- <ng-template #tasks>
+	<rumble-pwa-tasks-list class="module"></rumble-pwa-tasks-list>
+</ng-template>
+
+<ng-template #groups>
+	<rumble-pwa-groups-list class="module"></rumble-pwa-groups-list>
+</ng-template>
+
+<ng-template #permissions>
+	<rumble-pwa-permissions-list class="module"></rumble-pwa-permissions-list>
+</ng-template>
+
+<ng-template #operations>
+	<rumble-pwa-operations-list class="module"></rumble-pwa-operations-list>
+</ng-template>
+
+<ng-template #grants>
+	<rumble-pwa-grants-list class="module"></rumble-pwa-grants-list>
+</ng-template> -->

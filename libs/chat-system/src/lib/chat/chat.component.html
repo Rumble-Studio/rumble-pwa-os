@@ -1,0 +1,50 @@
+<p>
+	Welcome to the chat <b>{{ pseudo }}</b>
+</p>
+<div class="chat">
+	<div
+		class="activable"
+		(click)="reduceChatWindow()">
+		<p *ngIf="channelId; else noChat">Chatting on room : {{ channelId }}</p>
+		<ng-template #noChat>No chatting room</ng-template>
+	</div>
+	<ul class="chatFeed">
+		<ng-container *ngFor="let message of messageList">
+			<li>
+				<span>{{ message.timestamp | date: 'HH:mm' }}</span
+				>{{ message.sender }} : {{ message.message }}
+			</li>
+		</ng-container>
+	</ul>
+	<div class="chatWidget">
+		<form
+			#msgForm="ngForm"
+			(submit)="sendMessage(msgForm)"
+			class="message">
+			<input
+				type="text"
+				placeholder="Chat here..."
+				ngModel
+				name="message" />
+			<input
+				type="text"
+				type="submit"
+				value="Send" />
+		</form>
+		<button (click)="leaveChat()">Leave</button>
+	</div>
+	<form
+		#channelForm="ngForm"
+		(submit)="joinChat(channelForm)"
+		class="channelForm">
+		<input
+			type="text"
+			placeholder="Channel ID"
+			ngModel
+			name="channel" />
+		<input
+			type="text"
+			type="submit"
+			value="join" />
+	</form>
+</div>

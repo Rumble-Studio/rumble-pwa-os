@@ -1,0 +1,64 @@
+.collection-editor-container {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	// padding: 5px;
+	position: relative;
+	justify-content: center;
+	padding: 20px;
+}
+
+.collection-property {
+	padding: 10px 20px;
+	border: 1px solid lightgrey;
+	border-radius: 10px;
+	background-color: white;
+	margin-bottom: 20px;
+
+	.item-container {
+		.item-with-rank {
+			display: flex;
+			align-items: center;
+
+			&.add-item {
+				height: 50px;
+				justify-content: center;
+				border: 1px solid #4f4f4f;
+				border-radius: 3px;
+			}
+
+			.rank {
+				width: 50px;
+			}
+			.item {
+				width: 100%;
+			}
+		}
+	}
+}
+
+.collection-title {
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+	margin-top: 10px;
+}
+
+.item-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	margin-top: 10px;
+}
+
+.yellow-chip {
+	background-color: var(--rs-yellow-light);
+}
+
+.property {
+	min-height: 30px;
+	margin: 5px 0;
+	.property-title {
+		font-weight: bold;
+	}
+}

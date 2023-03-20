@@ -1,0 +1,147 @@
+<!-- <mat-slide-toggle [(ngModel)]="displaySharedForms">Display shared interviews</mat-slide-toggle> <br /><br /> -->
+<ng-container *ngIf="searchableForms.length > 0; else noInterviewsTpl">
+	<!-- form selection -->
+	<mat-form-field
+		appearance="outline"
+		class="rs-full-width">
+		<mat-label>Select an interview</mat-label>
+
+		<mat-chip-list
+			#chipList
+			aria-label="Interview selection">
+			<mat-chip
+				(removed)="removeForm()"
+				*ngIf="!!selectedForm">
+				{{ selectedForm.title }}
+				<button matChipRemove>
+					<mat-icon>cancel</mat-icon>
+				</button> </mat-chip
+			><input
+				*ngIf="!selectedForm"
+				placeholder="Ex. Simone's interview"
+				#formInput
+				[formControl]="formSelectionCtrl"
+				[matAutocomplete]="auto"
+				[matChipInputFor]="chipList"
+				[matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+				(matChipInputTokenEnd)="addFormWithInput()" />
+		</mat-chip-list>
+
+		<mat-autocomplete
+			#auto="matAutocomplete"
+			(optionSelected)="selectForm($event)">
+			<mat-option
+				*ngFor="let form of searchableForms"
+				[value]="form">
+				<mat-icon
+					class="shared-icon"
+					*ngIf="form.ownerId !== profile?.id"
+					[matTooltip]="'Shared interview'"
+					>groups</mat-icon
+				>
+				{{ form.title }} ({{ form.numberOfRecordingSessions }} guest{{
+					form.numberOfRecordingSessions <= 1 ? '' : 's'
+				}})
+			</mat-option>
+		</mat-autocomplete>
+	</mat-form-field>
+
+	<!-- recording sessions selection and virtual playlist-->
+	<ng-container *ngIf="selectedForm; else noFormSelectedTpl">
+		<button
+			class="rs-full-width"
+			mat-raised-button
+			[routerLink]="['/forms/editor/' + formId]"
+			[queryParams]="{ drawer: 'step', action: 'listen' }">
+			Go to this interview
+		</button>
+		<br /><br />
+
+		<mat-slide-toggle
+			*ngIf="hideAnswersWithoutAudioToggle"
+			[(ngModel)]="displaySessionsWithAudioOnly"
+			>Hide answers without audio</mat-slide-toggle
+		>
+		<div
+			class="exporter-container"
+			*ngIf="recordingSessionsListItems.length > 0; else noRecordingSessionsAvailableTpl">
+			<!-- recording sessions selection -->
+			<form class="sessions-list rs-no-select">
+				<mat-form-field
+					class="rs-full-width"
+					appearance="outline">
+					<mat-label>Select some guests</mat-label>
+
+					<mat-select
+						[(ngModel)]="selectedRecordedSessionIds"
+						name="sessions"
+						multiple>
+						<!-- <mat-option [value]="'host-content'">HOST contents</mat-option> -->
+						<mat-select-trigger>
+							<ng-container
+								*ngIf="selectedRecordedSessionIds.length > 0; else multpleRecordingSessionsSelectedTpl">
+								<rumble-pwa-group-item-generic
+									*ngFor="let recordingSessionListItem of selectedRecordingSessionsListItems"
+									[groupId]="recordingSessionListItem.user.id"></rumble-pwa-group-item-generic>
+							</ng-container>
+							<ng-template #multpleRecordingSessionsSelectedTpl>
+								<span>{{ selectedRecordedSessionIds.length }} guests selected</span>
+							</ng-template>
+						</mat-select-trigger>
+						<mat-option
+							*ngFor="let recordingSessionsListItem of recordingSessionsListItems"
+							[value]="recordingSessionsListItem.recordingSession.id">
+							<rumble-pwa-group-item-generic
+								[groupId]="recordingSessionsListItem.user.id"></rumble-pwa-group-item-generic>
+						</mat-option>
+					</mat-select>
+				</mat-form-field>
+			</form>
+
+			<button
+				*ngIf="displayAddAllBtn && selectedRecordingSessionHasTracks"
+				class="add-all-btn rs-full-width"
+				mat-raised-button
+				(click)="emitAllVirtualTracks()">
+				Add all audio segments
+			</button>
+
+			<!-- virtual playlist  -->
+			<div
+				*ngIf="selectedRecordedSessionIds.length > 0; else noSelectedSourceTpl"
+				class="example-container">
+				<rumble-pwa-virtual-playlist
+					class="virtual-playlist"
+					[state]="state"
+					[canDrag]="true"
+					[displayTranscript]="true"
+					[displayFavorite]="true"
+					[displayDetails]="true"
+					[connectDropTo]="connectDropTo"
+					[playlistIdentifier]="'fas-' + formId"
+					[displayTrackPlayerActions]="true"
+					(clickTrackEvent)="processClickTrackEvent($event)">
+				</rumble-pwa-virtual-playlist>
+			</div>
+			<!-- when no recording sessions are selected  -->
+			<ng-template #noSelectedSourceTpl>
+				<span class="builder-title">Please select a guest above.</span>
+			</ng-template>
+		</div>
+		<ng-template #noRecordingSessionsAvailableTpl> You have no guest recordings available yet. </ng-template>
+	</ng-container>
+
+	<!-- when no form is selected -->
+	<ng-template #noFormSelectedTpl>
+		<span class="builder-title">Please select an interview above.</span>
+	</ng-template>
+</ng-container>
+
+<ng-template #noInterviewsTpl>
+	You have no interviews yet.
+	<div
+		class="rs-cta rs-clickable"
+		(click)="createANewForm()">
+		<span>Create a new interview</span>
+	</div>
+</ng-template>

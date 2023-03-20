@@ -1,0 +1,24 @@
+<header class="rs-header">
+	<button
+		class="rs-goback"
+		*ngIf="layoutSize < 1"
+		mat-stroked-button
+		[routerLink]="'/dashboard'">
+		<mat-icon>arrow_back</mat-icon>
+	</button>
+	<section class="title">
+		<span class="object-category">Mixes</span>
+		<button
+			(click)="openDialog()"
+			mat-raised-button
+			class="rs-btn-new"
+			data-cy="create-mix-more-button">
+			<mat-icon>add</mat-icon>
+			New
+		</button>
+	</section>
+</header>
+<rumble-pwa-mix-list
+	[mixes]="mixes"
+	[(displayArchivedMixes)]="displayArchivedMixes"
+	(tableClickEventEmitter)="processTableClick($event)"></rumble-pwa-mix-list>

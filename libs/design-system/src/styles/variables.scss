@@ -1,0 +1,54 @@
+:root {
+	/** RS Custom **/
+
+	--rs-yellow: #f5ca1b; //	hsl(48, 92%, 53%)
+	--rs-green: #4aaf51; // hsl(124, 41%, 49%)
+	--rs-blue: #4196d4; // hsl(205, 63%, 54%);
+	--rs-pink: #e71d64; // hsl(339, 81%, 51%);
+	--rs-red: #ea5a5a; // hsl(0, 77%, 64%);
+
+	--rs-yellow-light: hsl(48, 92%, 75%); //	hsl(48, 92%, 53%)
+	--rs-green-light: hsl(124, 41%, 75%); // hsl(124, 41%, 49%)
+	--rs-blue-light: hsl(205, 63%, 75%); // hsl(205, 63%, 54%);
+	--rs-pink-light: hsl(339, 81%, 75%); // hsl(0, 77%, 64%);
+	--rs-red-light: hsl(0, 77%, 75%); // hsl(0, 77%, 64%);
+
+	--rs-yellow-lighter: hsl(48, 92%, 85%); //	hsl(48, 92%, 53%)
+	--rs-green-lighter: hsl(124, 41%, 85%); // hsl(124, 41%, 49%)
+	--rs-blue-lighter: hsl(205, 63%, 85%); // hsl(205, 63%, 54%);
+	--rs-pink-lighter: hsl(339, 81%, 85%); // hsl(0, 77%, 64%);
+	--rs-red-lighter: hsl(0, 77%, 85%); // hsl(0, 77%, 64%);
+
+	--rs-yellow-super-light: hsl(48, 92%, 90%); //	hsl(48, 92%, 53%)
+	--rs-green-super-light: hsl(124, 41%, 90%); // hsl(124, 41%, 49%)
+	--rs-blue-super-light: hsl(205, 63%, 90%); // hsl(205, 63%, 54%);
+	--rs-pink-super-light: hsl(339, 81%, 90%); // hsl(0, 77%, 64%);
+	--rs-red-super-light: hsl(0, 77%, 90%); // hsl(0, 77%, 64%);
+
+	--rs-yellow-dark: hsl(48, 92%, 40%); //	hsl(48, 92%, 53%)
+	--rs-green-dark: hsl(124, 41%, 40%); // hsl(124, 41%, 49%)
+	--rs-blue-dark: hsl(205, 63%, 40%); // hsl(205, 63%, 54%);
+	--rs-pink-dark: hsl(339, 81%, 40%); // hsl(0, 77%, 64%);
+	--rs-red-dark: hsl(0, 77%, 40%); // hsl(0, 77%, 64%);
+
+	--rs-white: #f1f5f6; // original
+	--rs-white-darker: #e7eaeb; // darker
+
+	--rs-green-disabled: #608678;
+
+	--rs-animation-speed: 0.3s;
+
+	--rs-text-grey-dark: #3f4147;
+	--rs-text-grey: #8791aa;
+	--rs-shadow-grey: #d7dded;
+	--rs-background-dashboard: #f4f6f8;
+	--rs-shadow-grey-light: hsla(224, 38%, 90%);
+	--rs-shadow-grey-lighter: rgba(220, 225, 239, 0.122);
+
+	--rs-yellow-a: rgba(245, 201, 27, 0.2); //	hsl(48, 92%, 53%)
+	--rs-blue-a: rgba(65, 151, 212, 0.2); // hsl(205, 63%, 54%);
+
+	--rs-yellow-light-a: hsla(48, 92%, 75%, 0.1); //	hsl(48, 92%, 53%)
+	--rs-yellow-super-light-a: rgba(253, 244, 206, 0.3);
+	--rs-yellow-dark-a: rgba(196, 158, 8, 0.3);
+}

@@ -1,0 +1,122 @@
+<ng-container *ngIf="page$$$.$ | async as page; else noPage">
+	<header class="rs-header">
+		<button
+			class="rs-goback"
+			mat-stroked-button
+			[routerLink]="'/pages'">
+			<mat-icon>arrow_back</mat-icon>
+		</button>
+		<section class="title">
+			<h2>
+				<span class="page-category">Page:</span>&nbsp;<em>{{ page.name }}</em>
+			</h2>
+		</section>
+
+		<button
+			mat-raised-button
+			class="rs-btn-new"
+			(click)="openObjectPrompt()">
+			<mat-icon>edit</mat-icon>
+		</button>
+
+		<a
+			*ngIf="fullUrl"
+			[href]="fullUrl"
+			[title]="fullUrl"
+			target="_blank">
+			<button
+				mat-raised-button
+				class="rs-btn-new">
+				Open the page <mat-icon>open_in_new</mat-icon>
+			</button>
+		</a>
+	</header>
+
+	<div class="rs-editor-container">
+		<ng-container *ngIf="page.description">
+			<div class="header">
+				<h3>Description</h3>
+			</div>
+			<div class="body">{{ page.description }}</div>
+			<hr />
+		</ng-container>
+
+		<!-- url path -->
+		<ng-container *ngIf="fullUrl">
+			<div class="header">
+				<h3>URL path</h3>
+			</div>
+			<div class="body">
+				<a
+					[href]="fullUrl"
+					[title]="fullUrl"
+					target="_blank">
+					<pill>{{ fullUrl }} <span class="material-icons-outlined rs-text-small">open_in_new</span></pill>
+				</a>
+			</div>
+			<br />
+			<hr />
+		</ng-container>
+
+		<!-- kind of page -->
+		<div class="header">
+			<h3>Page kind</h3>
+		</div>
+		<div class="body">
+			<pill>{{ page.kind }}</pill>
+		</div>
+		<br />
+		<hr />
+
+		<!-- page title  -->
+		<div class="header">
+			<h3>Page title</h3>
+		</div>
+		<div class="body">
+			<pill>{{ page.publicTitle }}</pill>
+		</div>
+		<br />
+		<hr />
+
+		<!-- page fav icon  -->
+		<div class="header">
+			<h3>Page favorite icon</h3>
+		</div>
+		<div class="body">
+			<image
+				*ngIf="faviconThumbnail?.imageUrl"
+				[imageUrl]="faviconThumbnail!.imageUrl"
+				[displaySelectButton]="true"
+				[selectButtonText]="'Edit'"
+				(imageSelectionEvent)="updateFavicon()"
+				[displayDeleteButton]="faviconThumbnail?.imageUrl != '/assets/avatar.png'"
+				(deleteImageEvent)="removeFavicon()"
+				[displayPaletteButton]="false">
+			</image>
+		</div>
+		<br />
+		<hr />
+
+		<!-- domain  -->
+		<div class="header">
+			<h3>Associated domain</h3>
+		</div>
+		<div
+			class="body rs-clickable"
+			[routerLink]="'/domains/' + domain$$$.value?.id">
+			<pill>{{ domain$$$.value?.name }} ({{ domain$$$.value?.url }})</pill>
+		</div>
+		<br />
+		<hr />
+	</div>
+</ng-container>
+<ng-template #noPage>
+	<button
+		mat-raised-button
+		[routerLink]="'/pages'">
+		<mat-icon>arrow_back</mat-icon>
+		Go back to all pages
+	</button>
+
+	<div class="page-editor-container">Page kit not available.</div>
+</ng-template>

@@ -1,0 +1,128 @@
+<object-list
+	[objects]="entityExports"
+	(tableClickEvent)="processTableClick($event)"
+	[middleActionTpl]="includeArchivedToggleTpl"
+	[noDataSourceTpl]="noDataSource">
+	<object-column
+		[columnId]="'resultData'"
+		[flex]="0.2"
+		[template]="archiveOrAudioSegmentTpl">
+	</object-column>
+	<ng-template
+		#archiveOrAudioSegmentTpl
+		let-object="object">
+		<ng-container [ngSwitch]="getTaskStatus$(object) | async">
+			<ng-container *ngSwitchCase="'failed'">
+				<mat-icon>warning</mat-icon>
+			</ng-container>
+			<ng-container *ngSwitchCase="'in_progress'">
+				<mat-spinner [diameter]="25"></mat-spinner>
+			</ng-container>
+			<ng-container *ngSwitchCase="'default'">
+				<mat-icon
+					*ngIf="containsArchive(object)"
+					[matTooltip]="'This contains an archive.'"
+					>archive</mat-icon
+				>
+				<mat-icon
+					*ngIf="containsAudioSegment(object)"
+					[matTooltip]="'This contains audio segments.'"
+					>audiotrack</mat-icon
+				>
+			</ng-container>
+		</ng-container>
+	</ng-template>
+	<object-column
+		[columnId]="'name'"
+		[header]="'Name'"
+		[sortable]="true"></object-column>
+
+	<object-column
+		*ngIf="!isMobile"
+		[columnId]="'timeCreation'"
+		[header]="'Created at'"
+		[template]="createdAtTpl"
+		[sortable]="true">
+	</object-column>
+	<ng-template
+		#createdAtTpl
+		let-object="object">
+		{{ (object.timeCreation ?? 0) * 1000 | date: 'yy/MM/dd, HH:mm' }}
+	</ng-template>
+
+	<object-column
+		[columnId]="'duration'"
+		[header]="'Duration'"
+		[template]="durationTpl"
+		[sortable]="true">
+	</object-column>
+	<ng-template
+		#durationTpl
+		let-object="object">
+		<ng-container *ngIf="object.duration">
+			{{ object.duration | duration: 'showUnits' }}
+		</ng-container>
+	</ng-template>
+
+	<object-column
+		[columnId]="'mixId'"
+		[header]="'Source mix'"
+		[template]="sourceMixTpl">
+	</object-column>
+	<ng-template
+		#sourceMixTpl
+		let-object="object">
+		<span *ngIf="object.mixId">
+			<button
+				[matTooltip]="'Open the source mix'"
+				(click)="$event.stopImmediatePropagation()"
+				[routerLink]="['/mixes/' + object.mixId]"
+				mat-flat-button>
+				Open mix
+				<mat-icon class="clickable blue-btn">blender</mat-icon>
+			</button>
+		</span>
+	</ng-template>
+	<object-column
+		[columnId]="'option'"
+		[template]="optionTpl"
+		[flex]="0.2"
+		[sortable]="false">
+	</object-column>
+	<ng-template
+		#optionTpl
+		let-object="object">
+		<button
+			mat-icon-button
+			[matMenuTriggerFor]="menu"
+			(click)="$event.stopPropagation()">
+			<mat-icon>more_vert</mat-icon>
+		</button>
+		<mat-menu #menu="matMenu">
+			<button
+				mat-menu-item
+				(click)="openEditEntityExportPrompt(object)">
+				<mat-icon>edit</mat-icon>
+				<span>Edit</span>
+			</button>
+			<button
+				mat-menu-item
+				(click)="object.state === 'archived' ? restoreExport(object) : archiveExport(object)">
+				<mat-icon>{{ object.state === 'archived' ? 'unarchive' : 'archive' }}</mat-icon>
+				<span>{{ object.state === 'archived' ? 'Restore' : 'Archive' }}</span>
+			</button>
+		</mat-menu>
+	</ng-template>
+</object-list>
+
+<ng-template #includeArchivedToggleTpl>
+	<mat-slide-toggle
+		*ngIf="displayArchivedToggle"
+		[(ngModel)]="displayArchivedExports"
+		>Include archived export(s)</mat-slide-toggle
+	>
+</ng-template>
+
+<ng-template #noDataSource>
+	<mat-card>No export yet. Exports are a result of your mixes.</mat-card>
+</ng-template>

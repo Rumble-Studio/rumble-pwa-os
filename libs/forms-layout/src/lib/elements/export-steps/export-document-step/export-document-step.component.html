@@ -1,0 +1,21 @@
+<div class="export-document-step-container">
+	<span class="step-kind">Document request</span>
+	<span class="step-title">{{ steptitle }}</span>
+	<span
+		*ngIf="stepdescription"
+		class="step-hint"
+		>{{ stepdescription }}</span
+	>
+
+	<div *ngIf="documentPath; else noAnswerTpl">
+		<div class="document-container"></div>
+	</div>
+	<ng-template #noAnswerTpl><span class="no-answer"> No document uploaded </span></ng-template>
+</div>
+<button
+	*ngIf="documentPath"
+	(click)="downloadDocument()"
+	[matTooltip]="'Download this document'"
+	mat-raised-button>
+	<mat-icon>download</mat-icon>
+</button>

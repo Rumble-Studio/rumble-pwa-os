@@ -1,0 +1,44 @@
+.collection-list {
+	.title {
+		text-align: center;
+	}
+}
+
+table {
+	width: 100%;
+}
+
+tr.collection-detail-row {
+	height: 0;
+}
+
+tr.collection-element-row:not(.collection-expanded-row):hover {
+	background: whitesmoke;
+	cursor: pointer;
+}
+
+tr.collection-element-row:not(.collection-expanded-row):active {
+	background: #efefef;
+}
+
+.collection-element-row td {
+	border-bottom-width: 0;
+}
+
+.collection-element-detail {
+	overflow: hidden;
+	display: flex;
+}
+
+.collection-element-description {
+	padding: 16px;
+}
+
+.collection-cards {
+	display: flex;
+	flex-wrap: wrap;
+}
+
+.collection-row {
+	cursor: pointer;
+}

@@ -1,0 +1,244 @@
+<header class="rs-header">
+	<section class="dashboard title">
+		<span class="object-category"
+			>{{ 'Dashboard' | transloco }}
+			<!-- <a
+				class="rs-roadmap-link feature"
+				[routerLink]="['/roadmap/p', 'login-and-sign-up-with-google']"
+				>Login with google</a
+			> -->
+			<!--<rumble-pwa-tag-pill></rumble-pwa-tag-pill>-->
+
+			<!-- <upgrade
+				[upgrade]="{
+					id: 'upgrade:dashboard',
+					title: 'Start using Rumble Studio',
+					description: 'truc'
+				}">
+			</upgrade> -->
+		</span>
+	</section>
+</header>
+
+<todo-list
+	[title]="'Get started with Rumble Studio'"
+	[todos]="[
+		{
+			id: 'todo:dashboard-list-video',
+			title: 'Watch tutorial video (2 mins)',
+			description: 'Understand the basics of Rumble Studio. Watch it later from the help menu.'
+		},
+		{
+			id: 'todo:dashboard-list-create-interview',
+			title: 'Build an interview',
+			description: 'Gather your raw audio by interviewing guests or uploading your own.'
+		},
+		{
+			id: 'todo:dashboard-list-create-mix',
+			title: 'Create a mix',
+			description: 'Arrange your audio segments into a sequence and export your final production.'
+		},
+		{
+			id: 'todo:dashboard-list-create-brand',
+			title: 'Design a branding kit (optional)',
+			description: 'Customise your interviews and mixes by saving your favourite colors, fonts and audio segments.'
+		}
+	]"></todo-list>
+
+<todo-open
+	[todo]="{
+		id: 'todo:quick-intro-video-dashboard',
+		title: 'Quick intro of Rumble Studio',
+		description: 'Have a look to this video below to get a quick overview of how to create a podcast in Rumble Studio.',
+		youtubeVideo: 'https://www.youtube-nocookie.com/embed/GlOzMExZp7k',
+		confirmTerm: 'Dismiss'
+	}">
+</todo-open>
+<todo-open
+	[todo]="{
+		id: 'todo:pick-color-in-brand-editor',
+		title: 'Find your next action',
+		description: 'Click on the blinking helpers for tips and tricks on how to get the most out of Rumble Studio.',
+		img: '/assets/todos/todo-todos.gif',
+		displayConditions: ['todo:quick-intro-video-dashboard']
+	}">
+</todo-open>
+
+<section
+	class="KYC-container"
+	*ngIf="objectDetailsKYC && objectDetailsKYC.attributes.length > 0">
+	<rumble-pwa-object-prompt
+		[objectDetails]="objectDetailsKYC"
+		(promptResultEvent)="processPromptResultEvent($event)"
+		(promptCancelEvent)="processPromptCancelEvent()"></rumble-pwa-object-prompt>
+</section>
+
+<!-- <section class="table-section">
+	WIP
+	<upgrade
+		[upgrade]="{
+			id: 'upgrade:dashboard',
+			title: 'Start using Rumble Studio',
+			description: 'truc'
+		}">
+	</upgrade>
+
+	<div *ngIf="subscriptions.length === 0">
+		<p>You have no subscriptions yet. Check out our plans in the subsription</p>
+	</div>
+</section> -->
+
+<ng-container *ngIf="can$('menu-display-form') | async">
+	<!-- recording sessions from other guests -->
+	<section
+		*ngIf="lastGuests && lastGuests.length > 0"
+		class="table-section">
+		<header
+			class="rs-header"
+			[ngClass]="{ mobile: layoutSize < 1 }">
+			<section class="title">
+				<span class="object-category">Recent guests</span>
+			</section>
+		</header>
+		<div class="table-container">
+			<rumble-pwa-recording-session-list
+				[recordingSessions]="lastGuests"
+				[displayDownloadAllButton]="false"
+				[displayArchivedToggle]="false"
+				[displayArchivedSessions]="false"
+				[hideAnswersWithoutAudioToggle]="false"
+				[displayFormName]="true">
+			</rumble-pwa-recording-session-list>
+		</div>
+	</section>
+
+	<!-- interviews/forms -->
+	<section
+		class="table-section"
+		*ngIf="forms && forms.length > 0">
+		<header
+			class="rs-header"
+			[ngClass]="{ mobile: layoutSize < 1 }">
+			<section class="title">
+				<span
+					class="object-category rs-clickable"
+					[routerLink]="['/forms']"
+					>Recent interviews</span
+				>
+			</section>
+		</header>
+
+		<div class="table-container">
+			<rumble-pwa-form-list
+				[forms]="forms"
+				(tableClickEventEmitter)="processTableClick($event, 'forms/editor/')"
+				[displayArchivedToggle]="false"></rumble-pwa-form-list>
+		</div>
+	</section>
+</ng-container>
+
+<!-- recording sessions AS A GUEST-->
+<section
+	*ngIf="lastOwnedRecordingSessions.length > 0"
+	class="table-section">
+	<header
+		class="rs-header"
+		[ngClass]="{ mobile: isMobile }">
+		<section class="title">
+			<span class="object-category">Recent interviews as a guest</span>
+		</section>
+	</header>
+
+	<object-list
+		[objects]="lastOwnedRecordingSessions"
+		[convertObjectToSearchableString]="convertObjectToSearchableString">
+		<!-- play column -->
+		<ng-template
+			let-object="object"
+			#listenColumn>
+			<button
+				[matTooltip]="'Listen'"
+				(click)="$event.stopImmediatePropagation(); listenTo(object.recordingSession.id)"
+				mat-flat-button>
+				<mat-icon class="clickable blue-btn">play_arrow</mat-icon>
+			</button>
+		</ng-template>
+		<object-column
+			[columnId]="'listen'"
+			[header]="'Listen'"
+			[template]="listenColumn">
+		</object-column>
+
+		<!-- go to column -->
+		<ng-template
+			let-object="object"
+			#goToColumn>
+			<button
+				[matTooltip]="'Open this interview in a new tab'"
+				(click)="$event.stopImmediatePropagation(); goToLink('/forms/open/' + object.form.id)"
+				mat-flat-button>
+				<mat-icon class="clickable blue-btn">open_in_new</mat-icon>
+			</button>
+		</ng-template>
+		<object-column
+			[columnId]="'goto'"
+			[header]="'Open this interview'"
+			[template]="goToColumn">
+		</object-column>
+
+		<!-- title column -->
+		<ng-template
+			let-object="object"
+			#titleColumn>
+			{{ object.form.title }}
+		</ng-template>
+		<object-column
+			[columnId]="'title'"
+			[header]="'Interview'"
+			[template]="titleColumn"
+			[flex]="1">
+		</object-column>
+
+		<!-- owner column -->
+		<object-column
+			[columnId]="'owner'"
+			[header]="'Interview owner'"
+			[flex]="2"
+			[template]="ownerColumnTpl">
+		</object-column>
+		<ng-template
+			#ownerColumnTpl
+			let-object="object">
+			<div class="formOwner">
+				<rumble-pwa-group-item-generic
+					[hideIcon]="true"
+					[groupId]="object.form.ownerId"></rumble-pwa-group-item-generic>
+			</div>
+		</ng-template>
+	</object-list>
+</section>
+
+<ng-container *ngIf="can$('menu-display-mix') | async">
+	<!-- mixes -->
+	<section
+		*ngIf="lastMixes.length || 0 > 0"
+		class="table-section">
+		<header
+			class="rs-header"
+			[ngClass]="{ mobile: layoutSize < 1 }">
+			<section class="title">
+				<span
+					class="object-category rs-clickable"
+					[routerLink]="['/mixes']"
+					>Recent mixes</span
+				>
+			</section>
+		</header>
+		<div class="table-container">
+			<rumble-pwa-mix-list
+				[mixes]="lastMixes"
+				(tableClickEventEmitter)="processTableClick($event, 'mixes/')"
+				[displayArchivedToggle]="false"></rumble-pwa-mix-list>
+		</div>
+	</section>
+</ng-container>

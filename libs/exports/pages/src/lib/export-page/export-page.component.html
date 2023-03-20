@@ -1,0 +1,17 @@
+<!-- MENU FOR OTHER ITEMS  -->
+<div
+	[matMenuTriggerFor]="otherItemMenu"
+	#otherItemMenuTrigger="matMenuTrigger"></div>
+<mat-menu #otherItemMenu="matMenu">
+	<button
+		mat-menu-item
+		*ngFor="let export of exports"
+		[value]="export.id"
+		(click)="selectExport(export.id)">
+		{{ export.name }}
+	</button>
+</mat-menu>
+
+<rumble-pwa-export-item
+	[objectId]="export$$$.id"
+	[displayGoToMixBtn]="true"></rumble-pwa-export-item>

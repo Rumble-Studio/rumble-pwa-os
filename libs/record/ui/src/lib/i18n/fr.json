@@ -1,0 +1,18 @@
+{
+	"recordActions": {
+		"file": "fichier",
+		"audio": "audio",
+		"video": "vidéo",
+		"screen": "écran",
+		"record": "enregistrer",
+		"Get ready in:": "Enregistrement dans :",
+		"stop": "stop",
+		"Cancel": "Annuler",
+		"Upload a file": "Téléverser un fichier",
+		"Grant microphone access": "Autoriser l'accès au micro",
+		"Grant camera access": "Autoriser l'accès à la caméra",
+		"You must grant access to your microphone to record audio.": "Vous devez autoriser l'accès au micro pour enregistrer de l'audio.",
+		"You must grant access to your camera to record video.": "Vous devez autoriser l'accès à la webcam pour enregistrer de la vidéo.",
+		"No camera available": "Aucune caméra disponible"
+	}
+}

@@ -1,0 +1,14 @@
+<div
+	class="item-source"
+	[ngClass]="{
+		mobile: !isDesktop,
+		'yellow-background': favoriteStep
+	}">
+	<i class="material-icons-outlined">{{ icon }}</i
+	><span
+		[ngClass]="{
+			'single-line-item': isDesktop
+		}"
+		>{{ menuText }}</span
+	>
+</div>

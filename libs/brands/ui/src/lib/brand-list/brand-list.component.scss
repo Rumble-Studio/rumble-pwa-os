@@ -1,0 +1,30 @@
+tr {
+	cursor: pointer;
+	&:hover {
+		background-color: var(--rs-yellow-lighter);
+	}
+}
+
+.brand-image {
+	object-fit: contain;
+	background-color: white;
+
+	height: 40px;
+	width: 40px;
+	margin-right: 10px;
+	// border-radius: 50%;
+}
+
+.menu-disabled {
+	width: 40px;
+	text-align: center;
+	opacity: 0.5;
+}
+
+.shared-icon {
+	margin-right: 5px;
+}
+
+mat-slide-toggle {
+	margin: 5px;
+}

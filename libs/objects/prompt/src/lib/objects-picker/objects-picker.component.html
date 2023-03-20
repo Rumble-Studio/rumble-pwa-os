@@ -1,0 +1,31 @@
+<div
+	class="objects-picker-container"
+	[style.flex-wrap]="flexWrap">
+	<ng-container *ngFor="let objectItem of objectThumbnails; let objectIndex = index">
+		<image
+			*ngIf="objectItem.imageUrl; else noImageUrlTpl"
+			[imageUrl]="objectItem.imageUrl"
+			[displaySelectButton]="objectItem.displaySelectButton ?? displaySelectButton"
+			[selectButtonText]="selectButtonText"
+			(imageSelectionEvent)="selectObjectByIndex(objectIndex)"
+			[displayDeleteButton]="displayDeleteButton"
+			(deleteImageEvent)="deleteObjectByIndex(objectIndex)"
+			[displayPaletteButton]="displayPaletteButton"
+			(imagePaletteEvent)="emitColorsEvent($event)"
+			[objectFit]="objectFit">
+		</image>
+		<ng-template #noImageUrlTpl>
+			<ng-container *ngIf="objectItem.innerHTML; else noPreviewAvailableTpl">
+				<div [innerHTML]="objectItem.innerHTML"></div>
+			</ng-container>
+		</ng-template>
+		<ng-template #noPreviewAvailableTpl>no preview</ng-template>
+	</ng-container>
+
+	<div
+		*ngIf="(maxSelectableObjects < 0 || objectThumbnails.length < maxSelectableObjects) && !hideAddButton"
+		(click)="getNewObjects()"
+		class="image rs-clickable">
+		<mat-icon class="add-icon">add</mat-icon>
+	</div>
+</div>

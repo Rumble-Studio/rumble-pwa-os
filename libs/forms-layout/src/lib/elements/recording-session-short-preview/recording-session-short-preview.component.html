@@ -1,0 +1,120 @@
+<div
+	*ngIf="steps.length; else noStepsWithPossibleAnwersTpl"
+	class="session-answers">
+	<ng-container *ngFor="let step of steps">
+		<ng-container [ngSwitch]="step.kind">
+			<mat-card
+				class="step-card"
+				*ngSwitchCase="'text-step'">
+				<rumble-pwa-export-text-step
+					[attrs]="step.attrs"
+					[answerAttrs]="stepAnswers[step.id]?.attrs">
+				</rumble-pwa-export-text-step>
+			</mat-card>
+
+			<mat-card
+				class="step-card"
+				*ngSwitchCase="'paragraph-step'">
+				<rumble-pwa-export-paragraph-step
+					[attrs]="step.attrs"
+					[answerAttrs]="stepAnswers[step.id]?.attrs">
+				</rumble-pwa-export-paragraph-step>
+			</mat-card>
+
+			<mat-card
+				class="step-card"
+				*ngSwitchCase="'video-step'">
+				<rumble-pwa-export-video-step
+					[attrs]="step.attrs"
+					[answerAttrs]="stepAnswers[step.id]?.attrs">
+				</rumble-pwa-export-video-step>
+			</mat-card>
+
+			<mat-card
+				class="step-card"
+				*ngSwitchCase="'upload-picture'">
+				<rumble-pwa-export-picture-step
+					[attrs]="step.attrs"
+					[answerAttrs]="stepAnswers[step.id]?.attrs">
+				</rumble-pwa-export-picture-step>
+			</mat-card>
+
+			<mat-card
+				class="step-card"
+				*ngSwitchCase="'upload-document'">
+				<rumble-pwa-export-document-step
+					[attrs]="step.attrs"
+					[answerAttrs]="stepAnswers[step.id]?.attrs">
+				</rumble-pwa-export-document-step>
+			</mat-card>
+
+			<mat-card
+				class="step-card"
+				*ngSwitchCase="'guest-info'">
+				<rumble-pwa-export-guest-informations-step
+					[attrs]="step.attrs"
+					[answerAttrs]="stepAnswers[step.id]?.attrs">
+				</rumble-pwa-export-guest-informations-step>
+			</mat-card>
+
+			<mat-card
+				class="step-card"
+				*ngSwitchCase="'call-to-action'">
+				<rumble-pwa-export-call-to-action-step
+					[attrs]="step.attrs"
+					[answerAttrs]="stepAnswers[step.id]?.attrs">
+				</rumble-pwa-export-call-to-action-step>
+			</mat-card>
+
+			<mat-card
+				class="step-card"
+				*ngSwitchCase="'share-this-form'">
+				<rumble-pwa-export-share-this-form-step
+					[attrs]="step.attrs"
+					[answerAttrs]="stepAnswers[step.id]?.attrs">
+				</rumble-pwa-export-share-this-form-step>
+			</mat-card>
+
+			<mat-card
+				class="step-card"
+				*ngSwitchCase="'number-request'">
+				<rumble-pwa-export-number-step
+					[attrs]="step.attrs"
+					[answerAttrs]="stepAnswers[step.id]?.attrs">
+				</rumble-pwa-export-number-step>
+			</mat-card>
+
+			<mat-card
+				class="step-card"
+				*ngSwitchCase="'qcm'">
+				<rumble-pwa-export-mcq-step
+					[attrs]="step.attrs"
+					[answerAttrs]="stepAnswers[step.id]?.attrs">
+				</rumble-pwa-export-mcq-step>
+			</mat-card>
+
+			<mat-card
+				class="step-card"
+				*ngSwitchCase="'slider-step'">
+				<rumble-pwa-export-slider-step
+					[attrs]="step.attrs"
+					[answerAttrs]="stepAnswers[step.id]?.attrs">
+				</rumble-pwa-export-slider-step>
+			</mat-card>
+
+			<mat-card
+				class="step-card"
+				*ngSwitchCase="'audio-step'">
+				<rumble-pwa-export-audio-step
+					[attrs]="step.attrs"
+					[answerAttrs]="stepAnswers[step.id]?.attrs">
+				</rumble-pwa-export-audio-step>
+			</mat-card>
+
+			<!-- <ng-container *ngSwitchDefault>
+				<span>{{ step.kind }}: No preview available for this step.</span>
+			</ng-container> -->
+		</ng-container>
+	</ng-container>
+</div>
+<ng-template #noStepsWithPossibleAnwersTpl>No answers to preview.</ng-template>

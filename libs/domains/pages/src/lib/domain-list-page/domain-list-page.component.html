@@ -1,0 +1,31 @@
+<header class="rs-header">
+	<button
+		class="rs-goback"
+		*ngIf="layoutSize < 1"
+		mat-stroked-button
+		[routerLink]="'/dashboard'">
+		<mat-icon>arrow_back</mat-icon>
+	</button>
+	<section class="title">
+		<span class="object-category">Domains</span>
+		<button
+			(click)="openObjectPrompt()"
+			mat-raised-button
+			class="rs-btn-new"
+			data-cy="create-interview-more-button">
+			<mat-icon>add</mat-icon>
+			New
+		</button>
+	</section>
+</header>
+
+<todo-open
+	[todo]="{
+		id: 'todo:domain-list-page-1st-step',
+		title: 'Verify your domain(s)',
+		description:
+			'Verifying a domain of yours is the first step to share an interview with a custom URL. Click on the domain name to see the DNS details.'
+	}">
+</todo-open>
+
+<rumble-pwa-domain-list [domains]="domains"></rumble-pwa-domain-list>

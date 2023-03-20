@@ -1,0 +1,163 @@
+<object-list
+	[objects]="forms"
+	(tableClickEvent)="processTableClick($event)"
+	[noDataSourceTpl]="noDataSource"
+	[middleActionTpl]="includeArchivedSharedToggleTpl">
+	<object-column
+		[header]="'Open editor'"
+		[columnId]="'openEditor'"
+		[template]="openEditorColumnTpl">
+	</object-column>
+	<ng-template
+		#openEditorColumnTpl
+		let-object="object">
+		<div
+			class="rs-clickable"
+			[matTooltip]="'Open the interview editor'">
+			<i class="material-icons-outlined">edit</i><span> Edit </span>
+		</div>
+	</ng-template>
+
+	<object-column
+		[header]="'Public link'"
+		[columnId]="'publicLink'"
+		[template]="publicLinkTpl"
+		[sortable]="false">
+	</object-column>
+	<ng-template
+		#publicLinkTpl
+		let-object="object">
+		<div
+			(click)="$event.stopPropagation()"
+			class="rs-clickable rs-no-select rs-flex-center"
+			[cdkCopyToClipboard]="getForFormUrl(object.id)"
+			(cdkCopyToClipboardCopied)="processCopyToClipboardEvent($event, 'Interview link copied to clipboard!')"
+			[matTooltip]="'Copy public interview link to clipboard'">
+			<i class="material-icons-outlined">content_copy</i><span> Copy link </span>
+		</div>
+	</ng-template>
+
+	<object-column
+		[header]="'Title'"
+		[columnId]="'title'"
+		[template]="titleTpl">
+	</object-column>
+	<ng-template
+		#titleTpl
+		let-object="object">
+		<mat-icon
+			class="shared-icon"
+			*ngIf="object.ownerId !== profile?.id"
+			[matTooltip]="'Shared interview'"
+			>groups</mat-icon
+		>
+		{{ object.title }}
+	</ng-template>
+
+	<object-column
+		[header]="'Description'"
+		[columnId]="'description'"
+		[template]="descriptionTpl">
+	</object-column>
+	<ng-template
+		#descriptionTpl
+		let-object="object">
+		<span
+			class="description"
+			*ngIf="object.description"
+			>{{ object.description?.length > 47 ? object.description?.slice(0, 47) + '...' : object.description }}</span
+		>
+	</ng-template>
+
+	<object-column
+		*ngIf="isDesktop"
+		[header]="'Last update'"
+		[columnId]="'timeUpdate'"
+		[template]="timeUpdateTpl">
+	</object-column>
+	<ng-template
+		#timeUpdateTpl
+		let-object="object">
+		{{ object.timeUpdate * 1000 | date: 'short' }}
+	</ng-template>
+
+	<object-column
+		[columnId]="'options'"
+		[template]="optionsTpl"
+		[sortable]="false">
+	</object-column>
+	<ng-template
+		#optionsTpl
+		let-object="object">
+		<button
+			*ngIf="object.ownerId === profile?.id; else sharedFormMenuTpl"
+			mat-icon-button
+			[matMenuTriggerFor]="menu"
+			(click)="$event.stopPropagation()">
+			<mat-icon>more_vert</mat-icon>
+		</button>
+		<mat-menu #menu="matMenu">
+			<button
+				mat-menu-item
+				(click)="openEditor(object.id)">
+				<span>Open editor</span>
+			</button>
+
+			<button
+				mat-menu-item
+				(click)="openFormPromptEditor(object)">
+				<mat-icon>edit</mat-icon>
+				<span>Edit</span>
+			</button>
+			<button
+				mat-menu-item
+				(click)="duplicateFormWithConfirmation(object)">
+				<mat-icon>content_copy</mat-icon>
+				<span>Duplicate</span>
+			</button>
+			<button
+				mat-menu-item
+				(click)="object.state === 'archived' ? restoreForm(object) : archiveForm(object)">
+				<mat-icon>{{ object.state === 'archived' ? 'unarchive' : 'archive' }}</mat-icon>
+				<span>{{ object.state === 'archived' ? 'Restore' : 'Archive' }}</span>
+			</button>
+			<button
+				mat-menu-item
+				(click)="deleteForm(object)">
+				<mat-icon class="material-icons-outlined"> delete</mat-icon>
+				<span>Delete</span>
+			</button>
+		</mat-menu>
+		<ng-template #sharedFormMenuTpl>
+			<span
+				(click)="$event.stopPropagation()"
+				class="menu-disabled"
+				[matTooltip]="
+					object.ownerId !== profile?.id ? 'You are not the owner of this interview, no action allowed.' : ''
+				">
+				<mat-icon class="rs-clickable">more_vert</mat-icon>
+			</span>
+		</ng-template>
+	</ng-template>
+</object-list>
+
+<ng-template #noDataSource>
+	<!-- <mat-card (click)="openFormDialog()"> You have no interview yet. Click on the "New" button to start a new one! </mat-card> -->
+
+	<div class="table-container rs-flex-center vertical">
+		No interview, yet😉
+		<div
+			class="rs-cta rs-clickable"
+			(click)="openFormPromptEditor()">
+			<span>New interview</span>
+		</div>
+	</div>
+</ng-template>
+
+<ng-template #includeArchivedSharedToggleTpl>
+	<mat-slide-toggle
+		*ngIf="displayArchivedToggle"
+		[(ngModel)]="displayArchivedForms"
+		>Display archived interviews</mat-slide-toggle
+	>
+</ng-template>

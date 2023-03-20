@@ -1,0 +1,43 @@
+<!-- MENU FOR OTHER ITEMS  -->
+<div class="burger-menu">
+	<div
+		[matMenuTriggerFor]="otherItemMenu"
+		#otherItemMenuTrigger="matMenuTrigger"></div>
+	<mat-menu #otherItemMenu="matMenu">
+		<button
+			mat-menu-item
+			*ngFor="let notification of notifications"
+			[value]="notification.id"
+			(click)="selectNotification(notification)">
+			{{ notification.title }}
+		</button>
+	</mat-menu>
+</div>
+<ng-container *ngIf="notification$$$.$ | async as notification; else noNotificationTpl">
+	<header class="rs-header">
+		<button
+			*ngIf="layoutSize < 1"
+			class="rs-goback"
+			mat-stroked-button
+			[routerLink]="'/items'">
+			<mat-icon>arrow_back</mat-icon>
+		</button>
+		<section class="title">
+			<h2>
+				<span class="object-category">Notification:</span>&nbsp;<em>{{ notification.title }}</em>
+			</h2>
+		</section>
+	</header>
+	<rumble-pwa-notification-item [notificationId]="notification.id"> </rumble-pwa-notification-item>
+</ng-container>
+
+<ng-template #noNotificationTpl>
+	<button
+		mat-raised-button
+		[routerLink]="'/notifications'">
+		<mat-icon>arrow_back</mat-icon>
+		Go back to all items
+	</button>
+
+	<div class="notification-editor-container">Notification not loaded yet.</div>
+</ng-template>

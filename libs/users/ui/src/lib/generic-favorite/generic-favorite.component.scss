@@ -1,0 +1,21 @@
+:host {
+	display: block;
+	position: relative;
+	width: 40px;
+	overflow: visible;
+	// background-color: red;
+}
+.favorite {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+	color: var(--rs-yellow);
+
+	position: relative;
+	overflow: visible;
+}
+.mat-icon {
+	position: relative;
+	overflow: visible;
+}

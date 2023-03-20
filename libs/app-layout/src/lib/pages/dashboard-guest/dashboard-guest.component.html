@@ -1,0 +1,98 @@
+<div class="page">
+	<header *ngIf="!cnamed">
+		<div class="logo">
+			<img
+				height="40"
+				src="/assets/classic-black.svg"
+				alt="Rumble Studio" />
+		</div>
+	</header>
+	<main>
+		<h1>Guest dashboard</h1>
+
+		<section>
+			<button
+				(click)="activateCreatorDashboard()"
+				mat-raised-button>
+				Open the Creator dashboard
+			</button>
+		</section>
+
+		<section
+			*ngIf="lastOwnedRecordingSessions.length > 0"
+			class="table-section">
+			<header
+				class="rs-header"
+				[ngClass]="{ mobile: isMobile }">
+				<section class="title">
+					<span class="object-category">Recent interviews as a guest</span>
+				</section>
+			</header>
+
+			<object-list [objects]="lastOwnedRecordingSessions">
+				<!-- play column -->
+				<ng-template
+					let-object="object"
+					#listenColumn>
+					<button
+						[matTooltip]="'Listen'"
+						(click)="$event.stopImmediatePropagation(); listenTo(object.recordingSession.id)"
+						mat-flat-button>
+						<mat-icon class="clickable blue-btn">play_arrow</mat-icon>
+					</button>
+				</ng-template>
+				<object-column
+					[columnId]="'listen'"
+					[header]="'Listen'"
+					[template]="listenColumn">
+				</object-column>
+
+				<!-- go to column -->
+				<ng-template
+					let-object="object"
+					#goToColumn>
+					<button
+						[matTooltip]="'Open this interview in a new tab'"
+						(click)="$event.stopImmediatePropagation(); goToLink('/forms/open/' + object.form.id)"
+						mat-flat-button>
+						<mat-icon class="clickable blue-btn">open_in_new</mat-icon>
+					</button>
+				</ng-template>
+				<object-column
+					[columnId]="'goto'"
+					[header]="'Open this interview'"
+					[template]="goToColumn">
+				</object-column>
+
+				<!-- title column -->
+				<ng-template
+					let-object="object"
+					#titleColumn>
+					{{ object.form.title }}
+				</ng-template>
+				<object-column
+					[columnId]="'title'"
+					[header]="'Interview'"
+					[template]="titleColumn"
+					[flex]="1">
+				</object-column>
+
+				<!-- owner column -->
+				<object-column
+					[columnId]="'owner'"
+					[header]="'Interview owner'"
+					[flex]="2"
+					[template]="ownerColumnTpl">
+				</object-column>
+				<ng-template
+					#ownerColumnTpl
+					let-object="object">
+					<div class="formOwner">
+						<rumble-pwa-group-item-generic [groupId]="object.form.ownerId"></rumble-pwa-group-item-generic>
+					</div>
+				</ng-template>
+			</object-list>
+		</section>
+	</main>
+	<footer></footer>
+</div>

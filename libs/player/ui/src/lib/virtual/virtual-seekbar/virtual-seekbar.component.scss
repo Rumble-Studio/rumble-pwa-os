@@ -1,0 +1,81 @@
+:host {
+	display: block;
+	width: 100%;
+	height: 20px;
+	padding: 5px;
+}
+
+.progress-bar {
+	height: 20px;
+	background-color: white;
+	position: relative;
+	border-radius: 10px;
+	overflow: hidden;
+	border: 1px solid var(--rs-yellow-light);
+
+	.multi-bar {
+		height: 100%;
+		position: absolute;
+		top: 0px;
+		left: 0px;
+		width: 100%;
+
+		display: flex;
+		.sub-progress-bar-border,
+		.sub-progress-bar {
+			height: 100%;
+			display: inline-block;
+			border-left: black 2px solid;
+			&.noBorderOneTheLeft {
+				border-left: none;
+			}
+		}
+	}
+
+	.background-no-multi-bar {
+		height: 100%;
+		width: 100%;
+		position: absolute;
+
+		top: 0px;
+		left: 0px;
+	}
+
+	.transparent-overlay {
+		height: 100%;
+		width: 100%;
+		position: absolute;
+		// background-color: rgba(0, 0, 0, 0.075);
+
+		top: 0px;
+		left: 0px;
+
+		transition: width 250ms linear;
+
+		display: flex;
+		justify-content: space-between;
+		span {
+			height: 100%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			pointer-events: none;
+			&:last-child {
+				margin-right: 5px;
+			}
+			&:first-child {
+				margin-left: 5px;
+			}
+		}
+	}
+	.play-bar {
+		height: 100%;
+		position: absolute;
+		// border:2px solid orangered;
+		top: 0px;
+		left: 0px;
+		border-radius: 2.5px;
+
+		transition: width 250ms linear;
+	}
+}

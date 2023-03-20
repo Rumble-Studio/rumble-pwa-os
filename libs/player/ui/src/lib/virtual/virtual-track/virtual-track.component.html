@@ -1,0 +1,123 @@
+<div
+	*ngIf="trackState"
+	class="virtual-track-container">
+	<mat-checkbox
+		*ngIf="displaySelected"
+		class="checkbox"
+		[(ngModel)]="selected"></mat-checkbox>
+	<!-- details -->
+	<rumble-pwa-virtual-details
+		*ngIf="displayDetails"
+		[tags]="fileTags$$$.$ | async"
+		[pictureSRCs]="trackState.virtualTrack.details?.pictureSrcs ?? []"
+		[title]="trackState.virtualTrack.details?.title"
+		[description]="trackState.virtualTrack.details?.description"
+		[ngClass]="{ unactive: !trackState.virtualTrack.active }"></rumble-pwa-virtual-details>
+
+	<!-- listen mode -->
+	<ng-container *ngIf="trackMode === 'listen'; else recordModeTpl">
+		<!-- play/pause btn -->
+		<section *ngIf="displayTrackPlayerActions">
+			<span
+				(click)="togglePlay()"
+				class="rs-clickable rs-no-select">
+				<i class="material-icons player-action-icon play">{{
+					trackState.representativeState.playing ? 'pause' : 'play_arrow'
+				}}</i>
+			</span>
+		</section>
+		<!-- seekbar and transcript -->
+		<section
+			*ngIf="displaySeekbar || displayTranscript"
+			class="seekbar-and-transcript"
+			[ngClass]="{ unactive: !trackState.virtualTrack.active }">
+			<ng-container *ngIf="displaySeekbar">
+				<!-- <div
+					*ngIf="trackState.representativeState.containsVideo"
+					class="video-placeholder"></div> -->
+				<ng-container *ngIf="trackState.representativeState.unlocked; else lockedTpl">
+					<rumble-pwa-virtual-seekbar
+						(seekMultiEvent)="processSeekMultiEvent($event)"
+						[formCustomisationDetails]="formCustomisationDetails"
+						[durations]="trackState.representativeState.durations"
+						[indexBeingPlayed]="trackState.representativeState.lastIndexBeingPlayed"
+						[percentageOfCurrentSong]="
+							trackState.representativeState.percentageOfLastElementBeingPlayed
+						"></rumble-pwa-virtual-seekbar>
+				</ng-container>
+
+				<ng-template #lockedTpl>
+					<div class="rs-fake-play-bar rs-no-select">Click to load audio</div>
+				</ng-template>
+			</ng-container>
+
+			<!-- display transcript if displayTranscript is true AND either we can edit OR we have something to display -->
+			<rumble-pwa-virtual-transcript
+				*ngIf="
+					displayTranscript &&
+					((trackState.virtualTrack.transcript?.canEditTranscript ?? false) ||
+						trackState.virtualTrack.transcript?.editedTranscript ||
+						trackState.virtualTrack.transcript?.originalTranscript)
+				"
+				[transcriptEdited]="trackState.virtualTrack.transcript?.editedTranscript"
+				[formCustomisationDetails]="formCustomisationDetails"
+				[transcriptOriginal]="trackState.virtualTrack.transcript?.originalTranscript"
+				[allowEditing]="trackState.virtualTrack.transcript?.canEditTranscript ?? false"
+				(newTextEvent)="processNewTextEvent($event)"></rumble-pwa-virtual-transcript>
+		</section>
+	</ng-container>
+	<!-- record mode -->
+	<ng-template #recordModeTpl>recording mode not yet available</ng-template>
+	<!-- favorite heart box -->
+	<generic-favorite
+		*ngIf="displayFavorite && trackState.virtualTrack.source"
+		[ngClass]="{
+			unactive: !trackState.virtualTrack.active
+		}"
+		[favoriteDetails]="{
+			objectId: trackState.virtualTrack.source.id,
+			objectKind: trackState.virtualTrack.source.kind
+		}"></generic-favorite>
+	<a
+		*ngIf="displayDownload && downloadFileUrl"
+		[href]="downloadFileUrl"
+		target="_blank">
+		<mat-icon [ngClass]="{ unactive: !trackState.virtualTrack.active }">file_download</mat-icon>
+	</a>
+	<!-- actions like handle, delete, cloud... -->
+	<ng-container *ngIf="displayActions">
+		<section class="actions">
+			<!-- <mat-icon
+				[ngClass]="{
+					unactive: !trackState.virtualTrack.active,
+					blink: !trackState.representativeState.allSynced
+				}"
+				>{{ trackState.representativeState.allSynced ? 'cloud_done' : 'backup' }}</mat-icon
+			> -->
+
+			<mat-icon
+				class="rs-clickable red-btn"
+				[ngClass]="{
+					unactive: !trackState.virtualTrack.active
+				}"
+				(click)="deleteTrack()"
+				>delete</mat-icon
+			>
+			<mat-icon
+				class="rs-clickable"
+				[ngClass]="{
+					unactive: !trackState.virtualTrack.active
+				}"
+				(click)="toggleActiveTrack()"
+				[matTooltip]="trackState.virtualTrack.active ? 'Disable this segment.' : 'Activate this segment.'"
+				>{{ trackState.virtualTrack.active ? 'music_note' : 'music_off' }}</mat-icon
+			>
+			<mat-icon
+				*ngIf="displayTrackMode"
+				(click)="toggleTrackMode()"
+				>edit</mat-icon
+			>
+			<ng-content></ng-content>
+		</section>
+	</ng-container>
+</div>

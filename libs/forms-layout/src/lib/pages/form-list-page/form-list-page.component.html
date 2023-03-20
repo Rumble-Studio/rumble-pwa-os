@@ -1,0 +1,25 @@
+<header class="rs-header">
+	<button
+		class="rs-goback"
+		*ngIf="layoutSize < 1"
+		mat-stroked-button
+		[routerLink]="'/dashboard'">
+		<mat-icon>arrow_back</mat-icon>
+	</button>
+	<section class="title">
+		<span class="object-category">Interviews</span>
+		<button
+			(click)="openFormPromptEditor()"
+			mat-raised-button
+			class="rs-btn-new"
+			data-cy="create-interview-more-button">
+			<mat-icon>add</mat-icon>
+			New
+		</button>
+	</section>
+</header>
+
+<rumble-pwa-form-list
+	[forms]="forms"
+	(tableClickEventEmitter)="processTableClick($event)"
+	[(displayArchivedForms)]="displayArchivedForms"></rumble-pwa-form-list>

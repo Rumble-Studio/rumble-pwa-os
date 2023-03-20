@@ -1,0 +1,52 @@
+<object-list
+	[objects]="pages"
+	(tableClickEvent)="processTableClick($event)">
+	<!-- name column -->
+	<object-column
+		[columnId]="'name'"
+		[header]="'name'">
+	</object-column>
+
+	<!-- url column -->
+	<object-column
+		[columnId]="'pattern'"
+		[header]="'URL pattern'"
+		[template]="urlColumnTpl">
+	</object-column>
+	<ng-template
+		#urlColumnTpl
+		let-object="object">
+		<a
+			class="rs-link rs-clickable"
+			[href]="object.url"
+			target="_blank"
+			(click)="$event.stopImmediatePropagation()">
+			{{ object.url }}</a
+		>
+	</ng-template>
+
+	<!-- options -->
+	<object-column
+		[columnId]="'options'"
+		[template]="optionsTpl"
+		[sortable]="false">
+	</object-column>
+	<ng-template
+		#optionsTpl
+		let-object="object">
+		<button
+			mat-icon-button
+			[matMenuTriggerFor]="menu"
+			(click)="$event.stopPropagation()">
+			<mat-icon>more_vert</mat-icon>
+		</button>
+		<mat-menu #menu="matMenu">
+			<button
+				mat-menu-item
+				(click)="deletePage(object)">
+				<mat-icon class="material-icons-outlined"> delete</mat-icon>
+				<span>Delete</span>
+			</button>
+		</mat-menu>
+	</ng-template>
+</object-list>

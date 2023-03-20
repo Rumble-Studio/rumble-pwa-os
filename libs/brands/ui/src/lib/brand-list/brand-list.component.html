@@ -1,0 +1,104 @@
+<object-list
+	[objects]="brands"
+	(tableClickEvent)="processTableClick($event)"
+	[noDataSourceTpl]="noDataSource"
+	[middleActionTpl]="includeArchivedSharedToggleTpl">
+	<object-column
+		[columnId]="'logo'"
+		[template]="logoTpl"
+		[sortable]="false">
+	</object-column>
+	<ng-template
+		#logoTpl
+		let-object="object">
+		<img
+			*ngIf="filesRepository.convertRSurlToUrl$(object.logo) | async as imageUrl"
+			class="brand-image"
+			[src]="imageUrl"
+			[title]="object.name" />
+	</ng-template>
+
+	<object-column
+		[header]="'Name'"
+		[columnId]="'name'"
+		[template]="nameTpl">
+	</object-column>
+	<ng-template
+		#nameTpl
+		let-object="object">
+		<mat-icon
+			class="shared-icon"
+			*ngIf="object.ownerId !== profile?.id"
+			[matTooltip]="'Shared brand'">
+			groups</mat-icon
+		>
+		{{ object.name }}
+	</ng-template>
+
+	<object-column
+		[columnId]="'description'"
+		[header]="'Description'">
+	</object-column>
+	<object-column
+		[columnId]="'colors'"
+		[header]="'Colors'"
+		[template]="colorsTpl"
+		[sortable]="false">
+	</object-column>
+	<ng-template
+		#colorsTpl
+		let-object="object">
+		<div [style]="convertBrandToColorList(object)"></div>
+	</ng-template>
+
+	<object-column
+		[columnId]="'options'"
+		[template]="optionsTpl"
+		[sortable]="false">
+	</object-column>
+	<ng-template
+		#optionsTpl
+		let-object="object">
+		<button
+			*ngIf="object.ownerId === profile?.id; else sharedBrandMenuTpl"
+			(click)="$event.stopImmediatePropagation()"
+			mat-icon-button
+			[matMenuTriggerFor]="menu">
+			<mat-icon>more_vert</mat-icon>
+		</button>
+		<mat-menu #menu="matMenu">
+			<button
+				mat-menu-item
+				(click)="deleteBrand(object)">
+				<mat-icon class="material-icons-outlined">delete</mat-icon>Delete
+			</button>
+			<button
+				mat-menu-item
+				(click)="object.state === 'archived' ? restoreBrand(object) : archiveBrand(object)">
+				<mat-icon>{{ object.state === 'archived' ? 'unarchive' : 'archive' }}</mat-icon>
+				<span>{{ object.state === 'archived' ? 'Restore' : 'Archived' }}</span>
+			</button>
+		</mat-menu>
+
+		<ng-template #sharedBrandMenuTpl>
+			<span
+				(click)="$event.stopPropagation()"
+				class="menu-disabled"
+				[matTooltip]="object.ownerId !== profile?.id ? 'You are not the owner of this brand, no action allowed.' : ''">
+				<mat-icon class="rs-clickable">more_vert</mat-icon>
+			</span>
+		</ng-template>
+	</ng-template>
+</object-list>
+
+<ng-template #noDataSource>
+	<mat-card> No branding kit yet. </mat-card>
+</ng-template>
+
+<ng-template #includeArchivedSharedToggleTpl>
+	<mat-slide-toggle
+		*ngIf="displayArchivedToggle"
+		[(ngModel)]="displayArchivedBrands"
+		>Display archived brands
+	</mat-slide-toggle>
+</ng-template>

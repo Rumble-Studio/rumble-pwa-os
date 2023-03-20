@@ -1,0 +1,136 @@
+<div>
+	<div class="header">
+		<h2>
+			{{ !operationDetails?.operation ? 'Create an operation' : 'Edit an operation' }}
+		</h2>
+	</div>
+	<form
+		[formGroup]="operationForm"
+		class="operation-form">
+		<mat-form-field
+			class="full-width"
+			appearance="outline">
+			<mat-label
+				>Name
+				<span
+					class="text-danger"
+					*ngIf="operationForm.get('name')?.errors && operationForm.get('name')?.hasError('required')"
+					>*</span
+				></mat-label
+			>
+			<input
+				matInput
+				formControlName="name"
+				name="name" />
+			<div
+				class="formError"
+				*ngIf="!operationForm.get('name')?.valid && operationForm.get('name')?.touched">
+				A name is required
+			</div>
+		</mat-form-field>
+
+		<mat-form-field
+			class="full-width"
+			appearance="outline">
+			<mat-label>Description</mat-label>
+			<input
+				matInput
+				formControlName="description"
+				name="description" />
+		</mat-form-field>
+
+		<mat-form-field
+			class="full-width"
+			appearance="outline">
+			<mat-label
+				>Kind<span
+					class="text-danger"
+					*ngIf="operationForm.get('kind')?.errors && operationForm.get('kind')?.hasError('required')"
+					>*</span
+				></mat-label
+			>
+			<input
+				matInput
+				formControlName="kind"
+				name="kind" />
+			<div
+				class="formError"
+				*ngIf="!operationForm.get('kind')?.valid && operationForm.get('kind')?.touched">
+				A kind is required
+			</div>
+		</mat-form-field>
+
+		<mat-form-field
+			class="full-width"
+			appearance="outline">
+			<mat-label>Details</mat-label>
+			<input
+				matInput
+				formControlName="details"
+				name="details" />
+		</mat-form-field>
+
+		<mat-form-field
+			class="full-width"
+			appearance="outline">
+			<mat-label
+				>Key<span
+					class="text-danger"
+					*ngIf="operationForm.get('key')?.errors && operationForm.get('key')?.hasError('required')"
+					>*</span
+				></mat-label
+			>
+			<input
+				matInput
+				formControlName="key"
+				name="key" />
+			<div
+				class="formError"
+				*ngIf="!operationForm.get('key')?.valid && operationForm.get('key')?.touched">
+				A key is required
+			</div>
+		</mat-form-field>
+
+		<mat-form-field
+			class="full-width"
+			appearance="outline">
+			<mat-label>Group</mat-label>
+			<mat-select
+				formControlName="groupId"
+				name="groupId">
+				<mat-option
+					*ngFor="let group of groups$$ | async"
+					[value]="group.id">
+					{{ group.name }}
+				</mat-option>
+			</mat-select>
+		</mat-form-field>
+	</form>
+
+	<div class="full-width horizontal">
+		<button
+			type="button"
+			mat-stroked-button
+			(click)="dismiss()">
+			<mat-icon>close</mat-icon>
+			Cancel
+		</button>
+
+		<button
+			type="button"
+			mat-stroked-button
+			(click)="delete()"
+			[disabled]="!operationDetails?.operation">
+			<mat-icon>delete</mat-icon>
+			Delete
+		</button>
+
+		<button
+			type="submit"
+			mat-raised-button
+			(click)="save()">
+			<mat-icon>{{ !operationDetails?.operation ? 'save' : 'check' }}</mat-icon>
+			{{ !operationDetails?.operation ? 'Create' : 'Update' }}
+		</button>
+	</div>
+</div>

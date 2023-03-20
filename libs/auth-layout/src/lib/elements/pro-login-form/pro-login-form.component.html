@@ -1,0 +1,72 @@
+<div class="pro-login-form-container">
+	<form
+		class="form"
+		[formGroup]="loginFormGroup"
+		(ngSubmit)="$event.preventDefault(); onSubmit()">
+		<div class="input-container">
+			<span class="label">Email</span>
+			<input
+				class="rs-textInput"
+				formControlName="email"
+				placeholder="simone@example.com"
+				type="email"
+				name="email"
+				data-cy="login-email"
+				#inputEmail
+				(keyup)="inputEmail.value = inputEmail.value.toLowerCase()" />
+			<div
+				class="formError"
+				*ngIf="loginFormGroup.controls.email.errors">
+				<ng-template [ngIf]="loginFormGroup.controls.email.errors.required"> Email is required </ng-template>
+				<ng-template [ngIf]="loginFormGroup.controls.email.errors.email"> Check the format of your email </ng-template>
+			</div>
+		</div>
+		<div class="input-container">
+			<span class="label">Password</span>
+			<input
+				class="rs-textInput"
+				formControlName="password"
+				placeholder="password"
+				type="password"
+				name="password"
+				autocomplete="on"
+				data-cy="login-password" />
+			<div
+				class="formError"
+				*ngIf="loginFormGroup.controls.password.invalid">
+				<ng-template [ngIf]="loginFormGroup.controls.password.errors?.required"> Password is required </ng-template>
+				<ng-template [ngIf]="loginFormGroup.controls.password.errors?.minlength">
+					Your password is too short
+				</ng-template>
+				<ng-template [ngIf]="loginFormGroup.controls.password.errors?.maxlength">
+					Your password is too long
+				</ng-template>
+			</div>
+		</div>
+
+		<div class="proFormActions">
+			<input
+				name="loginBtn"
+				class="submitBtn"
+				type="submit"
+				[disabled]="
+					!(
+						loginFormGroup.valid ||
+						loginFormGroup.controls.password.pristine ||
+						loginFormGroup.controls.email.pristine
+					) || loginFormDisabled
+				"
+				value="Sign in" />
+			<span
+				(click)="goToResetPage()"
+				class="rs-clickable"
+				>Password problem?
+				<span
+					class="rs-link"
+					data-cy="login-form-reset-password-link"
+					>Reset</span
+				></span
+			>
+		</div>
+	</form>
+</div>

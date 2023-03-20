@@ -1,0 +1,50 @@
+<div class="text-container">
+	<section
+		class="text-body"
+		[style.background]="formCustomisationDetails?.playbarColor + '80'"
+		[style.color]="formCustomisationDetails?.fontColor">
+		<span class="material-icons quote-icon">{{ icon }}</span>
+		<section>
+			<span class="text-action">
+				<span
+					*ngIf="!editingMode && allowEditing"
+					(click)="launchEditingMode()"
+					>edit</span
+				>
+				&nbsp;<span
+					*ngIf="editingMode"
+					(click)="saveEdits()"
+					>save</span
+				>
+				&nbsp;<span
+					*ngIf="allowEditing"
+					(click)="resetEdits()"
+					>reset</span
+				>
+				&nbsp;<span
+					*ngIf="text ?? originalText"
+					[cdkCopyToClipboard]="text ?? originalText!"
+					(cdkCopyToClipboardCopied)="processCopyToClipboardEvent($event)"
+					>copy</span
+				>
+			</span>
+		</section>
+		<section
+			*ngIf="!editingMode; else useEditingModeTpl"
+			(dblclick)="allowEditing ? launchEditingMode() : null"
+			class="inner-text rs-pre-wrap">
+			{{ text ?? originalText ?? DEFAULT_TEXT }}
+		</section>
+		<ng-template #useEditingModeTpl>
+			<section>
+				<textarea
+					#textarea
+					mat-input
+					[(ngModel)]="text"
+					rumblePwaAutoFocus
+					(blur)="saveEdits()"
+					rows="10"></textarea>
+			</section>
+		</ng-template>
+	</section>
+</div>

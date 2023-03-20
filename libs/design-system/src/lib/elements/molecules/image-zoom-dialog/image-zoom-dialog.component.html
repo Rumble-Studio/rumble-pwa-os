@@ -1,0 +1,20 @@
+<div class="rs-full-width rs-flex-end">
+	<div
+		class="rs-clickable close-icon-container"
+		(click)="dismiss()">
+		<mat-icon>close</mat-icon>
+	</div>
+</div>
+
+<span
+	*ngIf="data.title"
+	class="prompt-title">
+	{{ data.title }}
+</span>
+
+<div class="zoom-container">
+	<img
+		class="image-display"
+		[src]="data.imgSrc"
+		alt="" />
+</div>

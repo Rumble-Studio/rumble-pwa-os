@@ -1,0 +1,432 @@
+<object-list
+	[elevatedClass]="elevatedClass"
+	[objects]="files"
+	class="file-table-container"
+	[expandedTemplate]="expandedTemplate"
+	[middleActionTpl]="middleActionTpl"
+	[topLeftActionTpl]="topLeftActionTpl"
+	[searchValue]="searchValue"
+	[hideColumns]="hideColumns"
+	[convertObjectToSearchableString]="convertObjectToSearchableString"
+	[convertObjectToSortableElement]="getConvertObjectToSortableElement()"
+	(tableClickEvent)="processTableClick($event)"
+	[allowSelection]="allowSelection"
+	[pageSize]="5"
+	[maxObjectsSelected]="maxObjectsSelected"
+	[(selection)]="selection"
+	[connectDropTo]="connectDropTo">
+	<!-- preview -->
+	<object-column
+		[header]="''"
+		[columnId]="'preview'"
+		[template]="previewColumnTpl"
+		[sortable]="false">
+	</object-column>
+	<ng-template
+		#previewColumnTpl
+		let-object="object">
+		<ng-container [ngSwitch]="object.kind">
+			<ng-container *ngSwitchCase="'audio'">
+				<mat-icon class="material-icons-outlined">audio_file</mat-icon>
+				<span>{{ object.duration ?? 0 | duration }}</span>
+			</ng-container>
+
+			<ng-container *ngSwitchCase="'image'">
+				<!-- <div class="file-preview"> -->
+				<img
+					class="user-avatar"
+					[src]="object.urls.original.url"
+					[style.maxWidth]="'40px'"
+					[style.maxHeight]="'40px'"
+					[style.borderRadius]="'7px'" />
+
+				<!-- </div> -->
+			</ng-container>
+			<ng-container *ngSwitchCase="'video'">
+				<mat-icon class="material-icons-outlined">video_file</mat-icon>
+				<span>{{ object.duration ?? 0 | duration }}</span>
+			</ng-container>
+			<ng-container *ngSwitchCase="'document'">
+				<mat-icon class="material-icons-outlined">topic</mat-icon>
+				<span>{{ object.duration ?? 0 > 0 ? (object.duration | duration) : '' }}</span>
+			</ng-container>
+			<ng-container *ngSwitchDefault>
+				{{ object.kind }}
+			</ng-container>
+		</ng-container>
+	</ng-template>
+	<!-- extra name -->
+	<object-column
+		*ngIf="displayExtraFileProperties"
+		[header]="'Nickname'"
+		[columnId]="'extraName'"
+		[template]="extraNameTpl"
+		[flex]="2">
+	</object-column>
+	<ng-template
+		#extraNameTpl
+		let-object="object"
+		><span class="rs-text-ellipsis">{{ object.extraName }}</span>
+	</ng-template>
+
+	<!-- name -->
+	<object-column
+		[header]="'Name'"
+		[columnId]="'publicName'"
+		[template]="nameTpl"
+		[flex]="2">
+	</object-column>
+	<ng-template
+		#nameTpl
+		let-object="object">
+		<mat-icon
+			class="shared-icon"
+			*ngIf="object.ownerId !== profile?.id"
+			[matTooltip]="'Shared brand'">
+			groups</mat-icon
+		>
+		<span class="rs-text-ellipsis"> {{ object.publicName ?? object.fileName }}</span>
+	</ng-template>
+
+	<!-- extra description -->
+	<object-column
+		*ngIf="displayExtraFileProperties"
+		[header]="'Description'"
+		[columnId]="'extraDescription'"
+		[template]="extraDescriptionTpl"
+		[flex]="2">
+	</object-column>
+	<ng-template
+		#extraDescriptionTpl
+		let-object="object"
+		><span class="rs-text-ellipsis">{{ object.extraDescription }}</span>
+	</ng-template>
+
+	<!-- owner column -->
+	<object-column
+		*ngIf="!isMobile"
+		[columnId]="'owner'"
+		[header]="'File owner'"
+		[flex]="2"
+		[template]="ownerColumnTpl">
+	</object-column>
+	<ng-template
+		#ownerColumnTpl
+		let-object="object">
+		<div class="formOwner">
+			<rumble-pwa-group-item-generic
+				*ngIf="object.owner; else noOwnerTpl"
+				[groupId]="object.ownerId"></rumble-pwa-group-item-generic>
+			<ng-template #noOwnerTpl></ng-template>
+		</div>
+	</ng-template>
+
+	<!-- tags -->
+	<object-column
+		[columnId]="'filetags'"
+		[header]="'Tags'"
+		[flex]="1"
+		[template]="tagsColumnTpl"
+		[headerTemplate]="tagsHeaderTpl">
+	</object-column>
+	<ng-template #tagsHeaderTpl>
+		Tags
+		<explanation
+			(click)="$event.stopPropagation()"
+			[msg]="
+				'You can add custom tags to your files to find them later more easily. We will also generate some tags automatically based on the source of the files and the content of the file.'
+			"></explanation>
+	</ng-template>
+	<ng-template
+		#tagsColumnTpl
+		let-object="object">
+		<div
+			(click)="processFileTagsColumnClick(object); $event.stopPropagation()"
+			class="tags">
+			<ng-container *ngFor="let filetag of object.filetags">
+				<tag-pill
+					*ngIf="displayKindTags.length > 0 ? displayKindTags.includes(filetag.kind) : true"
+					[filetag]="filetag"></tag-pill>
+			</ng-container>
+			<mat-icon class="rs-clickable">add</mat-icon>
+		</div>
+	</ng-template>
+
+	<!-- time creation -->
+	<object-column
+		*ngIf="isDesktop"
+		[columnId]="'timeCreation'"
+		[header]="'Creation time'"
+		[template]="timeCreationTpl">
+	</object-column>
+	<ng-template
+		#timeCreationTpl
+		let-object="object">
+		{{ object.timeCreation * 1000 | date: 'short' }}
+	</ng-template>
+
+	<!-- favorite -->
+	<object-column
+		[sortable]="false"
+		[columnId]="'favorite'"
+		[template]="favoriteTpl"></object-column>
+
+	<!-- </ng-template>
+		<object-column
+		[sortable]="false"
+		[columnId]="'favorite'"exportEntity?.taskId
+		[template]="favoriteTpl"
+		[header]="'Favorite'"
+		[headerTemplate]="favoriteHeaderTpl">
+	</object-column>
+	<ng-template #favoriteHeaderTpl>
+		<explanation [msg]="'Mark this file as favorite to easily find it later.'"></explanation>
+	</ng-template> -->
+	<ng-template
+		#favoriteTpl
+		let-object="object">
+		<generic-favorite
+			class="favorite"
+			[favoriteDetails]="{ objectId: object.id, objectKind: 'file' }"></generic-favorite>
+	</ng-template>
+
+	<object-column
+		[columnId]="'exported'"
+		[template]="exportedTpl"
+		[sortable]="false"></object-column>
+
+	<ng-template
+		#exportedTpl
+		let-object="object">
+		<ng-container *ngIf="object.kind === 'audio' || object.kind === 'video'">
+			<ng-container *ngIf="((getExportByFileId$(object.id) | async)?.length || 0) > 0; else notExportedTpl">
+				<a
+					(click)="$event.stopPropagation()"
+					*ngIf="object.state === 'default'"
+					[href]="getFileDownloadUrl(object)"
+					[matTooltip]="'Download your exported file'">
+					<mat-icon>download</mat-icon>
+				</a>
+			</ng-container>
+			<ng-template #notExportedTpl>
+				<span
+					*ngIf="object.duration; else notReadyForExportTpl"
+					(click)="$event.stopPropagation(); exportFile(object)"
+					[matTooltip]="'Mark your file as exported'"
+					class="material-icons-outlined rs-clickable"
+					>archive</span
+				>
+
+				<!-- <mat-icon
+					*ngIf="object.duration"
+					(click)="$event.stopPropagation(); exportFile(object)"
+					[matTooltip]="'Mark your file as exported'">
+					archive</mat-icon
+				> -->
+			</ng-template>
+
+			<ng-template #notReadyForExportTpl>
+				<mat-spinner
+					*ngIf="object.unprocessable !== 'true'; else unprocessableFileTpl"
+					[matTooltip]="'This file is still being processed.'"
+					diameter="20"
+					class="spinner"></mat-spinner>
+			</ng-template>
+
+			<ng-template #unprocessableFileTpl>
+				<span
+					[matTooltip]="'This file is either corrupted or not compatible with Rumble Studio.'"
+					class="material-icons-outlined"
+					>broken_image</span
+				>
+			</ng-template>
+		</ng-container>
+		<ng-container *ngIf="isSuperUser">
+			<mat-chip-list>
+				<ng-container *ngFor="let urlDetails of object.urls | keyvalue">
+					<a
+						*ngIf="getUrlFromUrlDetails(urlDetails.value) as url"
+						[href]="url"
+						target="_blank">
+						<mat-chip>{{ urlDetails.key }} </mat-chip>
+					</a>
+				</ng-container>
+			</mat-chip-list>
+		</ng-container>
+	</ng-template>
+
+	<!-- options -->
+	<object-column
+		[sortable]="false"
+		[columnId]="'options'"
+		[template]="customMoreMenuTpl ?? optionsTpl"
+		[flex]="0.4">
+	</object-column>
+	<ng-template
+		#optionsTpl
+		let-object="object">
+		<button
+			mat-icon-button
+			[matMenuTriggerFor]="groupMenu"
+			(click)="$event.stopPropagation()">
+			<mat-icon>more_vert</mat-icon>
+		</button>
+
+		<mat-menu #groupMenu>
+			<button
+				(click)="$event.stopPropagation(); deleteExplanation.tooltip?.show()"
+				mat-menu-item>
+				<span class="menu-btn-aligned">
+					<mat-icon>delete</mat-icon>
+					Delete
+					<explanation
+						#deleteExplanation
+						(click)="$event.stopPropagation()"
+						[msg]="
+							'Deletion is not yet possible. Until we build the feature to list usages of this file through the app we will prevent deletion to avoid breaking it.'
+						"></explanation>
+				</span>
+			</button>
+			<button
+				mat-menu-item
+				*ngIf="isSuperUser"
+				[matMenuTriggerFor]="tagMenu">
+				<mat-icon>sell</mat-icon>Tags
+			</button>
+			<button
+				mat-menu-item
+				(click)="openRenameFilePrompt(object)">
+				<mat-icon>edit</mat-icon>Rename
+			</button>
+			<!-- <button
+				*ngIf="object.kind === 'audio'"
+				(click)="$event.stopPropagation(); exportFile(object)"
+				[disabled]="isFileExported(object.id) || object.typeClient === 'audio-export'"
+				mat-menu-item>
+				<span class="menu-btn-aligned">
+					<mat-icon>archive</mat-icon>
+					{{ isFileExported(object.id) ? 'Exported' : 'Mark as exported' }}
+					<explanation
+						#exportExplanation
+						(click)="$event.stopPropagation()"
+						[msg]="'Exporting files allows you to use them as items for your collections.'"></explanation>
+				</span>
+			</button> -->
+		</mat-menu>
+
+		<mat-menu #tagMenu>
+			<button
+				mat-menu-item
+				*ngIf="isSuperUser"
+				(click)="toggleTag(object.id, 'public')">
+				<mat-icon>public</mat-icon>Toggle public
+			</button>
+			<button
+				mat-menu-item
+				*ngIf="isSuperUser"
+				(click)="toggleTag(object.id, 'jingle')">
+				<mat-icon>music_note</mat-icon>Toggle jinge
+			</button>
+
+			<button
+				mat-menu-item
+				*ngIf="isSuperUser"
+				(click)="toggleTag(object.id, 'style-happy')">
+				style-happy
+			</button>
+
+			<button
+				mat-menu-item
+				*ngIf="isSuperUser"
+				(click)="toggleTag(object.id, 'style-chilled')">
+				style-chilled
+			</button>
+
+			<button
+				mat-menu-item
+				*ngIf="isSuperUser"
+				(click)="toggleTag(object.id, 'style-energetic')">
+				style-energetic
+			</button>
+
+			<button
+				mat-menu-item
+				*ngIf="isSuperUser"
+				(click)="toggleTag(object.id, 'style-classical')">
+				style-classical
+			</button>
+
+			<button
+				mat-menu-item
+				*ngIf="isSuperUser"
+				(click)="toggleTag(object.id, 'style-uplifting')">
+				style-uplifting
+			</button>
+		</mat-menu>
+	</ng-template>
+</object-list>
+
+<ng-template
+	#expandedTemplate
+	let-object="object">
+	<div class="content">
+		<ng-container *ngIf="object.fileOnServer; else fileNotOnServerTpl">
+			<div>
+				<ng-container [ngSwitch]="object.kind">
+					<ng-container *ngSwitchCase="'audio'">
+						<rumble-pwa-file-player
+							[displayDownload]="((getExportByFileId$(object.id) | async)?.length || 0) > 0"
+							[connectDropTo]="connectDropTo"
+							[displayDetails]="displayDetails"
+							[displayTranscript]="true"
+							[fileId]="object.id"></rumble-pwa-file-player>
+					</ng-container>
+					<ng-container *ngSwitchCase="'image'">
+						<div class="file-preview">
+							<img [src]="object.urls.original.url" />
+						</div>
+					</ng-container>
+					<ng-container *ngSwitchCase="'video'">
+						<div class="file-preview">
+							<!-- <video
+							[src]="object.urls.original.url"
+							controls></video> -->
+							<rumble-pwa-file-player
+								[displayDownload]="((getExportByFileId$(object.id) | async)?.length || 0) > 0"
+								[connectDropTo]="connectDropTo"
+								[displayDetails]="displayDetails"
+								[displayTranscript]="true"
+								[fileId]="object.id"></rumble-pwa-file-player>
+						</div>
+					</ng-container>
+					<ng-container *ngSwitchDefault>
+						<a
+							[href]="object.urls.original.url"
+							target="_blank"
+							>Open it</a
+						>
+						<!-- <ng-container *ngIf="object.extension === 'pdf'; else noPreviewAvailableTpl">
+						<embed
+							[src]="sanitizer.bypassSecurityTrustResourceUrl(object.urls.original.url)"
+							type="application/pdf" />
+					</ng-container> -->
+						<ng-template #noPreviewAvailableTpl>(No available preview)</ng-template>
+					</ng-container>
+				</ng-container>
+			</div>
+
+			<ul *ngIf="getMediaInfoFromData(object) as mediaInfo">
+				<li *ngIf="mediaInfo.width && mediaInfo.height">Resolution: {{ mediaInfo.width }}x{{ mediaInfo.height }} px</li>
+				<li *ngIf="mediaInfo.size_megabytes">Size: {{ mediaInfo.size_megabytes.toFixed(2) }} Mb</li>
+			</ul>
+		</ng-container>
+		<ng-template #fileNotOnServerTpl>
+			This file is not on our servers. This can happen for a few reasons:
+			<ul>
+				<li>This file is not YET arrived on our servers.</li>
+				<li>The file was corrupted.</li>
+				<li>The file was lost during the transfer.</li>
+			</ul>
+		</ng-template>
+	</div>
+</ng-template>

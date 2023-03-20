@@ -1,0 +1,41 @@
+<div class="todo-container">
+	<p class="confirmationTitle">
+		{{ todo?.title }}
+	</p>
+	<p [innerHTML]="todo?.description"></p>
+	<img
+		*ngIf="todo?.img"
+		width="100%"
+		[src]="todo!.img"
+		alt="" />
+
+	<div
+		*ngIf="todo?.youtubeVideo && display"
+		class="iframe-container">
+		<iframe
+			[src]="sanitize(todo!.youtubeVideo!)"
+			title="YouTube video player"
+			frameborder="0"
+			allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+			allowfullscreen></iframe>
+	</div>
+
+	<div class="confirmationOptions">
+		<button
+			*ngIf="todo?.alwaysShow !== true"
+			mat-raised-button
+			(click)="dismissTodo()"
+			class="action-btn">
+			{{ todo?.confirmTerm ?? confirmTerm }}
+		</button>
+		<button
+			*ngIf="todo?.doAction"
+			mat-raised-button
+			(click)="doAction()"
+			class="action-btn">
+			{{ todo?.actionTitle ?? 'Go' }}
+		</button>
+	</div>
+
+	<div class="triangle"></div>
+</div>

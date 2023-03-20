@@ -1,0 +1,33 @@
+<div
+	class="view-mode rs-clickable rs-no-select"
+	(click)="toggleView()">
+	<span [ngClass]="{ lowOpacity: viewMode === 'mobile' }"
+		><span class="view-mode-name">desktop</span>&nbsp;&nbsp;<mat-icon class="rs-clickable">desktop_windows</mat-icon></span
+	>&nbsp;/&nbsp;
+	<span [ngClass]="{ lowOpacity: viewMode === 'desktop' }">
+		<mat-icon class="rs-clickable">phone_iphone</mat-icon>&nbsp;<span class="view-mode-name">mobile</span></span
+	>
+</div>
+<div class="browser-container">
+	<div
+		class="rs-browser"
+		[ngClass]="viewMode">
+		<div class="rs-browser-navigation-bar">
+			<i
+				(click)="processClickColor('red')"
+				class="rs-browser-i"></i>
+			<i class="rs-browser-i"></i>
+			<i class="rs-browser-i"></i>
+			<input
+				class="rs-browser-address-bar clickable"
+				[value]="formUrl"
+				readonly
+				[cdkCopyToClipboard]="formUrl"
+				(cdkCopyToClipboardCopied)="processCopyToClipboardEvent($event)" />
+		</div>
+
+		<div class="rs-browser-container">
+			<ng-content></ng-content>
+		</div>
+	</div>
+</div>

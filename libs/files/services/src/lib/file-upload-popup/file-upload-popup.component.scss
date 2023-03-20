@@ -1,0 +1,64 @@
+:host {
+	width: 300px;
+	height: auto;
+	max-height: 400px;
+	position: absolute;
+	bottom: 0px;
+	right: 0px;
+	z-index: 10;
+	display: block;
+	background-color: var(--rs-yellow-lighter);
+	border-radius: 5px;
+	padding: 5px;
+	margin: 5px;
+	overflow-y: auto;
+}
+
+.uploadableFile {
+	border: 1px solid rgba(0, 0, 0, 0.1);
+	margin: 1px;
+	display: flex;
+	position: relative;
+	width: 100%;
+	flex-direction: row;
+	border-radius: 7px;
+	overflow: hidden;
+
+	.file-column {
+		display: flex;
+		flex-direction: column;
+		width: 80%;
+	}
+	.actions-column {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 20%;
+	}
+
+	.progress-details,
+	.state-details,
+	.file-details {
+		width: 100%;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+
+		.file-name {
+			margin: 5px;
+			text-overflow: ellipsis;
+			overflow: hidden;
+			white-space: nowrap;
+		}
+		.percentage-value,
+		.state-value,
+		.progress-bar {
+			margin: 5px;
+		}
+
+		.state-value {
+			opacity: 0.7;
+			font-size: smaller;
+		}
+	}
+}

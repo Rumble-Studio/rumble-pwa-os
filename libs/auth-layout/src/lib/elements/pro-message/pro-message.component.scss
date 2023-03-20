@@ -1,0 +1,63 @@
+.pill {
+	background-color: var(--rs-yellow);
+	color: black;
+	border-radius: 50px;
+	padding: 0.5rem 1rem;
+	font-size: 0.9rem;
+}
+
+.message-side {
+	z-index: 1;
+	padding: 25px;
+	border-radius: 30px;
+	flex-grow: 1;
+	position: relative;
+	overflow: hidden;
+	margin: 20px;
+
+	.headline {
+		font-size: 2.5rem;
+		margin-top: 10px;
+		margin-bottom: 10px;
+		.headline-color {
+			color: var(--rs-yellow);
+		}
+	}
+	.sub-headline {
+		font-size: 20px;
+		font-weight: bold;
+	}
+
+	.avantages {
+		.avantage {
+			display: flex;
+			align-items: center;
+			font-size: 17px;
+			mat-icon {
+				margin-right: 10px;
+			}
+		}
+		border-bottom: 1px solid black;
+	}
+
+	.side-info-bottom {
+		.trust-line {
+			font-size: 16px;
+		}
+		.company-trust {
+			display: flex;
+			flex-direction: row;
+			justify-content: center;
+			align-items: center;
+			p {
+				margin: 10px;
+			}
+		}
+	}
+
+	&.mobile {
+		max-width: 100%;
+		margin: 0px;
+		padding: 20px 10px 20px 10px;
+	}
+}

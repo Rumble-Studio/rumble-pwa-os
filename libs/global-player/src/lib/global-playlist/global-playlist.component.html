@@ -1,0 +1,25 @@
+<div
+	#handle
+	class="handle rs-handle rs-no-select">
+	<i
+		(click)="collapse()"
+		class="material-icons-outlined rs-clickable"
+		>expand_more</i
+	>
+	<ng-content></ng-content>
+</div>
+<div
+	*ngIf="state; else noItemToPlayTpl"
+	class="playlist-container">
+	<rumble-pwa-virtual-playlist
+		[playlistIdentifier]="'global-playlist'"
+		[state]="state"
+		[displayTranscript]="true"
+		[displayEndOfPlaylist]="true"
+		[displayFavorite]="displayFavorite"
+		[displayDetails]="true"
+		(dropTrackEvent)="processDropTrackEvent($event)"></rumble-pwa-virtual-playlist>
+</div>
+<ng-template #noItemToPlayTpl>
+	<div class="nothing-to-play-container">Playlist empty</div>
+</ng-template>

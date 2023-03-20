@@ -1,0 +1,49 @@
+<div class="dismiss-container">
+	<button
+		type="button"
+		mat-flat-button
+		(click)="goToAllExports()">
+		See all exports <i class="material-icons-outlined">archive</i>
+	</button>
+	&nbsp;
+	<button
+		type="button"
+		mat-flat-button
+		class="mat-elevation-z1"
+		(click)="dismiss()">
+		<mat-icon>close</mat-icon>
+	</button>
+</div>
+
+<ng-container *ngIf="mix$$$.$ | async as mix">
+	<section>
+		<h1>Exports of {{ mix.name }}</h1>
+		<p>
+			<i>{{ mix.description }}</i>
+		</p>
+	</section>
+
+	<section>
+		<button
+			type="button"
+			mat-raised-button
+			(click)="updateExportInfo()">
+			Refresh data <mat-icon>refresh</mat-icon>
+		</button>
+	</section>
+
+	<section *ngIf="exports.length > 0; else noExportTpl">
+		<rumble-pwa-export-item
+			*ngFor="let entityExport of exports"
+			[objectId]="entityExport.id"></rumble-pwa-export-item>
+	</section>
+	<ng-template #noExportTpl>
+		<p>No exports found for this mix.</p>
+		<button
+			type="button"
+			mat-raised-button
+			(click)="goToAllExports()">
+			See all exports <i class="material-icons-outlined">archive</i>
+		</button>
+	</ng-template>
+</ng-container>

@@ -1,0 +1,49 @@
+<div class="dialog-container">
+	<ng-template #cantSignInWithPasswordTpl>
+		<h3>Welcome back!</h3>
+
+		<p>This email has already been used before. To protect your previous answers we need to verify that it is you :)</p>
+		<p>To access this page, please:</p>
+		<ol>
+			<li>Click the yellow button below</li>
+			<li>Go to your email inbox</li>
+			<li>Click the link in the email we sent you</li>
+		</ol>
+		<p>Then you'll be brought back here to continue.</p>
+		<input
+			class="submitBtn"
+			type="button"
+			(click)="sendPasswordLessConnectionLink()"
+			value="📮 Send me the email" />
+	</ng-template>
+	<div
+		*ngIf="canSignInWithAPassword; else cantSignInWithPasswordTpl"
+		[style.width]="'100%'">
+		<rumble-pwa-pro-login-form
+			[defaultEmail]="defaultEmail"
+			(leaveFormEvent)="dismiss()"
+			*ngIf="!registerMode">
+		</rumble-pwa-pro-login-form>
+
+		<rumble-pwa-pro-register-form
+			[defaultEmail]="defaultEmail"
+			*ngIf="registerMode">
+		</rumble-pwa-pro-register-form>
+
+		<!-- <div class="bottom-link">
+			<span
+				class="rs-clickable"
+				*ngIf="showRegisterTab && !registerMode"
+				(click)="setRegisterMode(true)"
+				>No account yet? <span class="rs-link">Register</span></span
+			>
+
+			<span
+				class="rs-clickable"
+				*ngIf="registerMode"
+				(click)="setRegisterMode(false)"
+				>Already an account? <span class="rs-link">Sign in</span></span
+			>
+		</div> -->
+	</div>
+</div>

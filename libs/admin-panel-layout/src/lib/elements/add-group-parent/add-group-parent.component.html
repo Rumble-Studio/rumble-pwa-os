@@ -1,0 +1,43 @@
+<div class="add-parent">
+	<h2>Add a parent to {{ data.group.id }}</h2>
+	<form class="example-form">
+		<mat-form-field
+			class="full-width"
+			appearance="outline">
+			<mat-label>Group ID</mat-label>
+			<input
+				type="text"
+				placeholder="Ex. group1"
+				aria-label="Text"
+				matInput
+				[formControl]="groupControl"
+				[matAutocomplete]="auto" />
+			<mat-autocomplete
+				autoActiveFirstOption
+				#auto="matAutocomplete">
+				<mat-option
+					*ngFor="let group of filteredGroups | async"
+					[value]="group">
+					{{ group }}
+				</mat-option>
+			</mat-autocomplete>
+		</mat-form-field>
+	</form>
+	<div class="full-width horizontal">
+		<button
+			type="button"
+			mat-stroked-button
+			(click)="dismiss()">
+			<mat-icon>close</mat-icon>
+			Cancel
+		</button>
+
+		<button
+			type="submit"
+			mat-raised-button
+			(click)="save()">
+			<mat-icon>add</mat-icon>
+			Add
+		</button>
+	</div>
+</div>

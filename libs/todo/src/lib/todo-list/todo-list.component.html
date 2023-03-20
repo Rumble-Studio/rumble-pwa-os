@@ -1,0 +1,16 @@
+<div class="todo-list-items-container">
+	<header
+		*ngIf="title"
+		class="rs-header">
+		<section class="title">
+			<span class="object-category">{{ title }}</span>
+		</section>
+	</header>
+	<p
+		*ngIf="description"
+		[innerHTML]="description"></p>
+
+	<todo-list-item
+		*ngFor="let todo of todos"
+		[todo]="todo"></todo-list-item>
+</div>

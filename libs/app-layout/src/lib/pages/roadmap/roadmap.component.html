@@ -1,0 +1,81 @@
+<h3>Roadmap and feature requests</h3>
+<!-- <section class="know-urgent-items">
+	<h4>To give you a quick peek at the short-term roadmap (we are talking about hours or days ETA):</h4>
+	<ul>
+		<li>Add recording ability to the mix page [IN PROGRESS]</li>
+		<li>Fixing the "Export all" feature (not always launching the export the right way)</li>
+	</ul>
+	<h4>Thanks for your upvotes! The following items are now officialiy part of our roadmap:</h4>
+	<ul>
+		<li>CNAME settings for a better whitelabelling</li>
+		<li>Video questions</li>
+	</ul>
+</section> -->
+<section class="wait-message">
+	<mat-button-toggle-group
+		*ngIf="cannySsoTokenLoaded"
+		name="fontStyle"
+		aria-label="Font Style"
+		[(ngModel)]="selectedBoardToken">
+		<mat-button-toggle [value]="tokens.featureRequests">Feature requests</mat-button-toggle>
+		<mat-button-toggle [value]="tokens.bugs">Bugs</mat-button-toggle>
+		<mat-button-toggle [value]="tokens.integrationRequests">Integration requests</mat-button-toggle>
+		<mat-button-toggle [value]="tokens.languageRequests">Language requests</mat-button-toggle>
+	</mat-button-toggle-group>
+	<br />
+	<br />
+	<div
+		#cannyContainer
+		id="canny-container">
+		<div data-canny></div>
+	</div>
+	<p *ngIf="!cannySsoTokenLoaded">We are loading the interactive roadmap...</p>
+</section>
+<!-- <section class="know-urgent-items">
+	<h4>Changelog</h4>
+
+	<ul>
+		<li><span class="changelog-date">July 31th, 2022</span>: ~20 stock jingles added to the mix page</li>
+		<li>
+			<span class="changelog-date">July 30th, 2022</span>: Use your file library directly in the mix page (and upload new
+			ones)
+		</li>
+		<li><span class="changelog-date">July 29th, 2022</span>: 🛠️ fix audio recorded not displayed in guest screen</li>
+		<li>
+			<span class="changelog-date">July 29th, 2022</span>: Export guest non-audio answers to a CSV file (transcript
+			included).
+		</li>
+
+		<li><span class="changelog-date">July 28th, 2022</span>: You can now add a Call to action on the closing message.</li>
+		<li>
+			<span class="changelog-date">July 28th, 2022</span>: 🛠️ fix export as merged files not working (slash / in names
+			were breaking the export process)
+		</li>
+		<li>
+			<span class="changelog-date">July 27th, 2022</span>: Download ALL guest answers into on ZIP file or as individual
+			files per guest (available in 4th tab in Interview editor) + new naming convention for files and folders.
+		</li>
+		<li>
+			<span class="changelog-date">July 27th, 2022</span>: We can now directly go to a specific roadmap item like
+			<a
+				class="rs-roadmap-link"
+				href="/roadmap/p/login-and-sign-up-with-google"
+				>Login with google</a
+			>
+		</li>
+		<li>
+			<span class="changelog-date">July 27th, 2022</span>: 🛠️ Fix "Share this interview" (branding files were not shared)
+		</li>
+		<li>
+			<span class="changelog-date">July 26th, 2022</span>: Moved assistant widget to Help page. Removed widget and cookie
+			banner from guest experience.
+		</li>
+		<li><span class="changelog-date">July 26th, 2022</span>: Disabled sharing files feature on Tutorial Interview</li>
+
+		<li>
+			<span class="changelog-date">July 26th, 2022</span>: 🌮 AppSumo Campaign launch : add button to review and upgrade
+			at the top
+		</li>
+		<li><span class="changelog-date">July 26th, 2022</span>: ✌️ Add changelog to app</li>
+	</ul>
+</section> -->

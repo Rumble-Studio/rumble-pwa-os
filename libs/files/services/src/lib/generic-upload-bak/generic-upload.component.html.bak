@@ -1,0 +1,260 @@
+<div class="container">
+	<section class="header">
+		<h2 *ngIf="dialogDataUploadDetails.title">{{ dialogDataUploadDetails.title }}</h2>
+		<h3 *ngIf="dialogDataUploadDetails.description">{{ dialogDataUploadDetails.description }}</h3>
+	</section>
+
+	<form (submit)="saveFileAndReturnResult()">
+		<!-- BROWSER BUTTON -->
+		<ng-container *ngIf="!currentlyUploadingFile">
+			<button
+				class="import-btn"
+				*ngIf="(!entityFileSrc && !entityFile$$$.id) || dialogDataUploadDetails.allowMultipleFilesUpload"
+				mat-raised-button
+				type="button"
+				(click)="openBrowser()"
+				[style.margin-top.px]="dialogDataUploadDetails.askForPublicName ? 20 : 10">
+				<mat-icon>folder</mat-icon>
+				Browse
+			</button>
+			<input
+				*ngIf="dialogDataUploadDetails.allowMultipleFilesUpload; else inputMultipleFile"
+				hidden
+				(change)="onFileChanged($event)"
+				#browseFileBtn
+				multiple
+				type="file"
+				name="publicname"
+				accept="{{ acceptedFileType }}" />
+			<ng-template #inputMultipleFile>
+				<input
+					hidden
+					(change)="onFileChanged($event)"
+					#browseFileBtn
+					type="file"
+					name="publicname"
+					accept="{{ acceptedFileType }}" />
+			</ng-template>
+		</ng-container>
+
+		<!-- FILE SELECTED FROM TABLE -->
+		<ng-container *ngIf="entityFileSrc; else filesImportedTpl">
+			<form class="border-and-shadow">
+				<mat-form-field
+					class="text-input"
+					appearance="outline"
+					*ngIf="dialogDataUploadDetails.askForPublicName && !entityFile$$$.id; else noNeedForPublicNameTpl">
+					<mat-label>File name</mat-label>
+					<input
+						[(ngModel)]="entityFilePublicName"
+						[maxlength]="inputMaxLength"
+						matInput
+						name="publicname"
+						type="text"
+						placeholder="Ex. 'My Amazing File'" />
+					<mat-hint>
+						<span> Give a custom name to this file. </span>
+						<span class="char-counter"> ({{ entityFilePublicName?.length }} / {{ inputMaxLength }}) </span>
+					</mat-hint>
+				</mat-form-field>
+				<ng-template #noNeedForPublicNameTpl>
+					<ng-container *ngIf="entityFile$$$.value">
+						<div class="file-upload-name-container">
+							<span class="file-upload-name"
+								>Your selected file: {{ entityFile$$$.value.publicName ?? entityFile$$$.value.fileName }}</span
+							>
+						</div>
+					</ng-container>
+				</ng-template>
+				<ng-container
+					*ngTemplateOutlet="
+						previewFileTpl;
+						context: { fileSrc: entityFileSrc, macroKind: entityFileMacroFileKindToUseForPreview }
+					">
+				</ng-container>
+
+				<rumble-pwa-file-tags-editor
+					[ngClass]="{ hide: !dialogDataUploadDetails.tagsEditor }"
+					(tagsHasChangedEmitter)="entityFileTags = $event"
+					(keydown.enter)="$event.stopPropagation()"
+					[fileId]="entityFile$$$.id">
+				</rumble-pwa-file-tags-editor>
+			</form>
+		</ng-container>
+
+		<!-- IMPORTED FILES -->
+		<ng-template #filesImportedTpl>
+			<ng-container
+				#filesImportedTpl
+				*ngFor="let file of files; let fileIndex = index">
+				<ng-container *ngIf="file">
+					<form
+						*ngIf="!file.uploading && !file.uploaded; else uploadingTpl"
+						class="border-and-shadow">
+						<mat-form-field
+							class="text-input"
+							appearance="outline"
+							*ngIf="dialogDataUploadDetails.askForPublicName; else noNeedForPublicNameTpl">
+							<mat-label>File name</mat-label>
+							<input
+								[(ngModel)]="file.publicName"
+								[maxlength]="inputMaxLength"
+								matInput
+								name="publicname"
+								type="text"
+								placeholder="Ex. 'My Amazing File'" />
+							<mat-hint>
+								<span> Give a custom name to this file. </span>
+								<span class="char-counter"> ({{ file.publicName?.length }} / {{ inputMaxLength }}) </span>
+							</mat-hint>
+						</mat-form-field>
+						<ng-template #noNeedForPublicNameTpl>
+							<div
+								class="file-upload-name-container"
+								*ngIf="files.length > 0">
+								<span class="file-upload-name">Your file: {{ file.file.name }}</span>
+							</div>
+						</ng-template>
+
+						<ng-container
+							*ngTemplateOutlet="
+								previewFileTpl;
+								context: { fileSrc: file.src, macroKind: file.macroFileKindToUseForPreview, fileIndex }
+							">
+						</ng-container>
+
+						<rumble-pwa-file-tags-editor
+							[ngClass]="{ hide: !dialogDataUploadDetails.tagsEditor }"
+							(tagsHasChangedEmitter)="file.tags = $event"
+							(keydown.enter)="$event.stopPropagation()">
+						</rumble-pwa-file-tags-editor>
+					</form>
+					<ng-template #uploadingTpl>
+						<div class="border-and-shadow">
+							<section>
+								<span *ngIf="file.uploading; else uploadCompleteTpl">
+									<mat-spinner
+										diameter="20"
+										class="spinner"></mat-spinner>
+									<p>{{ file.publicName }}</p>
+									{{ file.loadingMessage }}
+									<span
+										*ngIf="file.uploadPercentage"
+										class="loading-percentage"
+										>{{ file.uploadPercentage }}%</span
+									>
+								</span>
+								<ng-template #uploadCompleteTpl>
+									<p>{{ file.publicName }} has been uploaded successfully.</p>
+								</ng-template>
+							</section>
+						</div>
+					</ng-template>
+				</ng-container>
+			</ng-container>
+		</ng-template>
+
+		<!-- GLOBAL ACTIONS -->
+		<div class="file-upload">
+			<!-- cancel button -->
+			<button
+				mat-stroked-button
+				type="button"
+				(click)="close()"
+				class="normal-btn">
+				<mat-icon>close</mat-icon>
+				Cancel
+			</button>
+			<!-- clear button -->
+			<button
+				*ngIf="entityFile$$$.id || (!currentlyUploadingFile && files.length > 0)"
+				mat-stroked-button
+				type="button"
+				(click)="clearFile()"
+				class="normal-btn">
+				<mat-icon>delete</mat-icon>
+				Clear{{ dialogDataUploadDetails.allowMultipleFilesUpload ? ' (all)' : '' }}
+			</button>
+			<!-- submit button -->
+			<button
+				*ngIf="entityFile$$$.id || (!currentlyUploadingFile && files.length > 0)"
+				mat-raised-button
+				type="submit"
+				class="normal-btn">
+				<mat-icon>check</mat-icon>
+				Submit
+			</button>
+		</div>
+	</form>
+
+	<!-- Display file table if allowExistingFile -->
+	<ng-container *ngIf="dialogDataUploadDetails.allowExistingFile">
+		<rumble-pwa-file-table
+			[files]="entityFiles"
+			(tableClickEvent)="processTableClick($event)">
+		</rumble-pwa-file-table>
+	</ng-container>
+</div>
+
+<ng-template
+	#previewFileTpl
+	let-fileSrc="fileSrc"
+	let-macroKind="macroKind"
+	let-fileIndex="fileIndex">
+	<div
+		class="file-preview"
+		*ngIf="fileSrc">
+		<ng-container [ngSwitch]="macroKind">
+			<ng-container *ngSwitchCase="'image'">
+				<div class="image-overlay">
+					<img
+						[src]="fileSrc"
+						class="imagePreview" />
+				</div>
+			</ng-container>
+
+			<ng-container *ngSwitchCase="'audio'">
+				<div>
+					<audio
+						controls
+						[src]="fileSrc">
+						Your browser does not support the
+						<code>audio</code>
+					</audio>
+				</div>
+			</ng-container>
+
+			<ng-container *ngSwitchCase="'video'">
+				<video controls>
+					<source
+						[src]="fileSrc"
+						type="video/webm" />
+
+					<source
+						[src]="fileSrc"
+						type="video/mp4" />
+
+					<source
+						[src]="fileSrc"
+						type="video/avi" />
+					Sorry, your browser does not support embedded videos.
+				</video>
+			</ng-container>
+
+			<ng-container *ngSwitchDefault> No preview available for this file. </ng-container>
+		</ng-container>
+
+		<!-- switch case on macroFileKindToUseForPreview -->
+
+		<div class="file-upload">
+			<button
+				type="button"
+				mat-stroked-button
+				(click)="clearFile(fileIndex)"
+				class="normal-btn">
+				<mat-icon>delete</mat-icon>
+				Clear
+			</button>
+		</div>
+	</div>
+</ng-template>

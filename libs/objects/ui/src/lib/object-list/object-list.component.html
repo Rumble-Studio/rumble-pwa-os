@@ -1,0 +1,233 @@
+<!-- header -->
+<div
+	*ngIf="dataLoaded"
+	class="object-list-header"
+	[ngClass]="{ headerHidden: !titleTpl && !topLeftActionTpl && !middleActionTpl && !topRightActionTpl }">
+	<!-- title -->
+	<div
+		class="action"
+		*ngIf="titleTpl">
+		<ng-container [ngTemplateOutlet]="titleTpl"> </ng-container>
+	</div>
+	<!-- top left -->
+	<div class="action">
+		<ng-container
+			*ngIf="topLeftActionTpl; else defaultSearchTpl"
+			[ngTemplateOutlet]="topLeftActionTpl">
+		</ng-container>
+	</div>
+	<!-- middle -->
+	<div class="action">
+		<ng-container
+			*ngIf="middleActionTpl"
+			[ngTemplateOutlet]="middleActionTpl">
+		</ng-container>
+	</div>
+	<!-- top right -->
+	<div class="action">
+		<ng-container
+			*ngIf="topRightActionTpl"
+			[ngTemplateOutlet]="topRightActionTpl">
+		</ng-container>
+	</div>
+</div>
+
+<!-- table -->
+<div
+	*ngIf="dataSource.data.length > 0 && dataLoaded; else noDataSource"
+	[ngClass]="{
+		'mat-elevation-z8': elevatedClass
+	}">
+	<mat-table
+		#table
+		multiTemplateDataRows
+		[dataSource]="dataSource"
+		matSort
+		cdkDropList
+		[cdkDropListConnectedTo]="connectDropTo"
+		[cdkDropListData]="dropData">
+		<!-- columns definition -->
+		<ng-container
+			*ngFor="let column of columns"
+			[matColumnDef]="column.columnId">
+			<ng-container *ngIf="column.sortable; else notSortableHeaderCellTpl">
+				<mat-header-cell
+					[style.flex]="column.flex"
+					*matHeaderCellDef
+					mat-sort-header
+					class="rs-no-select">
+					<ng-container
+						*ngIf="column.headerTemplate; else defaultHeaderTpl"
+						[ngTemplateOutlet]="column.headerTemplate"></ng-container>
+					<ng-template #defaultHeaderTpl>
+						{{ column.header }}
+					</ng-template>
+				</mat-header-cell>
+			</ng-container>
+			<ng-template #notSortableHeaderCellTpl>
+				<mat-header-cell
+					*matHeaderCellDef
+					[style.flex]="column.flex"
+					class="rs-no-select">
+					<ng-container
+						*ngIf="column.headerTemplate; else defaultHeaderTpl"
+						[ngTemplateOutlet]="column.headerTemplate"></ng-container>
+					<ng-template #defaultHeaderTpl>
+						{{ column.header }}
+					</ng-template>
+				</mat-header-cell>
+			</ng-template>
+
+			<mat-cell
+				[style.flex]="column.flex"
+				*matCellDef="let object"
+				(click)="processClickEvent(object, column.columnId)">
+				<ng-container
+					*ngIf="column.template; else simpleColumnTpl"
+					[ngTemplateOutlet]="column.template"
+					[ngTemplateOutletContext]="{object}">
+				</ng-container>
+				<ng-template #simpleColumnTpl>
+					<div class="cell-container">
+						{{ object[column.objectProperty ?? column.columnId] }}
+					</div>
+				</ng-template>
+			</mat-cell>
+		</ng-container>
+
+		<!-- Checkbox Column -->
+		<ng-container matColumnDef="__select">
+			<mat-header-cell *matHeaderCellDef>
+				<mat-checkbox
+					(change)="$event ? toggleAllRows() : null"
+					[checked]="selectionModel.hasValue() && isAllSelected()"
+					[indeterminate]="selectionModel.hasValue() && !isAllSelected()"
+					[aria-label]="checkboxLabel()">
+				</mat-checkbox>
+			</mat-header-cell>
+			<mat-cell *matCellDef="let object">
+				<!-- <mat-checkbox
+					(click)="$event.stopPropagation()"
+					(change)="$event ? selectionModel.toggle(object) : null"
+					[checked]="selectionModel.isSelected(object)"
+					[aria-label]="checkboxLabel(object)">
+				</mat-checkbox> -->
+
+				<mat-checkbox
+					(click)="$event.stopPropagation()"
+					(change)="selectObject(object, $event)"
+					[checked]="isObjectSelected(object)"
+					[aria-label]="checkboxLabel(object)">
+				</mat-checkbox>
+			</mat-cell>
+		</ng-container>
+
+		<!-- row definition (handles expandable classes too) -->
+		<mat-row
+			*matRowDef="let object; columns: displayedColumns"
+			[ngClass]="
+				generateRowClasses(object, {
+					'expanded-object-element-row': !!expandedTemplate,
+					'rs-clickable': !!expandedTemplate,
+					'expanded-object-expanded-row': !!expandedTemplate ? expandedElements.includes(object) : false
+				})
+			"
+			(click)="!!expandedTemplate ? toggleExpand(object) : undefined"
+			cdkDrag
+			[cdkDragStartDelay]="{ touch: 200, mouse: 0 }"
+			[cdkDragData]="object"></mat-row>
+
+		<!-- extra row if expandable -->
+		<ng-container *ngIf="expandedTemplate">
+			<ng-container matColumnDef="expandedDetail">
+				<mat-cell
+					*matCellDef="let object"
+					[attr.colspan]="displayedColumns.length">
+					<div
+						class="expanded-object-element-detail"
+						*ngIf="expandedElements.includes(object)"
+						[@detailExpand]="expandedElements.includes(object) ? 'expanded' : 'collapsed'">
+						<ng-container
+							[ngTemplateOutlet]="expandedTemplate"
+							[ngTemplateOutletContext]="{object}">
+						</ng-container>
+					</div>
+				</mat-cell>
+			</ng-container>
+			<mat-row
+				*matRowDef="let object; columns: ['expandedDetail']"
+				[style.display]="expandedElements.includes(object) ? '' : 'none'"
+				class="expanded-object-detail-row"></mat-row>
+		</ng-container>
+
+		<!-- headers -->
+		<mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+
+		<!-- Row shown when there is no matching data. -->
+		<tr
+			class="mat-row"
+			*matNoDataRow>
+			<td
+				class="mat-cell"
+				colspan="4">
+				<span *ngIf="input; else noInputTpl"> Nothing matching the filter "{{ input.value }}" </span>
+				<ng-template #noInputTpl>
+					<span> Nothing to display </span>
+				</ng-template>
+			</td>
+		</tr>
+	</mat-table>
+
+	<mat-paginator
+		*ngIf="dataSource.data.length > pageSize"
+		[pageSize]="pageSize"
+		[pageSizeOptions]="pageSizeOptions"></mat-paginator>
+</div>
+
+<!-- default "no data" template -->
+<ng-template #noDataSource>
+	<ng-container *ngIf="dataLoaded; else loadingTpl">
+		<ng-container
+			*ngIf="noDataSourceTpl; else noDataSourceBasicTpl"
+			[ngTemplateOutlet]="noDataSourceTpl">
+		</ng-container>
+		<ng-template #noDataSourceBasicTpl>
+			<mat-card> Nothing yet here. </mat-card>
+		</ng-template>
+	</ng-container>
+	<ng-template #loadingTpl>
+		<content-loader
+			viewBox="0 0 300 40"
+			class="loader">
+			<svg:rect
+				x="0"
+				y="00"
+				width="150"
+				height="10" />
+			<svg:rect
+				x="0"
+				y="15"
+				width="150"
+				height="10" />
+			<svg:rect
+				x="0"
+				y="30"
+				width="150"
+				height="10" />
+		</content-loader>
+	</ng-template>
+</ng-template>
+
+<!-- default search template -->
+<ng-template #defaultSearchTpl>
+	<mat-form-field
+		class="rs-flex-center"
+		appearance="outline">
+		<mat-label>Filter</mat-label>
+		<input
+			matInput
+			[(ngModel)]="searchValue"
+			[placeholder]="searchPlaceholder"
+			#input />
+	</mat-form-field>
+</ng-template>

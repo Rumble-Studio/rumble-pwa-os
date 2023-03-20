@@ -1,0 +1,17 @@
+<div class="export-call-to-action-container">
+	<span class="step-kind">Call to action</span>
+	<span class="step-title">{{ steptitle }}</span>
+	<span
+		*ngIf="stepdescription"
+		class="step-hint"
+		>{{ stepdescription }}</span
+	>
+	<div
+		*ngIf="clicked; else noClick"
+		class="guest-click">
+		<span class="guest-click"><mat-icon>done</mat-icon> Guest clicked on your button!</span>
+	</div>
+	<ng-template #noClick>
+		<span class="guest-click"><mat-icon>close</mat-icon> Guest did not click on your button</span>
+	</ng-template>
+</div>

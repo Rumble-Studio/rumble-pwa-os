@@ -1,0 +1,44 @@
+<ng-container *ngIf="group$$$.$ | async as group; else groupNotAvailableTpl">
+	<!-- icon -->
+	<ng-container
+		*ngIf="!hideIcon"
+		[ngSwitch]="group.kind">
+		<ng-container *ngSwitchCase="'team'">
+			<i class="truc-icon material-icons-outlined">groups</i>
+		</ng-container>
+		<ng-container *ngSwitchCase="'user'">
+			<i class="truc-icon material-icons-outlined">person</i>
+		</ng-container>
+		<ng-container *ngSwitchCase="'folder'">
+			<i class="truc-icon material-icons-outlined">folder</i>
+		</ng-container>
+		<ng-container *ngSwitchCase="'file'">
+			<i class="truc-icon material-icons-outlined">attachment</i>
+		</ng-container>
+		<ng-container *ngSwitchDefault>
+			<i class="truc-icon material-icons-outlined">warning_amber</i>
+		</ng-container>
+	</ng-container>
+	<!-- name -->
+	<span class="no-select group-container-name">
+		<ng-container [ngSwitch]="group.kind">
+			<ng-container *ngSwitchCase="'team'">
+				{{ group.name }}
+			</ng-container>
+			<ng-container *ngSwitchCase="'user'">
+				<rumble-pwa-group-item-user [userId]="group.id"></rumble-pwa-group-item-user>
+			</ng-container>
+
+			<ng-container *ngSwitchCase="'file'">
+				<rumble-pwa-group-item-file [fileId]="group.id"></rumble-pwa-group-item-file>
+			</ng-container>
+			<ng-container *ngSwitchDefault>
+				{{ group.name }}
+			</ng-container>
+		</ng-container>
+	</span>
+</ng-container>
+<ng-template #groupNotAvailableTpl>
+	<i class="truc-icon material-icons-outlined">warning_amber</i>
+	<span class="no-select group-container-name">Element not available</span>
+</ng-template>

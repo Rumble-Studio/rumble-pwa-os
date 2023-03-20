@@ -1,0 +1,48 @@
+<div
+	class="progress-bar rs-clickable"
+	[style.borderColor]="darkColor">
+	<div
+		*ngIf="showMultiBar"
+		class="multi-bar">
+		<ng-container *ngFor="let duration of durationsToUse; let index = index">
+			<div
+				*ngIf="duration > 0"
+				class="sub-progress-bar"
+				[ngStyle]="{
+					backgroundColor: lightColor,
+					width: 100 * duration + '%',
+					opacity: 100 * cumulativeDurations[index] + '%'
+				}"
+				[ngClass]="{ noBorderOneTheLeft: index === 0 }"></div>
+		</ng-container>
+	</div>
+	<div
+		*ngIf="!showMultiBar"
+		[ngStyle]="{ backgroundColor: lightColor }"
+		class="background-no-multi-bar"></div>
+	<div
+		#playBar
+		[ngStyle]="{ backgroundColor: darkColor }"
+		class="play-bar"></div>
+	<div
+		*ngIf="showMultiBar"
+		class="multi-bar">
+		<ng-container *ngFor="let duration of durationsToUse; let index = index">
+			<div
+				*ngIf="duration > 0"
+				class="sub-progress-bar-border"
+				[ngClass]="{ noBorderOneTheLeft: index === 0 }"
+				[style.width]="100 * duration + '%'"></div>
+		</ng-container>
+	</div>
+	<div
+		#progressBar
+		class="transparent-overlay">
+		<span
+			><ng-container *ngIf="position && !hideTimes">{{ position | duration }}</ng-container></span
+		>
+		<span
+			><ng-container *ngIf="totalDuration && !hideTimes">{{ totalDuration | duration }}</ng-container></span
+		>
+	</div>
+</div>

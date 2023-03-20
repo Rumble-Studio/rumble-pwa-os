@@ -1,0 +1,33 @@
+{
+	"form": { "Open step list": "Open step list" },
+	"formOpenerPrompt": {
+		"Loading, please wait...": "Loading, please wait..."
+	},
+	"formProvider": {
+		"OK": "Next",
+		"Celebrate again": "Celebrate again",
+		"Try Rumble Studio": "Try Rumble Studio",
+		"Your email": "Your email",
+		"Let's go": "Let's go",
+		"Go back": "Go back",
+		"Continue as": "Continue as",
+		"Upload an image": "Upload an image",
+		"Upload a video": "Upload a video",
+		"Upload a document": "Upload a document",
+		"Your answer:": "Your answer:",
+		"Upload a file": "Upload a file"
+	},
+	"guestWelcomeStep": {
+		"Continue as": "Continue as",
+		"an anonymous user": "an anonymous user",
+		"Loading your details...": "Loading your details...",
+		"Close this anonymous session": "Close this anonymous session",
+		"Connect as a different user": "Connect as a different user"
+	},
+	"formStepper": {
+		"No recording": "No recording",
+		"You have not recorded any answer yet.": "You have not recorded any answer yet.",
+		"Stay here": "Stay here",
+		"Go to next step": "Go to next step"
+	}
+}

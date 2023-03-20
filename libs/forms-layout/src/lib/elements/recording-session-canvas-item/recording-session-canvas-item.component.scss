@@ -1,0 +1,16 @@
+.decoration-container {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	img {
+		object-fit: cover;
+		width: 100%;
+		height: 100%;
+	}
+}
+.play-button {
+	position: absolute;
+	right: 5px;
+	bottom: 5px;
+	background: transparent;
+}

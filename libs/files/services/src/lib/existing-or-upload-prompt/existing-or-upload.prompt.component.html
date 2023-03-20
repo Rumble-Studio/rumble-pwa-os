@@ -1,0 +1,28 @@
+<section class="top-section">
+	<!-- close button -->
+	<div class="close-line rs-full-width rs-flex-end">
+		<div
+			class="rs-clickable close-icon-container"
+			mat-dialog-close>
+			<mat-icon>close</mat-icon>
+		</div>
+	</div>
+</section>
+<div
+	class="choice-container"
+	*transloco="let t; read: 'filesService.existingOrUpload'">
+	<div
+		class="btn mat-elevation-z1 rs-clickable"
+		mat-raised-button
+		[mat-dialog-close]="'upload'">
+		<span> {{ t('Upload a new file') }} </span>
+		<mat-icon>upload</mat-icon>
+	</div>
+	<div
+		class="btn mat-elevation-z1 rs-clickable"
+		mat-raised-button
+		[mat-dialog-close]="'existing'">
+		<span> {{ t('Choose from your file library') }} </span>
+		<mat-icon>file_copy</mat-icon>
+	</div>
+</div>

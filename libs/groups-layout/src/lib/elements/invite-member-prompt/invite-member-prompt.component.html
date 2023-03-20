@@ -1,0 +1,52 @@
+<div class="dismiss-container">
+	<button
+		type="button"
+		mat-flat-button
+		class="mat-elevation-z1"
+		(click)="dismiss()">
+		<mat-icon>close</mat-icon>
+	</button>
+</div>
+
+<form
+	class="group-form"
+	[formGroup]="groupForm"
+	(ngSubmit)="inviteUser()">
+	<h2>Invite to {{ group.name }}</h2>
+	<mat-form-field
+		class="full-width"
+		appearance="outline">
+		<mat-label>Email</mat-label>
+		<input
+			matInput
+			placeholder="Ex. jean-michel@example.com"
+			formControlName="email"
+			name="email"
+			type="email"
+			required />
+		<div
+			class="formError"
+			*ngIf="groupForm.dirty && groupForm.controls.email.errors">
+			<ng-template [ngIf]="groupForm.controls.email.errors.required"> The email is required </ng-template>
+			<ng-template [ngIf]="groupForm.controls.email.errors.email"> The email is incorrect </ng-template>
+		</div>
+	</mat-form-field>
+
+	<div class="full-width horizontal">
+		<button
+			type="button"
+			mat-stroked-button
+			(click)="dismiss()">
+			<mat-icon>close</mat-icon>
+			Cancel
+		</button>
+
+		<button
+			type="submit"
+			mat-raised-button
+			[disabled]="!groupForm.valid && groupForm.dirty">
+			<mat-icon>sent</mat-icon>
+			Invite {{ groupForm.value.email ? groupForm.value.email : '' }}
+		</button>
+	</div>
+</form>

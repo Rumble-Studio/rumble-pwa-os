@@ -1,0 +1,17 @@
+:host {
+	display: block;
+	position: absolute;
+	right: 0px;
+	z-index: 10;
+
+	--size: 20px;
+}
+
+.lock {
+	position: relative;
+	height: var(--size);
+	width: var(--size);
+	border-radius: 50%;
+	color: var(--rs-yellow);
+	text-shadow: 1px 2px 1px rgb(0 0 0 / 20%);
+}

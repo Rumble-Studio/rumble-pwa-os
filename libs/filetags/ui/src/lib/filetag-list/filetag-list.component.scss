@@ -1,0 +1,20 @@
+table {
+	width: (100%);
+}
+mat-cell,
+mat-header-cell,
+mat-footer-cell {
+	&:not(mat-cell.mat-column-description) {
+		justify-content: center;
+	}
+}
+
+tr.mat-no-data-row {
+	display: flex;
+	width: 100%;
+	td {
+		width: 100%;
+		display: flex;
+		align-items: center;
+	}
+}

@@ -1,0 +1,14 @@
+<mat-nav-list>
+	<ng-container *ngFor="let link of links">
+		<rumble-pwa-link-side-nav
+			*ngIf="
+				(!link.superUserOnly && !link.supportUserAccess) ||
+				(link.superUserOnly && this.showSuperUser) ||
+				(link.supportUserAccess && this.showSupportUser)
+			"
+			[link]="link"
+			[compactView]="compactView"
+			[menuTitle]="menuTitle">
+		</rumble-pwa-link-side-nav>
+	</ng-container>
+</mat-nav-list>

@@ -1,0 +1,73 @@
+/* You can add global styles to this file, and also import other style files */
+
+* {
+	box-sizing: border-box;
+	font-family: inherit;
+	color: inherit;
+}
+
+html,
+body {
+	height: 100%;
+}
+body {
+	margin: 0;
+	overscroll-behavior-y: none;
+	font-family: 'DM Sans', 'Roboto', 'Helvetica Neue', sans-serif;
+	scroll-margin: 0;
+	scroll-padding: 0;
+}
+
+.mat-tab-label {
+	min-width: 1px !important;
+}
+
+.mat-input-element,
+.mat-form-field-label,
+.mat-hint {
+	color: inherit;
+}
+
+.mat-form-field-wrapper {
+	padding-bottom: unset;
+}
+.mat-form-field-subscript-wrapper {
+	position: relative !important;
+}
+
+.mat-checkbox {
+	.mat-checkbox-layout {
+		white-space: unset;
+	}
+}
+
+/*
+  ATTEMPT TO CUSTOM THE SLIDER COLOR
+  
+	// .mat-slider {
+	// 	background: transparent;
+	// }
+
+	// .mat-slider.mat-accent .mat-slider-thumb {
+	// 	background-color: inherit;
+	// }
+
+	// .mat-slider.mat-accent .mat-slider-track-fill {
+	// 	background-color: inherit;
+	// }
+
+*/
+
+// .mat-form-field-appearance-outline {
+//   .mat-form-field-outline-end,
+//   .mat-form-field-outline-start,
+//   .mat-form-field-outline-gap {
+//     border: 1px solid red;
+//   }
+// }
+
+rumble-pwa-guest-generic {
+	.mat-form-field-appearance-outline .mat-form-field-outline {
+		color: inherit;
+	}
+}

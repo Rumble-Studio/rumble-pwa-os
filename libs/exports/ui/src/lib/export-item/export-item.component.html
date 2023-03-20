@@ -1,0 +1,79 @@
+<div
+	class="container"
+	*ngIf="entityExport$$$.$ | async as entityExport">
+	<section class="object-property">
+		<!-- title -->
+		<div class="object-title">
+			<h3>{{ entityExport.name }}</h3>
+			<div class="btn-section">
+				<button
+					class="gotomix-btn"
+					*ngIf="entityExport.mixId && displayGoToMixBtn"
+					mat-raised-button
+					[routerLink]="'/mixes/' + entityExport.mixId">
+					Go to mix
+				</button>
+
+				<button
+					*ngIf="task$$$.value?.progress !== 1"
+					type="button"
+					mat-raised-button
+					(click)="updateExportInfo()">
+					Refresh data <mat-icon>refresh</mat-icon>
+				</button>
+			</div>
+		</div>
+
+		<!-- description -->
+		<div class="property">
+			<ng-container *ngIf="(entityExport.description ?? '').length > 0; else noDescriptionTpl">
+				<span class="property-title">Description:</span>
+				{{ entityExport.description }}
+			</ng-container>
+			<ng-template #noDescriptionTpl>
+				<!-- <span> No description. </span> -->
+			</ng-template>
+		</div>
+
+		<ng-container *ngIf="task$$$.value && !task$$$.value.complete; else defaultTpl">
+			<ng-container *ngIf="task$$$.value.failed; else spinnerTpl">
+				Your export request failed. No worries: it won't count against your quotas.
+			</ng-container>
+			<ng-template #spinnerTpl
+				><div class="task">Task in progress <mat-spinner [diameter]="25"></mat-spinner></div
+			></ng-template>
+		</ng-container>
+
+		<ng-template #defaultTpl>
+			<div
+				*ngIf="resultData; else noResultDataTpl"
+				class="property">
+				<section *ngIf="archive; else noArchiveTpl">
+					<!-- download archive btn -->
+					<p>There is one archive file included in this export ({{ archive.fileName }}).</p>
+
+					<rumble-pwa-downloader
+						[fileId]="archive.fileId"
+						[downloadMessage]="'Download the ZIP file'"></rumble-pwa-downloader>
+				</section>
+				<ng-template #noArchiveTpl>
+					<!-- <p>There are no archive files included in this export.</p> -->
+				</ng-template>
+				<rumble-pwa-virtual-playlist
+					*ngIf="exportPlaylistId && (hasMergedTracks || entityExport.fileId)"
+					[state]="state"
+					[canDrag]="true"
+					[displayTranscript]="true"
+					[displayFavorite]="true"
+					[displayDetails]="true"
+					[displayTrackPlayerActions]="true"
+					[connectDropTo]="[]"
+					[displayDownload]="true"
+					[playlistIdentifier]="exportPlaylistId">
+				</rumble-pwa-virtual-playlist>
+			</div>
+
+			<ng-template #noResultDataTpl> There is no result (yet) available for this export. </ng-template>
+		</ng-template>
+	</section>
+</div>

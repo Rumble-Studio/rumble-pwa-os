@@ -1,0 +1,32 @@
+<div class="picker-container">
+	<div class="color-list">
+		<ng-container *ngFor="let color of colors; let colorIndex = index">
+			<div
+				*ngIf="color && canYouEdit"
+				(click)="emitDeleteColorByIndex(colorIndex)"
+				class="color-item">
+				<div
+					class="color-preview"
+					[style.background-color]="colors[colorIndex]"></div>
+				<span class="color-text"> {{ color }}</span>
+				<mat-icon class="trash-icon">delete</mat-icon>
+			</div>
+		</ng-container>
+		<div
+			*ngIf="canYouEdit"
+			class="color-item new-color"
+			(click)="colorPicker.click()">
+			<input
+				[style.opacity]="0"
+				[style.width]="'0px'"
+				[style.background]=""
+				[(colorPicker)]="colorPickerColor"
+				[cpOKButton]="true"
+				[cpOutputFormat]="'hex'"
+				[cpCancelButton]="true"
+				(colorPickerSelect)="emitNewSelectedColor($event)"
+				#colorPicker />
+			<mat-icon>add</mat-icon>
+		</div>
+	</div>
+</div>

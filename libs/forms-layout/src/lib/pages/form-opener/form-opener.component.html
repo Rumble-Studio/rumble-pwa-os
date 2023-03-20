@@ -1,0 +1,46 @@
+<ng-container *ngIf="form$$$.$ | async as form; else noForm">
+	<ng-container *ngIf="!isOffline; else formIsOfflineTpl">
+		<ng-container *ngIf="!isDeleted; else formIsDeletedTpl">
+			<div class="form-opener-container">
+				<rumble-pwa-form
+					[formId]="form.id"
+					[previewMode]="false"
+					[providerId]="providerId"
+					[stepId]="stepId"
+					[forceMobile]="layoutSize < 1"
+					[profile]="profile">
+				</rumble-pwa-form>
+			</div>
+		</ng-container>
+	</ng-container>
+
+	<ng-template #formIsOfflineTpl>
+		<div class="alternative-content">
+			<h3>
+				<i class="material-icons-outlined">speaker_notes_off</i>
+				This interview is not accessible to the public.
+			</h3>
+		</div>
+	</ng-template>
+	<ng-template #formIsDeletedTpl>
+		<div class="alternative-content">
+			<h3>
+				<i class="material-icons-outlined">delete</i>
+				This interview has been deleted.
+			</h3>
+		</div>
+	</ng-template>
+</ng-container>
+<ng-template #noForm>
+	<div
+		class="alternative-content"
+		*ngIf="formIsLoading; else notLoadingTpl">
+		Loading, please wait...
+	</div>
+	<ng-template #notLoadingTpl>
+		<div class="alternative-content">
+			<mat-icon>error_outline</mat-icon>
+			No interview available.
+		</div>
+	</ng-template>
+</ng-template>

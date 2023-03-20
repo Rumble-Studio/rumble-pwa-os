@@ -1,0 +1,128 @@
+:host {
+	height: 100%;
+	width: 100%;
+}
+.browser-container {
+	height: calc(100% - 40px);
+	width: 100%;
+	// background-color: green;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.view-mode {
+	// height: 40px;
+	// background-color: cyan;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin: 10px 5px 5px 0px;
+
+	span {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		.view-mode-name {
+			font-size: 10px;
+		}
+	}
+}
+
+.lowOpacity {
+	opacity: 0.5;
+}
+
+.rs-browser {
+	font-size: 18px;
+	border-radius: 0.25em;
+	display: flex;
+	flex-direction: column;
+	position: relative;
+	overflow: hidden;
+	box-shadow: 0 0.2em 0.4em -0.05em rgba(0, 0, 0, 0.3);
+	height: calc(100% - 20px);
+	width: calc(100% - 20px);
+}
+
+.rs-browser-navigation-bar {
+	display: flex;
+	box-sizing: border-box;
+	height: 2.1em;
+	width: 100%;
+	background: linear-gradient(to bottom, #edeaed 0%, #dddfdd 100%);
+	border-bottom: 2px solid #cbcbcb;
+
+	.rs-browser-i {
+		display: inline-block;
+		height: 0.7em;
+		width: 0.7em;
+		border-radius: 0.45em;
+		background-color: #eee;
+		margin: 0.4em 0.15em;
+	}
+
+	.rs-browser-i:nth-child(1) {
+		background-color: rgb(255, 86, 79);
+	}
+
+	.rs-browser-i:nth-child(1):hover {
+		background-color: rgb(255, 20, 25);
+		cursor: pointer;
+	}
+
+	.rs-browser-i:nth-child(2) {
+		background-color: rgb(255, 183, 42);
+	}
+
+	.rs-browser-i:nth-child(2):hover {
+		background-color: rgb(230, 175, 42);
+	}
+
+	.rs-browser-i:nth-child(3) {
+		background-color: rgb(37, 198, 58);
+	}
+
+	.rs-browser-i:nth-child(3):hover {
+		background-color: rgb(10, 225, 10);
+	}
+
+	.rs-browser-address-bar {
+		font-size: 0.75em;
+		vertical-align: top;
+		display: inline-block;
+		height: 1.6em;
+		color: #aaa;
+		// width: calc(100% - 6em);
+		flex-grow: 1;
+		max-width: 600px;
+		border: 0.1em solid #e1e1e1;
+		border-radius: 0.25em;
+		background-color: #eee;
+		margin: 0.1em auto;
+		padding: 0 0.4em;
+	}
+}
+
+.rs-browser-container {
+	background-color: white;
+	height: 100%;
+	width: 100%;
+	overflow-x: auto;
+	overflow-y: auto;
+
+	// padding: 20px;
+
+	&:first-child {
+		scale: 0.5;
+	}
+}
+
+.rs-browser {
+	&.mobile {
+		width: 320px;
+		.rs-browser-i {
+			display: none;
+		}
+	}
+}

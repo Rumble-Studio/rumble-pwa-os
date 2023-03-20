@@ -1,0 +1,512 @@
+<!-- <button matButton (click)="getFormValidationErrors()">errors</button> -->
+<form
+	[formGroup]="stepsFormGroup"
+	#form>
+	<ng-container
+		*ngFor="let attribute of filterAttributesOnSections(formStepInstance.stepDetail.attributes); let attributeIndex = index"
+		[ngSwitch]="attribute.kind">
+		<ng-container *ngIf="attribute.providerId === providerId">
+			<upgrade
+				#upgrade
+				(click)="$event.stopImmediatePropagation()"
+				[upgrade]="{
+					id: 'upgrade:' + attribute.name,
+					title: attribute.label ?? '',
+					description: 'This option is not available with your current plan.',
+					permissionsRequired: attribute.permissionsNeeded
+				}">
+			</upgrade>
+
+			<div
+				class="attribute-container"
+				*ngIf="!isHidden(attribute)"
+				[ngClass]="{
+					mobile: isMobile,
+					image: attribute.kind === 'display-image' || attribute.kind === 'image',
+					slider: attribute.kind === 'slider',
+					'rs-yellow-bg':
+						attribute.permissionsNeeded &&
+						attribute.permissionsNeeded.length > 0 &&
+						!(upgrade?.hasGrantsAndPermissions === true),
+					vertical: convertKeyToAttrValue(attribute, 'vertical')
+				}"
+				(click)="
+					attribute.permissionsNeeded &&
+					attribute.permissionsNeeded.length > 0 &&
+					!(upgrade?.hasGrantsAndPermissions === true)
+						? $event.preventDefault()
+						: undefined;
+					attribute.permissionsNeeded &&
+					attribute.permissionsNeeded.length > 0 &&
+					!(upgrade?.hasGrantsAndPermissions === true)
+						? upgrade.doAction()
+						: undefined
+				"
+				[hidden]="attribute.hiddenToProvider">
+				<!-- textList editor -->
+				<ng-container *ngSwitchCase="'textList'">
+					<rumble-pwa-text-list-editor
+						[textList]="getValue(attribute)"
+						(textListChanged)="emitChange($event, null, attribute)"></rumble-pwa-text-list-editor>
+				</ng-container>
+
+				<!-- textList consumer -->
+				<ng-container *ngSwitchCase="'mcq'">
+					<rumble-pwa-text-list-consumer
+						[textList]="convertKeyToAttrValue(attribute).toString() || ''"
+						[multipleChoicesAllowed]="!!convertKeyToAttrValue(attribute, 'multiple')"
+						(answer)="emitChange($event, null, attribute)"
+						[selectedItemsAsStr]="getValue(attribute)">
+					</rumble-pwa-text-list-consumer>
+				</ng-container>
+
+				<!-- text -->
+				<ng-container *ngSwitchCase="'text'">
+					<mat-form-field
+						class="attribute text rs-full-width"
+						appearance="outline">
+						<mat-label>{{ convertKeyToAttrValue(attribute) }}</mat-label>
+						<input
+							matInput
+							[placeholder]="convertKeyToAttrValue(attribute, 'placeholder').toString() || ''"
+							[required]="isRequired(attribute)"
+							[value]="getValue(attribute)"
+							(input)="emitChange(null, $event.target, attribute)"
+							[formControlName]="attribute.name" />
+						<mat-hint>{{ convertKeyToAttrValue(attribute, 'hint') }}</mat-hint>
+						<mat-error *ngIf="stepsFormGroup.controls[attribute.name].hasError('required')">
+							This field is <strong>required</strong>
+						</mat-error>
+					</mat-form-field>
+				</ng-container>
+
+				<!-- shortText -->
+				<ng-container *ngSwitchCase="'shortText'">
+					<mat-form-field
+						class="attribute shortText rs-full-width"
+						appearance="outline">
+						<mat-label>{{ convertKeyToAttrValue(attribute) }}</mat-label>
+						<input
+							matInput
+							#shortInput
+							maxlength="64"
+							[placeholder]="convertKeyToAttrValue(attribute, 'placeholder').toString() || ''"
+							[required]="isRequired(attribute)"
+							[value]="getValue(attribute)"
+							(input)="emitChange(null, $event.target, attribute)"
+							[formControlName]="attribute.name" />
+						<mat-hint>{{ convertKeyToAttrValue(attribute, 'hint') }}</mat-hint>
+						<mat-hint align="end">{{ shortInput.value.length || 0 }}/64</mat-hint>
+						<mat-error *ngIf="stepsFormGroup.controls[attribute.name].hasError('required')">
+							This field is <strong>required</strong>.
+						</mat-error>
+					</mat-form-field>
+				</ng-container>
+
+				<!-- email -->
+				<ng-container *ngSwitchCase="'email'">
+					<mat-form-field
+						class="attribute email rs-full-width"
+						appearance="outline">
+						<mat-label>{{ convertKeyToAttrValue(attribute) }}</mat-label>
+						<input
+							matInput
+							type="text"
+							email
+							(keydown.enter)="processEmailEnter(); $event.stopImmediatePropagation()"
+							[placeholder]="convertKeyToAttrValue(attribute, 'placeholder').toString() || ''"
+							[required]="isRequired(attribute)"
+							[value]="getValue(attribute)"
+							(input)="emitChange(null, $event.target, attribute, false, true)"
+							[formControlName]="attribute.name" />
+						<mat-hint>{{ convertKeyToAttrValue(attribute, 'hint') }}</mat-hint>
+						<mat-error *ngIf="stepsFormGroup.controls[attribute.name].hasError('required')">
+							This field is <strong>required</strong>.
+						</mat-error>
+						<mat-error
+							*ngIf="
+								stepsFormGroup.controls[attribute.name].hasError('pattern') ||
+								stepsFormGroup.controls[attribute.name].hasError('email')
+							">
+							This email seems <strong>incorrect</strong>.
+						</mat-error>
+					</mat-form-field>
+				</ng-container>
+
+				<!-- paragraph -->
+				<ng-container *ngSwitchCase="'paragraph'">
+					<mat-form-field
+						class="attribute paragraph rs-full-width"
+						appearance="outline">
+						<mat-label>{{ convertKeyToAttrValue(attribute) }}</mat-label>
+						<textarea
+							matInput
+							cdkTextareaAutosize
+							#autosize="cdkTextareaAutosize"
+							cdkAutosizeMinRows="1"
+							cdkAutosizeMaxRows="10"
+							[required]="isRequired(attribute)"
+							[placeholder]="convertKeyToAttrValue(attribute, 'placeholder').toString() || ''"
+							[value]="getValue(attribute)"
+							(input)="emitChange(null, $event.target, attribute)"
+							[formControlName]="attribute.name"></textarea>
+						<mat-hint>{{ convertKeyToAttrValue(attribute, 'hint') }}</mat-hint>
+					</mat-form-field>
+				</ng-container>
+
+				<!-- number -->
+				<ng-container *ngSwitchCase="'number'">
+					<mat-form-field
+						class="attribute number rs-full-width"
+						appearance="outline">
+						<mat-label>{{ convertKeyToAttrValue(attribute) }}</mat-label>
+						<input
+							matInput
+							[placeholder]="convertKeyToAttrValue(attribute, 'placeholder').toString() || ''"
+							[required]="isRequired(attribute)"
+							[value]="getValue(attribute)"
+							(input)="emitChange(null, $event.target, attribute)"
+							[formControlName]="attribute.name" />
+						<mat-hint>{{ convertKeyToAttrValue(attribute, 'hint') }}</mat-hint>
+						<mat-error *ngIf="stepsFormGroup.controls[attribute.name].hasError('required')">
+							This field is <strong>required</strong>.
+						</mat-error>
+						<mat-error
+							*ngIf="
+								stepsFormGroup.controls[attribute.name].hasError('pattern') ||
+								stepsFormGroup.controls[attribute.name].hasError('number')
+							">
+							Please type only <strong>numbers</strong>.
+						</mat-error>
+					</mat-form-field>
+				</ng-container>
+
+				<!-- audio (request) -->
+				<ng-container *ngSwitchCase="'audio'">
+					<rumble-pwa-virtual-playlist-recorder
+						[playlistId]="getValue(attribute)"
+						[previewMode]="previewMode"
+						[formCustomisationDetails]="formCustomisation"
+						(hasActiveTracks)="processAnyTrackEvent(attribute)"
+						[displayVideoBtn]="convertKeyToAttrValue(attribute, 'allowVideoRecording') === true"
+						[displayAudiodBtn]="convertKeyToAttrValue(attribute, 'allowAudioRecording') === true"
+						[displayUploadBtn]="
+							convertKeyToAttrValue(attribute, 'allowUploadRecording') === true
+						"></rumble-pwa-virtual-playlist-recorder>
+					<mat-error
+						*ngIf="
+							stepsFormGroup.controls[attribute.name]?.hasError('required') &&
+							stepsFormGroup.controls[attribute.name]?.dirty
+						">
+						An audio answer is <strong>required</strong>.
+					</mat-error>
+				</ng-container>
+
+				<!-- display-audio -->
+				<ng-container *ngSwitchCase="'display-audio'">
+					<rumble-pwa-playlist-player
+						*ngIf="convertKeyToAttrValue(attribute).toString().length > 0"
+						[formCustomisationDetails]="formCustomisation"
+						[playlistId]="convertKeyToAttrValue(attribute).toString()"
+						#player>
+					</rumble-pwa-playlist-player>
+				</ng-container>
+
+				<!-- checkbox -->
+				<ng-container *ngSwitchCase="'checkbox'">
+					<mat-checkbox
+						(change)="emitChange($event.checked, null, attribute)"
+						[checked]="getValue(attribute) === 'true'"
+						[required]="isRequired(attribute)"
+						>{{ convertKeyToAttrValue(attribute) }}{{ isRequired(attribute) ? '*' : '' }}
+					</mat-checkbox>
+				</ng-container>
+
+				<!-- image (request) -->
+				<ng-container *ngSwitchCase="'image'">
+					<ng-container *ngIf="getValue(attribute); else uploadImageTpl">
+						<image
+							[imageUrl]="(getImageUrlFromId$(getValue(attribute)) | async) ?? undefined"
+							[displayDeleteButton]="true"
+							[objectFit]="'contain'"
+							(deleteImageEvent)="clearAsset(attribute)">
+						</image>
+					</ng-container>
+					<ng-template #uploadImageTpl>
+						{{ convertKeyToAttrValue(attribute, 'hint') }}
+
+						<div class="rs-file-drop-area">
+							<span *transloco="let t; read: 'formsLayout.formProvider'">{{ t('Upload an image') }}</span>
+
+							<input
+								class="rs-drop-btn"
+								[multiple]="false"
+								[accept]="getAcceptedExtensionsString(attribute)"
+								(change)="handleFileList($event, attribute)"
+								(click)="$event.preventDefault(); handleFileList(undefined, attribute)"
+								type="file" />
+						</div>
+					</ng-template>
+					<mat-error *ngIf="stepsFormGroup.controls[attribute.name].hasError('required')">
+						This image is <strong>required</strong>.
+					</mat-error>
+				</ng-container>
+
+				<!-- document (request) -->
+				<ng-container *ngSwitchCase="'document'">
+					<ng-container *ngIf="getValue(attribute); else uploadImageTpl">
+						File name: {{ (getDocumentNameId$(getValue(attribute)) | async) ?? undefined }}
+						<button
+							mat-raised-button
+							(click)="clearAsset(attribute)">
+							Clear <mat-icon>clear</mat-icon>
+						</button>
+					</ng-container>
+					<ng-template #uploadImageTpl>
+						{{ convertKeyToAttrValue(attribute, 'hint') }}
+
+						<div class="rs-file-drop-area">
+							<span *transloco="let t; read: 'formsLayout.formProvider'">{{ t('Upload a document') }}</span>
+
+							<input
+								class="rs-drop-btn"
+								[multiple]="false"
+								[accept]="getAcceptedExtensionsString(attribute)"
+								(change)="handleFileList($event, attribute)"
+								(click)="$event.preventDefault(); handleFileList(undefined, attribute)"
+								type="file" />
+						</div>
+					</ng-template>
+					<mat-error *ngIf="stepsFormGroup.controls[attribute.name].hasError('required')">
+						This document is <strong>required</strong>.
+					</mat-error>
+				</ng-container>
+
+				<!-- video (request) -->
+				<ng-container *ngSwitchCase="'video'">
+					<ng-container *ngIf="getValue(attribute); else uploadVideoTpl">
+						<video
+							class="video-attribute"
+							controls>
+							<source
+								[src]="filesRepository.convertEntityFileIdToUrl$(getValue(attribute)) | async"
+								[style.borderRadius]="'3px'" />
+
+							Sorry, your browser does not support embedded videos.
+						</video>
+
+						<button
+							mat-raised-button
+							(click)="clearAsset(attribute)">
+							Clear <mat-icon>clear</mat-icon>
+						</button>
+					</ng-container>
+
+					<ng-template #uploadVideoTpl>
+						{{ convertKeyToAttrValue(attribute, 'hint') }}
+
+						<div class="rs-file-drop-area">
+							<span *transloco="let t; read: 'formsLayout.formProvider'">{{ t('Upload a video') }}</span>
+
+							<input
+								class="rs-drop-btn"
+								[multiple]="false"
+								[accept]="getAcceptedExtensionsString(attribute)"
+								(change)="handleFileList($event, attribute)"
+								(click)="$event.preventDefault(); handleFileList(undefined, attribute)"
+								type="file" />
+						</div>
+					</ng-template>
+					<mat-error *ngIf="stepsFormGroup.controls[attribute.name].hasError('required')">
+						This video is <strong>required</strong>.
+					</mat-error>
+				</ng-container>
+
+				<!-- url (request) -->
+				<ng-container *ngSwitchCase="'url'">
+					<mat-form-field
+						class="attribute url rs-full-width"
+						appearance="outline">
+						<mat-label>{{ convertKeyToAttrValue(attribute) }}</mat-label>
+						<input
+							matInput
+							name="url"
+							[placeholder]="convertKeyToAttrValue(attribute, 'placeholder').toString() || ''"
+							[value]="getValue(attribute)"
+							(input)="emitChange(null, $event.target, attribute)"
+							type="url"
+							[required]="isRequired(attribute)"
+							[formControlName]="attribute.name" />
+						<mat-hint>{{ convertKeyToAttrValue(attribute, 'hint') }}</mat-hint>
+						<mat-error *ngIf="stepsFormGroup.controls[attribute.name].hasError('required')">
+							This field is <strong>required</strong>.
+						</mat-error>
+						<mat-error *ngIf="stepsFormGroup.controls[attribute.name].hasError('pattern')">
+							This url seems <strong>incorrect</strong>.
+						</mat-error>
+					</mat-form-field>
+				</ng-container>
+
+				<!-- message -->
+				<ng-container *ngSwitchCase="'message'">
+					{{ convertKeyToAttrValue(attribute) }}:
+					{{ convertKeyToAttrValue(attribute, 'hint') }}
+				</ng-container>
+
+				<!-- display-title -->
+				<ng-container *ngSwitchCase="'display-title'">
+					<span class="span-display-title">{{ convertKeyToAttrValue(attribute) }}</span>
+					<ng-container *ngIf="showHostAvatar && hostProfile?.id">
+						<span
+							class="host-avatar"
+							[matTooltip]="hostProfile?.fullName ? 'Your host: ' + hostProfile?.fullName : 'your host'">
+							<img
+								*ngIf="hostImage$$$.$ | async as hostAvatarSrc; else noProfilePictureUrlTpl"
+								class="profile-picture"
+								[src]="hostAvatarSrc"
+								alt="" />
+
+							<ng-template #noProfilePictureUrlTpl>
+								<span class="profile-picture-text">{{ hostProfile?.fullName?.substring(0, 1) ?? 'H' }}</span>
+							</ng-template>
+						</span>
+					</ng-container>
+				</ng-container>
+
+				<!-- display-paragraph -->
+				<ng-container *ngSwitchCase="'display-paragraph'">
+					<div
+						class="rs-pre-wrap"
+						[innerHTML]="convertKeyToAttrValue(attribute)"></div>
+				</ng-container>
+
+				<!-- display-image -->
+				<ng-container *ngSwitchCase="'display-image'">
+					<image
+						*ngIf="convertKeyToAttrValue(attribute)"
+						[passive]="false"
+						[objectFit]="'contain'"
+						[imageUrl]="(getImageUrlFromId$(convertKeyToAttrValue(attribute).toString()) | async) ?? undefined">
+					</image>
+				</ng-container>
+
+				<!-- display-email-list -->
+				<ng-container *ngSwitchCase="'display-email-list'">
+					<ng-container *ngIf="convertKeyToAttrValue(attribute).toString().length > 0">
+						<span>You have invited:</span>
+						<div class="email-list-container">
+							<mat-chip-list class="email-list">
+								<ng-container
+									*ngFor="
+										let emailCounter of countBy(convertKeyToAttrValue(attribute).toString().split(';'))
+											| keyvalue
+									">
+									<mat-chip
+										class="email-list-chip"
+										*ngIf="emailCounter.key.length > 0"
+										>{{ emailCounter.key
+										}}{{ emailCounter.value > 1 ? ' (x' + emailCounter.value + ')' : '' }}
+									</mat-chip>
+								</ng-container>
+							</mat-chip-list>
+						</div>
+					</ng-container>
+				</ng-container>
+
+				<!-- buttonUrl -->
+				<ng-container *ngSwitchCase="'buttonUrl'">
+					<span
+						*ngIf="convertKeyToAttrValue(attribute, 'buttonTarget') && convertKeyToAttrValue(attribute)"
+						(click)="processBtnAction(attribute)"
+						class="rs-navigation-action rs-clickable rs-no-select"
+						[style.background]="formCustomisation?.actionBtnBackgroundColor ?? formCustomisation?.fontColor"
+						[style.color]="formCustomisation?.actionBtnFontColor ?? formCustomisation?.color"
+						[style.borderRadius]="formCustomisation?.borderRadius + 'px'">
+						{{ convertKeyToAttrValue(attribute) }}
+						<span class="material-icons">
+							{{ convertKeyToAttrValue(attribute, 'buttonIcon') }}
+						</span>
+					</span>
+				</ng-container>
+
+				<!-- button -->
+				<ng-container *ngSwitchCase="'button'">
+					<span
+						(click)="processBtnAction(attribute)"
+						*ngIf="!recordingProps.occupied"
+						class="rs-navigation-action rs-clickable rs-no-select"
+						[style.background]="formCustomisation?.actionBtnBackgroundColor ?? formCustomisation?.fontColor"
+						[style.color]="formCustomisation?.actionBtnFontColor ?? formCustomisation?.color"
+						[style.borderRadius]="formCustomisation?.borderRadius + 'px'"
+						[ngClass]="{ disabled: valid === 'INVALID' }">
+						{{ convertKeyToAttrValue(attribute) }}&nbsp;
+						<span class="material-icons">
+							{{ convertKeyToAttrValue(attribute, 'buttonIcon') }}
+						</span>
+					</span>
+				</ng-container>
+
+				<!-- action button -->
+				<!-- action button is like a button but it does not depend on form valid state -->
+				<ng-container *ngSwitchCase="'action-button'">
+					<div
+						(click)="processBtnAction(attribute)"
+						*ngIf="!recordingProps.occupied"
+						class="rs-navigation-action rs-clickable rs-no-select"
+						[style.background]="formCustomisation?.actionBtnBackgroundColor ?? formCustomisation?.fontColor"
+						[style.color]="formCustomisation?.actionBtnFontColor ?? formCustomisation?.color"
+						[style.borderRadius]="formCustomisation?.borderRadius + 'px'">
+						{{ convertKeyToAttrValue(attribute) }}&nbsp;
+						<span class="material-icons">
+							{{ convertKeyToAttrValue(attribute, 'buttonIcon') }}
+						</span>
+					</div>
+				</ng-container>
+
+				<!-- display a line -->
+				<ng-container *ngSwitchCase="'display-line'">
+					<hr />
+				</ng-container>
+
+				<!-- slider request -->
+				<ng-container *ngSwitchCase="'slider'">
+					<div
+						class="slider-container"
+						[ngClass]="{ vertical: convertKeyToAttrValue(attribute, 'vertical') }">
+						<span class="range">{{ convertKeyToAttrValue(attribute, 'minimumValue') }}</span>
+						<mat-slider
+							#slider
+							class="rs-full-width"
+							max="{{ convertKeyToAttrValue(attribute, 'maximumValue') }}"
+							min="{{ convertKeyToAttrValue(attribute, 'minimumValue') }}"
+							step="{{ convertKeyToAttrValue(attribute, 'stepSize') }}"
+							[thumbLabel]="false"
+							[value]="getValue(attribute)"
+							(input)="emitChange($event.value, undefined, attribute)"
+							[tickInterval]="'auto'"
+							[vertical]="!!convertKeyToAttrValue(attribute, 'vertical')">
+						</mat-slider>
+						<span class="range">{{ convertKeyToAttrValue(attribute, 'maximumValue') }}</span>
+					</div>
+					<ng-container *ngIf="!!getValue(attribute) || previewMode; else noAnswerTpl">
+						<div class="value-container">
+							<span *transloco="let t; read: 'formsLayout.formProvider'"
+								>{{ t('Your answer:') }} {{ slider.value }}</span
+							>
+						</div>
+					</ng-container>
+					<ng-template #noAnswerTpl>
+						<div class="value-container">
+							<span
+								>Please pick a value{{ convertKeyToAttrValue(attribute, 'required') === true ? '*' : '' }}</span
+							>
+						</div>
+					</ng-template>
+				</ng-container>
+				<!-- default -->
+				<ng-container *ngSwitchDefault> Not handled yet: {{ attribute.kind }} </ng-container>
+			</div>
+		</ng-container>
+	</ng-container>
+</form>
+<!-- valid?{{ stepsFormGroup.valid | json }} -->

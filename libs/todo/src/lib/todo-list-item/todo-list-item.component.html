@@ -1,0 +1,11 @@
+<mat-icon>remove</mat-icon>
+<span
+	><span class="todo-item-title">{{ todo?.title }}</span> <span [innerHTML]="todo?.description"></span
+></span>
+<button
+	*ngIf="todo?.alwaysShow !== true"
+	mat-icon-button
+	(click)="dismissTodo()"
+	class="action-btn">
+	<mat-icon>done_outline</mat-icon>
+</button>

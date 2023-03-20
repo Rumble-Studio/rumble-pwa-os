@@ -1,0 +1,23 @@
+.link-container {
+	position: relative;
+}
+.link {
+	display: flex;
+	align-items: center;
+	height: 48px;
+	border-radius: 9px;
+	margin: 2px;
+	transition: color 0.3s ease-in-out;
+	color: var(--rs-text-grey);
+	position: relative;
+
+	&.active,
+	&:hover {
+		color: black;
+		background-color: var(--rs-yellow-lighter);
+	}
+	i {
+		margin-right: 20px;
+		margin-left: 8px;
+	}
+}

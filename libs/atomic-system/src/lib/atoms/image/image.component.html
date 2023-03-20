@@ -1,0 +1,70 @@
+<ng-template #loadingImageUrlTpl>
+	<content-loader
+		viewBox="0 0 150 150"
+		class="loader">
+		<svg:circle
+			cx="75"
+			cy="50"
+			r="25" />
+		<!-- <svg:rect
+			x="0"
+			y="20"
+			rx="5"
+			ry="5"
+			width="100"
+			height="10" /> -->
+		<svg:rect
+			x="40"
+			y="80"
+			width="70"
+			height="70" />
+	</content-loader>
+</ng-template>
+<div
+	class="rs-show-children-on-hover container"
+	[style.width]="width"
+	[style.height]="height"
+	[ngClass]="{ minimumStyle: passive }">
+	<div
+		class="image-container"
+		[style.borderRadius]="borderRadius">
+		<img
+			*ngIf="imageUrl; else loadingImageUrlTpl"
+			[src]="imageUrl"
+			[alt]="alt"
+			[style.objectFit]="objectFit" />
+	</div>
+
+	<button
+		class="select-btn rs-clickable hiddenByDefault"
+		type="button"
+		*ngIf="displaySelectButton && !passive"
+		mat-raised-button
+		(click)="emitImageSelectionEvent()">
+		{{ selectButtonText }}
+	</button>
+	<mat-icon
+		*ngIf="displayZoomButton && imageUrl && !passive"
+		class="preview-icon rs-clickable hiddenByDefault"
+		(click)="zoomImage()">
+		zoom_in
+	</mat-icon>
+	<mat-icon
+		*ngIf="displayDeleteButton && !passive"
+		class="trash-icon-image rs-clickable hiddenByDefault"
+		(click)="emitDeleteImageEvent()">
+		delete
+	</mat-icon>
+	<mat-icon
+		*ngIf="displayPaletteButton && !passive"
+		class="palette-icon-image rs-clickable hiddenByDefault"
+		(click)="emitImagePalette()">
+		palette
+	</mat-icon>
+	<explanation
+		*ngIf="displayPaletteButton && !passive"
+		class="rs-show-on-parent-hover explanation hiddenByDefault"
+		(click)="$event.stopPropagation()"
+		[msg]="'Get colors from this image'">
+	</explanation>
+</div>

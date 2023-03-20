@@ -1,0 +1,35 @@
+<div class="player">
+	<div
+		#handle
+		*ngIf="settings.playbar.collapsed"
+		class="fully-collapsed-handle rs-handle rs-no-select">
+		<i
+			(click)="openPlaybar()"
+			class="material-icons-outlined rs-clickable"
+			>expand_less</i
+		>
+	</div>
+	<rumble-pwa-global-playlist *ngIf="!settings.playlist.collapsed"></rumble-pwa-global-playlist>
+	<rumble-pwa-global-playbar *ngIf="!settings.playbar.collapsed"><ng-content></ng-content></rumble-pwa-global-playbar>
+	<div
+		class="resize-handle resize-handle-top rs-no-select"
+		mwlResizeHandle
+		[resizeEdges]="{ top: true }"></div>
+	<div
+		class="resize-handle resize-handle-left rs-no-select"
+		mwlResizeHandle
+		[resizeEdges]="{ left: true }"></div>
+	<div
+		class="resize-handle resize-handle-right rs-no-select"
+		mwlResizeHandle
+		[resizeEdges]="{ right: true }"></div>
+	<div
+		class="resize-handle resize-handle-bottom rs-no-select"
+		mwlResizeHandle
+		[resizeEdges]="{ bottom: true }"></div>
+</div>
+
+<div
+	class="resize-handle resize-handle-top"
+	mwlResizeHandle
+	[resizeEdges]="{ top: true }"></div>

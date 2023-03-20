@@ -1,0 +1,39 @@
+<mat-form-field appearance="outline">
+	<mat-label>Select a font</mat-label>
+	<mat-select [(value)]="selectedFont">
+		<mat-option></mat-option>
+		<mat-option
+			[value]="font.label"
+			*ngFor="let font of data.fonts"
+			><span
+				[style.font-family]="getFontStyle(font.label)"
+				class="font-option">
+				{{ font.label }}
+			</span></mat-option
+		>
+	</mat-select>
+</mat-form-field>
+
+<!-- <mat-form-field appearance="outline">
+	<mat-label>enter a font URL</mat-label>
+	<input
+		type="text"
+		matInput
+		placeholder="Enter a font URL"
+		[(ngModel)]="selectedFont" />
+</mat-form-field> -->
+
+<div class="bottom-edit">
+	<button
+		mat-flat-button
+		class="rs-btn-new btn-edit-brand"
+		(click)="onClose()">
+		Cancel
+	</button>
+	<button
+		mat-raised-button
+		class="rs-btn-new btn-edit-brand"
+		(click)="onSave()">
+		Save
+	</button>
+</div>

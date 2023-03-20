@@ -1,0 +1,7 @@
+<a
+	*ngIf="fileUrl; else noFileUrlTpl"
+	[href]="fileUrl"
+	target="_blank">
+	<button mat-raised-button>{{ downloadMessage }}</button>
+</a>
+<ng-template #noFileUrlTpl> File not found </ng-template>

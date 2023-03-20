@@ -1,0 +1,128 @@
+<div class="dismiss-container">
+	<button
+		type="button"
+		mat-flat-button
+		class="mat-elevation-z1"
+		(click)="dismiss()">
+		<mat-icon>close</mat-icon>
+	</button>
+</div>
+
+<ng-container *ngIf="exportForm">
+	<form
+		class="script-form"
+		*ngIf="mix$$$.value as mix"
+		[formGroup]="exportForm"
+		(ngSubmit)="save()">
+		<h2>Generate a new export for "{{ mix.name }}"</h2>
+		<mat-form-field
+			class="full-width"
+			appearance="outline">
+			<mat-label>Export name</mat-label>
+			<input
+				matInput
+				rumblePwaAutoFocus
+				placeholder="Ex. Export for {{ mix.name }}"
+				formControlName="name"
+				name="name"
+				data-cy="export-name" />
+			<div
+				class="formError"
+				*ngIf="exportForm.dirty && exportForm.controls.name.errors">
+				<ng-template [ngIf]="exportForm.controls.name.errors.required"> A name is required </ng-template>
+				<ng-template [ngIf]="exportForm.controls.name.errors.maxlength"> This name is too long </ng-template>
+			</div>
+		</mat-form-field>
+
+		<mat-form-field
+			class="full-width"
+			appearance="outline">
+			<mat-label>Export description</mat-label>
+			<textarea
+				rows="5"
+				matInput
+				formControlName="description"
+				name="description"
+				placeholder="Ex. Export to be used for next episode..."
+				data-cy="export-description"></textarea>
+		</mat-form-field>
+
+		<mat-form-field
+			class="full-width"
+			appearance="outline">
+			<mat-label>Select a subscription</mat-label>
+			<mat-hint>The number of exported minutes will be associated with this subscription.</mat-hint>
+
+			<ng-template
+				#subscriptionDetails
+				let-subscription="subscription"
+				let-maxDurationExportedReached="maxDurationExportedReached">
+				<span>
+					{{ subscription.name }}
+				</span>
+				<span
+					[ngClass]="{
+						red: maxDurationExportedReached
+					}"
+					[matTooltip]="
+						maxDurationExportedReached
+							? 'Monthly export limit reached.'
+							: (subscription.maxDurationExported - subscription.durationExported | duration: 'showUnits') +
+							  ' left'
+					">
+					{{ subscription.durationExported | duration: 'showUnits' }} /
+					{{ subscription.maxDurationExported | duration: 'showUnits' }}
+				</span>
+				<rumble-pwa-group-item-generic
+					class="group-item"
+					[groupId]="subscription.beneficiaryId"></rumble-pwa-group-item-generic>
+			</ng-template>
+
+			<mat-select
+				formControlName="subscriptions"
+				name="selectedFormTemplate">
+				<mat-select-trigger>
+					<ng-container *ngIf="exportForm.controls.subscriptions.value">
+						<ng-container
+							*ngTemplateOutlet="
+								subscriptionDetails;
+								context: { subscription: exportForm.controls.subscriptions.value }
+							"></ng-container>
+					</ng-container>
+				</mat-select-trigger>
+				<mat-option
+					*ngFor="let subscription of subscriptions"
+					[disabled]="isSubscriptionDisabled(subscription)"
+					[value]="subscription">
+					<ng-container
+						*ngTemplateOutlet="
+							subscriptionDetails;
+							context: {
+								subscription: subscription,
+								maxDurationExportedReached: subscriptionExportLeft(subscription) <= 0
+							}
+						"></ng-container>
+				</mat-option>
+			</mat-select>
+		</mat-form-field>
+
+		<div class="full-width horizontal">
+			<button
+				type="button"
+				mat-stroked-button
+				(click)="dismiss()">
+				<mat-icon>close</mat-icon>
+				Cancel
+			</button>
+
+			<button
+				type="submit"
+				mat-raised-button
+				[disabled]="!exportForm.valid && exportForm.dirty"
+				data-cy="create-update-button">
+				<mat-icon>check</mat-icon>
+				Export this mix
+			</button>
+		</div>
+	</form>
+</ng-container>

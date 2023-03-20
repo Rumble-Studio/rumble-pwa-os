@@ -1,0 +1,119 @@
+<div
+	class="global-playbar"
+	*ngIf="state">
+	<rumble-pwa-virtual-details
+		*ngIf="
+			displayDetails &&
+			state.virtualPlaylist.details &&
+			(state.virtualPlaylist.details.title ||
+				state.virtualPlaylist.details.description ||
+				(state.virtualPlaylist.details.pictureSrcs?.length ?? 0) > 0)
+		"
+		[pictureSRCs]="customPictureSrc ? [customPictureSrc] : state.virtualPlaylist.details.pictureSrcs ?? []"
+		[title]="state.virtualPlaylist.details.title"
+		[description]="state.virtualPlaylist.details.description"></rumble-pwa-virtual-details>
+
+	<section
+		class="seekbar-details-actions"
+		*ngIf="state; else notStateTpl">
+		<div
+			*ngIf="state.representativeState.containsVideo && displayVideo"
+			class="video-placeholder">
+			<canvas
+				(dblclick)="doubleClickFunction()"
+				(click)="simpleClickFunction()"
+				#canvasElement
+				class="canvasElement"></canvas>
+			<!-- <div class="canvas-actions-container">
+				<mat-icon class="fullscreen-btn">fullscreen</mat-icon>
+			</div> -->
+		</div>
+
+		<div class="seekbar-line">
+			<span
+				*ngIf="compact"
+				(click)="togglePlay()"
+				class="rs-clickable rs-no-select">
+				<i class="material-icons player-action-icon play compact">{{
+					state.representativeState.playing ? 'pause' : 'play_arrow'
+				}}</i>
+			</span>
+
+			<ng-container *ngIf="state?.representativeState?.unlocked; else lockedTpl">
+				<rumble-pwa-virtual-seekbar
+					*ngIf="state.representativeState.canplay; else cantPlayTpl"
+					(seekMultiEvent)="processSeekMultiEvent($event)"
+					[durations]="state.representativeState.durations"
+					[indexBeingPlayed]="state.representativeState.lastIndexBeingPlayed"
+					[percentageOfCurrentSong]="state.representativeState.percentageOfLastElementBeingPlayed"
+					[hideTimes]="!compact"
+					[formCustomisationDetails]="formCustomisationDetails"></rumble-pwa-virtual-seekbar>
+				<ng-template #cantPlayTpl>
+					<span class="cant-play">Loading....</span>
+				</ng-template>
+			</ng-container>
+
+			<ng-template #lockedTpl>
+				<div class="rs-fake-play-bar rs-no-select">Click to load audio</div>
+			</ng-template>
+		</div>
+
+		<section
+			*ngIf="!compact"
+			class="below-seekbar">
+			<div class="time-info rs-clickable rs-no-select">
+				{{ state.representativeState.cumulatedPlayedDuration | duration }}
+			</div>
+
+			<div class="player-actions">
+				<!-- <span
+					*ngIf="state.representativeState.nbOfActiveTracks > 1"
+					mat-fab
+					(click)="notImplemented()"
+					class="rs-clickable rs-no-select">
+					<i class="material-icons-outlined player-action-icon">skip_previous</i>
+				</span> -->
+				<span
+					(click)="togglePlay()"
+					class="rs-clickable rs-no-select">
+					<i class="material-icons player-action-icon play">{{
+						state.representativeState.playing ? 'pause' : 'play_arrow'
+					}}</i>
+				</span>
+				<!-- <span
+					*ngIf="state.representativeState.nbOfActiveTracks > 1"
+					(click)="notImplemented()"
+					class="rs-clickable rs-no-select">
+					<i class="material-icons-outlined player-action-icon">skip_next</i>
+				</span> -->
+			</div>
+			<div class="time-info rs-clickable rs-no-select">
+				<span *ngIf="state.representativeState.duration > 0.01">{{
+					state.representativeState.duration | duration
+				}}</span>
+			</div>
+		</section>
+
+		<!-- display transcript if displayTranscript is true AND either we can edit OR we have something to display -->
+		<rumble-pwa-virtual-transcript
+			*ngIf="displayTranscript"
+			[transcriptEdited]="state.virtualPlaylist.transcript?.editedTranscript"
+			[formCustomisationDetails]="formCustomisationDetails"
+			[transcriptOriginal]="state.virtualPlaylist.transcript?.originalTranscript"
+			[allowEditing]="false"></rumble-pwa-virtual-transcript>
+	</section>
+
+	<ng-container *ngIf="displayFavorite && state.virtualPlaylist.source">
+		<generic-favorite
+			[favoriteDetails]="{
+				objectId: state.virtualPlaylist.source.id,
+				objectKind: state.virtualPlaylist.source.kind
+			}"></generic-favorite>
+	</ng-container>
+
+	<ng-template #notStateTpl>
+		<section class="seekbar-details-actions">Details are not loaded.</section>
+	</ng-template>
+
+	<ng-template #noPlaylistTpl> Nothing being played. </ng-template>
+</div>

@@ -1,0 +1,173 @@
+<div
+	class="rs-file-drop-area"
+	*transloco="let t; read: 'objectsPrompt.filesUploadControl'">
+	<span class="fake-btn">{{ t('Choose file') }}</span>
+	<!-- more than 1 file -->
+	<span
+		class="file-msg"
+		*ngIf="filesWithData && filesWithData.length > 1"
+		>{{ filesWithData.length }} {{ t('selected files.') }}</span
+	>
+	<!-- 1 file -->
+	<span
+		class="file-msg"
+		*ngIf="filesWithData && filesWithData.length === 1"
+		>{{ filesWithData[0].file.name }}</span
+	>
+	<!-- no files -->
+	<!-- <span
+		class="file-msg"
+		*ngIf="!filesWithData || filesWithData.length === 0"
+		>or drag and drop {{ maxObjectsSelected > 1 ? 'some files' : 'a file' }} here</span
+	> -->
+	<span
+		class="file-msg"
+		*ngIf="!filesWithData || filesWithData.length === 0"
+		>{{ t('or use drag and drop') }}</span
+	>
+	<input
+		class="file-input"
+		[multiple]="maxObjectsSelected > 1"
+		[accept]="acceptedExtensionsString"
+		type="file" />
+</div>
+<br />
+<br />
+
+<div class="with-padding">
+	<object-list
+		[topLeftActionTpl]="emptyTpl"
+		[noDataSourceTpl]="emptyTpl"
+		[objects]="filesWithData"
+		[generateRowClasses]="generateRowClasses"
+		[hideColumns]="maxObjectsSelected > 1 ? [] : ['delete']">
+		<!-- delete file -->
+		<object-column
+			[columnId]="'delete'"
+			[header]="''"
+			[sortable]="false"
+			[template]="removeColumnTpl">
+		</object-column>
+		<ng-template
+			#removeColumnTpl
+			let-object="object">
+			<mat-icon
+				*ngIf="!object.notValid; else notValidFileTpl"
+				class="rs-clickable"
+				(click)="toggleFileWithDataDeletion(object)">
+				{{ !object.toIgnore ? 'delete' : 'restore_from_trash' }}
+			</mat-icon>
+			<ng-template #notValidFileTpl>
+				<mat-icon>block</mat-icon>
+			</ng-template>
+		</ng-template>
+
+		<!-- file name -->
+		<object-column
+			[columnId]="'file-name'"
+			[header]="'Name'"
+			[template]="nameColumnTpl"
+			[flex]="3">
+		</object-column>
+		<ng-template
+			#nameColumnTpl
+			let-object="object">
+			<mat-form-field
+				appearance="outline"
+				[style.width]="'100%'">
+				<mat-label>Custom file name</mat-label>
+				<input
+					[(ngModel)]="object.publicName"
+					[maxlength]="FILE_PUBLIC_NAME_MAX_LENGTH"
+					matInput
+					name="publicname"
+					type="text"
+					placeholder="Ex. 'My Amazing File'" />
+				<mat-hint>
+					<span class="char-counter">{{ object.publicName?.length }} / {{ FILE_PUBLIC_NAME_MAX_LENGTH }} chars </span>
+				</mat-hint>
+			</mat-form-field>
+		</ng-template>
+
+		<!-- file preview -->
+		<object-column
+			[columnId]="'file-preview'"
+			[header]="'Preview'"
+			[sortable]="false"
+			[template]="previewColumnTpl"
+			[flex]="3">
+		</object-column>
+		<ng-template
+			#previewColumnTpl
+			let-object="object">
+			<ng-container *ngIf="object.src as fileSrc; else noSrcTpl">
+				<div class="preview-container">
+					<ng-container [ngSwitch]="object.macroFileKindToUseForPreview">
+						<ng-container *ngSwitchCase="'image'">
+							<img
+								[src]="fileSrc"
+								[style.borderRadius]="'3px'" />
+						</ng-container>
+
+						<ng-container *ngSwitchCase="'audio'">
+							<audio
+								controls
+								[src]="fileSrc">
+								Your browser does not support the
+								<code>audio</code>
+							</audio>
+						</ng-container>
+
+						<ng-container *ngSwitchCase="'video'">
+							<video
+								[style.borderRadius]="'3px'"
+								controls>
+								<source
+									[src]="fileSrc"
+									[style.borderRadius]="'3px'" />
+
+								Sorry, your browser does not support embedded videos.
+							</video>
+						</ng-container>
+
+						<ng-container *ngSwitchDefault> No preview available for this file. </ng-container>
+					</ng-container>
+				</div>
+			</ng-container>
+			<ng-template #noSrcTpl>
+				<div>
+					<span
+						class="rs-yellow-text"
+						*ngIf="object.tooBigForPreview"
+						>This file is too big for preview.</span
+					>
+					<span
+						class="rs-red-text"
+						*ngIf="object.tooBigForUpload"
+						><br />This file is too big for upload (100Mb max).</span
+					>
+					<span
+						class="rs-yellow-text"
+						*ngIf="!object.tooBigForUpload && !object.tooBigForPreview"
+						>Preview not available</span
+					>
+				</div>
+			</ng-template>
+		</ng-template>
+
+		<!-- file size -->
+		<object-column
+			[columnId]="'size'"
+			[header]="'Size'"
+			[template]="sizeColumnTpl"
+			[flex]="2">
+		</object-column>
+		<ng-template
+			#sizeColumnTpl
+			let-object="object">
+			{{ parseInt(object.file.size / 1024 + '', 10) }}kb
+		</ng-template>
+	</object-list>
+</div>
+
+<ng-template #emptyTpl> </ng-template>

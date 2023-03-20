@@ -1,0 +1,3061 @@
+{
+	"version": 1,
+	"projects": {
+		"admin": {
+			"$schema": "../../node_modules/nx/schemas/project-schema.json",
+			"projectType": "library",
+			"root": "libs/admin",
+			"sourceRoot": "libs/admin/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/admin"],
+					"options": {
+						"jestConfig": "libs/admin/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/admin/src/**/*.ts", "libs/admin/src/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"admin-panel-layout": {
+			"$schema": "../../node_modules/nx/schemas/project-schema.json",
+			"projectType": "library",
+			"root": "libs/admin-panel-layout",
+			"sourceRoot": "libs/admin-panel-layout/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/admin-panel-layout"],
+					"options": {
+						"jestConfig": "libs/admin-panel-layout/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/admin-panel-layout/src/**/*.ts", "libs/admin-panel-layout/src/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"admin-panel-system": {
+			"$schema": "../../node_modules/nx/schemas/project-schema.json",
+			"projectType": "library",
+			"root": "libs/admin-panel-system",
+			"sourceRoot": "libs/admin-panel-system/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/admin-panel-system"],
+					"options": {
+						"jestConfig": "libs/admin-panel-system/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/admin-panel-system/src/**/*.ts", "libs/admin-panel-system/src/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"app-layout": {
+			"$schema": "../../node_modules/nx/schemas/project-schema.json",
+			"projectType": "library",
+			"root": "libs/app-layout",
+			"sourceRoot": "libs/app-layout/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/app-layout"],
+					"options": {
+						"jestConfig": "libs/app-layout/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/app-layout/src/**/*.ts", "libs/app-layout/src/**/*.html"]
+					},
+					"outputs": ["{options.outputFile}"]
+				}
+			},
+			"tags": []
+		},
+		"atomic-system": {
+			"projectType": "library",
+			"root": "libs/atomic-system",
+			"sourceRoot": "libs/atomic-system/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/atomic-system"],
+					"options": {
+						"jestConfig": "libs/atomic-system/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/atomic-system/**/*.ts", "libs/atomic-system/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"auth-layout": {
+			"$schema": "../../node_modules/nx/schemas/project-schema.json",
+			"projectType": "library",
+			"root": "libs/auth-layout",
+			"sourceRoot": "libs/auth-layout/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/auth-layout"],
+					"options": {
+						"jestConfig": "libs/auth-layout/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/auth-layout/src/**/*.ts", "libs/auth-layout/src/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"auth-system": {
+			"$schema": "../../node_modules/nx/schemas/project-schema.json",
+			"projectType": "library",
+			"root": "libs/auth-system",
+			"sourceRoot": "libs/auth-system/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/auth-system"],
+					"options": {
+						"jestConfig": "libs/auth-system/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/auth-system/src/**/*.ts", "libs/auth-system/src/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"billing-layout": {
+			"$schema": "../../node_modules/nx/schemas/project-schema.json",
+			"projectType": "library",
+			"root": "libs/billing-layout",
+			"sourceRoot": "libs/billing-layout/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/billing-layout"],
+					"options": {
+						"jestConfig": "libs/billing-layout/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/billing-layout/src/**/*.ts", "libs/billing-layout/src/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"billing-system": {
+			"$schema": "../../node_modules/nx/schemas/project-schema.json",
+			"projectType": "library",
+			"root": "libs/billing-system",
+			"sourceRoot": "libs/billing-system/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/billing-system"],
+					"options": {
+						"jestConfig": "libs/billing-system/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/billing-system/src/**/*.ts", "libs/billing-system/src/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"brands-audio-packs": {
+			"projectType": "library",
+			"root": "libs/brands/audio-packs",
+			"sourceRoot": "libs/brands/audio-packs/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/brands/audio-packs"],
+					"options": {
+						"jestConfig": "libs/brands/audio-packs/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/brands/audio-packs/**/*.ts", "libs/brands/audio-packs/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"brands-pages": {
+			"projectType": "library",
+			"root": "libs/brands/pages",
+			"sourceRoot": "libs/brands/pages/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/brands/pages"],
+					"options": {
+						"jestConfig": "libs/brands/pages/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/brands/pages/**/*.ts", "libs/brands/pages/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"brands-state": {
+			"projectType": "library",
+			"root": "libs/brands/state",
+			"sourceRoot": "libs/brands/state/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/brands/state"],
+					"options": {
+						"jestConfig": "libs/brands/state/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/brands/state/**/*.ts", "libs/brands/state/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"brands-ui": {
+			"projectType": "library",
+			"root": "libs/brands/ui",
+			"sourceRoot": "libs/brands/ui/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/brands/ui"],
+					"options": {
+						"jestConfig": "libs/brands/ui/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/brands/ui/**/*.ts", "libs/brands/ui/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"broker-system": {
+			"$schema": "../../node_modules/nx/schemas/project-schema.json",
+			"projectType": "library",
+			"root": "libs/broker-system",
+			"sourceRoot": "libs/broker-system/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/broker-system"],
+					"options": {
+						"jestConfig": "libs/broker-system/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/broker-system/src/**/*.ts", "libs/broker-system/src/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"chat-playground": {
+			"$schema": "../../node_modules/nx/schemas/project-schema.json",
+			"projectType": "application",
+			"root": "apps/chat-playground",
+			"sourceRoot": "apps/chat-playground/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"build": {
+					"builder": "@angular-devkit/build-angular:browser",
+					"options": {
+						"outputPath": "dist/apps/chat-playground",
+						"index": "apps/chat-playground/src/index.html",
+						"main": "apps/chat-playground/src/main.ts",
+						"polyfills": "apps/chat-playground/src/polyfills.ts",
+						"tsConfig": "apps/chat-playground/tsconfig.app.json",
+						"inlineStyleLanguage": "scss",
+						"assets": ["apps/chat-playground/src/favicon.ico", "apps/chat-playground/src/assets"],
+						"styles": ["apps/chat-playground/src/styles.scss"],
+						"scripts": [],
+						"allowedCommonJsDependencies": ["crypto-js"]
+					},
+					"configurations": {
+						"production": {
+							"budgets": [
+								{
+									"type": "initial",
+									"maximumWarning": "500kb",
+									"maximumError": "1mb"
+								},
+								{
+									"type": "anyComponentStyle",
+									"maximumWarning": "2kb",
+									"maximumError": "4kb"
+								}
+							],
+							"fileReplacements": [
+								{
+									"replace": "apps/chat-playground/src/environments/environment.ts",
+									"with": "apps/chat-playground/src/environments/environment.prod.ts"
+								}
+							],
+							"outputHashing": "all"
+						},
+						"development": {
+							"buildOptimizer": false,
+							"optimization": false,
+							"vendorChunk": true,
+							"extractLicenses": false,
+							"sourceMap": true,
+							"namedChunks": true
+						}
+					},
+					"defaultConfiguration": "production"
+				},
+				"serve": {
+					"builder": "@angular-devkit/build-angular:dev-server",
+					"configurations": {
+						"production": {
+							"browserTarget": "chat-playground:build:production"
+						},
+						"development": {
+							"browserTarget": "chat-playground:build:development"
+						}
+					},
+					"defaultConfiguration": "development"
+				},
+				"extract-i18n": {
+					"builder": "@angular-devkit/build-angular:extract-i18n",
+					"options": {
+						"browserTarget": "chat-playground:build"
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["apps/chat-playground/src/**/*.ts", "apps/chat-playground/src/**/*.html"]
+					},
+					"outputs": ["{options.outputFile}"]
+				},
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/apps/chat-playground"],
+					"options": {
+						"jestConfig": "apps/chat-playground/jest.config.ts",
+						"passWithNoTests": true
+					}
+				}
+			},
+			"tags": []
+		},
+		"chat-playground-e2e": {
+			"$schema": "../../node_modules/nx/schemas/project-schema.json",
+			"root": "apps/chat-playground-e2e",
+			"sourceRoot": "apps/chat-playground-e2e/src",
+			"projectType": "application",
+			"architect": {
+				"e2e": {
+					"builder": "@nrwl/cypress:cypress",
+					"options": {
+						"cypressConfig": "apps/chat-playground-e2e/cypress.json",
+						"tsConfig": "apps/chat-playground-e2e/tsconfig.e2e.json",
+						"devServerTarget": "chat-playground:serve:development"
+					},
+					"configurations": {
+						"production": {
+							"devServerTarget": "chat-playground:serve:production"
+						}
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["apps/chat-playground-e2e/**/*.{js,ts}"]
+					},
+					"outputs": ["{options.outputFile}"]
+				}
+			},
+			"tags": [],
+			"implicitDependencies": ["chat-playground"]
+		},
+		"chat-system": {
+			"$schema": "../../node_modules/nx/schemas/project-schema.json",
+			"projectType": "library",
+			"root": "libs/chat-system",
+			"sourceRoot": "libs/chat-system/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/chat-system"],
+					"options": {
+						"jestConfig": "libs/chat-system/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/chat-system/src/**/*.ts", "libs/chat-system/src/**/*.html"]
+					},
+					"outputs": ["{options.outputFile}"]
+				}
+			},
+			"tags": []
+		},
+		"client-notifications": {
+			"$schema": "../../node_modules/nx/schemas/project-schema.json",
+			"projectType": "library",
+			"root": "libs/client-notifications",
+			"sourceRoot": "libs/client-notifications/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/client-notifications"],
+					"options": {
+						"jestConfig": "libs/client-notifications/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/client-notifications/src/**/*.ts", "libs/client-notifications/src/**/*.html"]
+					},
+					"outputs": ["{options.outputFile}"]
+				}
+			},
+			"tags": []
+		},
+		"collections-models": {
+			"projectType": "library",
+			"root": "libs/collections/models",
+			"sourceRoot": "libs/collections/models/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/collections/models"],
+					"options": {
+						"jestConfig": "libs/collections/models/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/collections/models/**/*.ts", "libs/collections/models/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"collections-page": {
+			"projectType": "library",
+			"root": "libs/collections/pages",
+			"sourceRoot": "libs/collections/pages/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/collections/pages"],
+					"options": {
+						"jestConfig": "libs/collections/pages/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/collections/pages/**/*.ts", "libs/collections/pages/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"collections-state": {
+			"projectType": "library",
+			"root": "libs/collections/state",
+			"sourceRoot": "libs/collections/state/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/collections/state"],
+					"options": {
+						"jestConfig": "libs/collections/state/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/collections/state/**/*.ts", "libs/collections/state/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"collections-ui": {
+			"projectType": "library",
+			"root": "libs/collections/ui",
+			"sourceRoot": "libs/collections/ui/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/collections/ui"],
+					"options": {
+						"jestConfig": "libs/collections/ui/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/collections/ui/**/*.ts", "libs/collections/ui/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"conversations-layout": {
+			"$schema": "../../node_modules/nx/schemas/project-schema.json",
+			"projectType": "library",
+			"root": "libs/conversations-layout",
+			"sourceRoot": "libs/conversations-layout/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/conversations-layout"],
+					"options": {
+						"jestConfig": "libs/conversations-layout/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/conversations-layout/src/**/*.ts", "libs/conversations-layout/src/**/*.html"]
+					},
+					"outputs": ["{options.outputFile}"]
+				}
+			},
+			"tags": []
+		},
+		"crop-system": {
+			"$schema": "../../node_modules/nx/schemas/project-schema.json",
+			"projectType": "library",
+			"root": "libs/crop-system",
+			"sourceRoot": "libs/crop-system/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/crop-system"],
+					"options": {
+						"jestConfig": "libs/crop-system/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/crop-system/src/**/*.ts", "libs/crop-system/src/**/*.html"]
+					},
+					"outputs": ["{options.outputFile}"]
+				}
+			},
+			"tags": []
+		},
+		"crop-system-playground": {
+			"$schema": "../../node_modules/nx/schemas/project-schema.json",
+			"projectType": "application",
+			"root": "apps/crop-system-playground",
+			"sourceRoot": "apps/crop-system-playground/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"build": {
+					"builder": "@angular-devkit/build-angular:browser",
+					"outputs": ["{options.outputPath}"],
+					"options": {
+						"outputPath": "dist/apps/crop-system-playground",
+						"index": "apps/crop-system-playground/src/index.html",
+						"main": "apps/crop-system-playground/src/main.ts",
+						"polyfills": "apps/crop-system-playground/src/polyfills.ts",
+						"tsConfig": "apps/crop-system-playground/tsconfig.app.json",
+						"inlineStyleLanguage": "scss",
+						"assets": ["apps/crop-system-playground/src/favicon.ico", "apps/crop-system-playground/src/assets"],
+						"styles": ["apps/crop-system-playground/src/styles.scss"],
+						"scripts": []
+					},
+					"configurations": {
+						"production": {
+							"budgets": [
+								{
+									"type": "initial",
+									"maximumWarning": "500kb",
+									"maximumError": "1mb"
+								},
+								{
+									"type": "anyComponentStyle",
+									"maximumWarning": "2kb",
+									"maximumError": "4kb"
+								}
+							],
+							"fileReplacements": [
+								{
+									"replace": "apps/crop-system-playground/src/environments/environment.ts",
+									"with": "apps/crop-system-playground/src/environments/environment.prod.ts"
+								}
+							],
+							"outputHashing": "all"
+						},
+						"development": {
+							"buildOptimizer": false,
+							"optimization": false,
+							"vendorChunk": true,
+							"extractLicenses": false,
+							"sourceMap": true,
+							"namedChunks": true
+						}
+					},
+					"defaultConfiguration": "production"
+				},
+				"serve": {
+					"builder": "@angular-devkit/build-angular:dev-server",
+					"configurations": {
+						"production": {
+							"browserTarget": "crop-system-playground:build:production"
+						},
+						"development": {
+							"browserTarget": "crop-system-playground:build:development"
+						}
+					},
+					"defaultConfiguration": "development"
+				},
+				"extract-i18n": {
+					"builder": "@angular-devkit/build-angular:extract-i18n",
+					"options": {
+						"browserTarget": "crop-system-playground:build"
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": [
+							"apps/crop-system-playground/src/**/*.ts",
+							"apps/crop-system-playground/src/**/*.html"
+						]
+					},
+					"outputs": ["{options.outputFile}"]
+				},
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/apps/crop-system-playground"],
+					"options": {
+						"jestConfig": "apps/crop-system-playground/jest.config.ts",
+						"passWithNoTests": true
+					}
+				}
+			},
+			"tags": []
+		},
+		"crop-system-playground-e2e": {
+			"$schema": "../../node_modules/nx/schemas/project-schema.json",
+			"root": "apps/crop-system-playground-e2e",
+			"sourceRoot": "apps/crop-system-playground-e2e/src",
+			"projectType": "application",
+			"architect": {
+				"e2e": {
+					"builder": "@nrwl/cypress:cypress",
+					"options": {
+						"cypressConfig": "apps/crop-system-playground-e2e/cypress.json",
+						"tsConfig": "apps/crop-system-playground-e2e/tsconfig.e2e.json",
+						"devServerTarget": "crop-system-playground:serve:development"
+					},
+					"configurations": {
+						"production": {
+							"devServerTarget": "crop-system-playground:serve:production"
+						}
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["apps/crop-system-playground-e2e/**/*.{js,ts}"]
+					},
+					"outputs": ["{options.outputFile}"]
+				}
+			},
+			"tags": [],
+			"implicitDependencies": ["crop-system-playground"]
+		},
+		"design-system": {
+			"$schema": "../../node_modules/nx/schemas/project-schema.json",
+			"projectType": "library",
+			"root": "libs/design-system",
+			"sourceRoot": "libs/design-system/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/design-system"],
+					"options": {
+						"jestConfig": "libs/design-system/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/design-system/src/**/*.ts", "libs/design-system/src/**/*.html"]
+					},
+					"outputs": ["{options.outputFile}"]
+				}
+			},
+			"tags": []
+		},
+		"domains-pages": {
+			"projectType": "library",
+			"root": "libs/domains/pages",
+			"sourceRoot": "libs/domains/pages/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/domains/pages"],
+					"options": {
+						"jestConfig": "libs/domains/pages/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/domains/pages/**/*.ts", "libs/domains/pages/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"domains-state": {
+			"projectType": "library",
+			"root": "libs/domains/state",
+			"sourceRoot": "libs/domains/state/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/domains/state"],
+					"options": {
+						"jestConfig": "libs/domains/state/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/domains/state/**/*.ts", "libs/domains/state/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"domains-ui": {
+			"projectType": "library",
+			"root": "libs/domains/ui",
+			"sourceRoot": "libs/domains/ui/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/domains/ui"],
+					"options": {
+						"jestConfig": "libs/domains/ui/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/domains/ui/**/*.ts", "libs/domains/ui/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"exports-models": {
+			"projectType": "library",
+			"root": "libs/exports/models",
+			"sourceRoot": "libs/exports/models/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/exports/models"],
+					"options": {
+						"jestConfig": "libs/exports/models/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/exports/models/**/*.ts", "libs/exports/models/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"exports-pages": {
+			"projectType": "library",
+			"root": "libs/exports/pages",
+			"sourceRoot": "libs/exports/pages/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/exports/pages"],
+					"options": {
+						"jestConfig": "libs/exports/pages/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/exports/pages/**/*.ts", "libs/exports/pages/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"exports-state": {
+			"projectType": "library",
+			"root": "libs/exports/state",
+			"sourceRoot": "libs/exports/state/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/exports/state"],
+					"options": {
+						"jestConfig": "libs/exports/state/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/exports/state/**/*.ts", "libs/exports/state/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"exports-ui": {
+			"projectType": "library",
+			"root": "libs/exports/ui",
+			"sourceRoot": "libs/exports/ui/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/exports/ui"],
+					"options": {
+						"jestConfig": "libs/exports/ui/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/exports/ui/**/*.ts", "libs/exports/ui/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"files-display": {
+			"projectType": "library",
+			"root": "libs/files/display",
+			"sourceRoot": "libs/files/display/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/files/display"],
+					"options": {
+						"jestConfig": "libs/files/display/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/files/display/**/*.ts", "libs/files/display/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"files-models": {
+			"projectType": "library",
+			"root": "libs/files/models",
+			"sourceRoot": "libs/files/models/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/files/models"],
+					"options": {
+						"jestConfig": "libs/files/models/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/files/models/**/*.ts", "libs/files/models/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"files-pages": {
+			"projectType": "library",
+			"root": "libs/files/pages",
+			"sourceRoot": "libs/files/pages/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/files/pages"],
+					"options": {
+						"jestConfig": "libs/files/pages/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/files/pages/**/*.ts", "libs/files/pages/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"files-services": {
+			"projectType": "library",
+			"root": "libs/files/services",
+			"sourceRoot": "libs/files/services/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/files/services"],
+					"options": {
+						"jestConfig": "libs/files/services/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/files/services/**/*.ts", "libs/files/services/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"files-state": {
+			"projectType": "library",
+			"root": "libs/files/state",
+			"sourceRoot": "libs/files/state/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/files/state"],
+					"options": {
+						"jestConfig": "libs/files/state/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/files/state/**/*.ts", "libs/files/state/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"files-ui": {
+			"projectType": "library",
+			"root": "libs/files/ui",
+			"sourceRoot": "libs/files/ui/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/files/ui"],
+					"options": {
+						"jestConfig": "libs/files/ui/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/files/ui/**/*.ts", "libs/files/ui/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"filetags-pages": {
+			"$schema": "../../../node_modules/nx/schemas/project-schema.json",
+			"projectType": "library",
+			"root": "libs/filetags/pages",
+			"sourceRoot": "libs/filetags/pages/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/filetags/pages"],
+					"options": {
+						"jestConfig": "libs/filetags/pages/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/filetags/pages/src/**/*.ts", "libs/filetags/pages/src/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"filetags-state": {
+			"$schema": "../../../node_modules/nx/schemas/project-schema.json",
+			"projectType": "library",
+			"root": "libs/filetags/state",
+			"sourceRoot": "libs/filetags/state/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/filetags/state"],
+					"options": {
+						"jestConfig": "libs/filetags/state/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/filetags/state/src/**/*.ts", "libs/filetags/state/src/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"filetags-ui": {
+			"$schema": "../../../node_modules/nx/schemas/project-schema.json",
+			"projectType": "library",
+			"root": "libs/filetags/ui",
+			"sourceRoot": "libs/filetags/ui/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/filetags/ui"],
+					"options": {
+						"jestConfig": "libs/filetags/ui/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/filetags/ui/src/**/*.ts", "libs/filetags/ui/src/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"forms-layout": {
+			"$schema": "../../node_modules/nx/schemas/project-schema.json",
+			"projectType": "library",
+			"root": "libs/forms-layout",
+			"sourceRoot": "libs/forms-layout/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/forms-layout"],
+					"options": {
+						"jestConfig": "libs/forms-layout/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/forms-layout/src/**/*.ts", "libs/forms-layout/src/**/*.html"]
+					},
+					"outputs": ["{options.outputFile}"]
+				}
+			},
+			"tags": []
+		},
+		"forms-state": {
+			"projectType": "library",
+			"root": "libs/forms/state",
+			"sourceRoot": "libs/forms/state/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/forms/state"],
+					"options": {
+						"jestConfig": "libs/forms/state/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/forms/state/**/*.ts", "libs/forms/state/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"forms-system": {
+			"$schema": "../../node_modules/nx/schemas/project-schema.json",
+			"projectType": "library",
+			"root": "libs/forms-system",
+			"sourceRoot": "libs/forms-system/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/forms-system"],
+					"options": {
+						"jestConfig": "libs/forms-system/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/forms-system/src/**/*.ts", "libs/forms-system/src/**/*.html"]
+					},
+					"outputs": ["{options.outputFile}"]
+				}
+			},
+			"tags": []
+		},
+		"forms-ui": {
+			"projectType": "library",
+			"root": "libs/forms/ui",
+			"sourceRoot": "libs/forms/ui/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/forms/ui"],
+					"options": {
+						"jestConfig": "libs/forms/ui/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/forms/ui/**/*.ts", "libs/forms/ui/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"global-player": {
+			"$schema": "../../node_modules/nx/schemas/project-schema.json",
+			"projectType": "library",
+			"root": "libs/global-player",
+			"sourceRoot": "libs/global-player/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/global-player"],
+					"options": {
+						"jestConfig": "libs/global-player/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/global-player/src/**/*.ts", "libs/global-player/src/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"groups-layout": {
+			"$schema": "../../node_modules/nx/schemas/project-schema.json",
+			"projectType": "library",
+			"root": "libs/groups-layout",
+			"sourceRoot": "libs/groups-layout/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/groups-layout"],
+					"options": {
+						"jestConfig": "libs/groups-layout/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/groups-layout/src/**/*.ts", "libs/groups-layout/src/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"groups-system": {
+			"$schema": "../../node_modules/nx/schemas/project-schema.json",
+			"projectType": "library",
+			"root": "libs/groups-system",
+			"sourceRoot": "libs/groups-system/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/groups-system"],
+					"options": {
+						"jestConfig": "libs/groups-system/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/groups-system/src/**/*.ts", "libs/groups-system/src/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"groups-ui": {
+			"projectType": "library",
+			"root": "libs/groups/ui",
+			"sourceRoot": "libs/groups/ui/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/groups/ui"],
+					"options": {
+						"jestConfig": "libs/groups/ui/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/groups/ui/**/*.ts", "libs/groups/ui/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"guests-layout": {
+			"$schema": "../../node_modules/nx/schemas/project-schema.json",
+			"projectType": "library",
+			"root": "libs/guests-layout",
+			"sourceRoot": "libs/guests-layout/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/guests-layout"],
+					"options": {
+						"jestConfig": "libs/guests-layout/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/guests-layout/src/**/*.ts", "libs/guests-layout/src/**/*.html"]
+					},
+					"outputs": ["{options.outputFile}"]
+				}
+			},
+			"tags": []
+		},
+		"i18n": {
+			"projectType": "library",
+			"root": "libs/i18n",
+			"sourceRoot": "libs/i18n/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/i18n"],
+					"options": {
+						"jestConfig": "libs/i18n/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/i18n/**/*.ts", "libs/i18n/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"info-layout": {
+			"$schema": "../../node_modules/nx/schemas/project-schema.json",
+			"projectType": "library",
+			"root": "libs/info-layout",
+			"sourceRoot": "libs/info-layout/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/info-layout"],
+					"options": {
+						"jestConfig": "libs/info-layout/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/info-layout/src/**/*.ts", "libs/info-layout/src/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"invitation-system": {
+			"$schema": "../../node_modules/nx/schemas/project-schema.json",
+			"projectType": "library",
+			"root": "libs/invitation-system",
+			"sourceRoot": "libs/invitation-system/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/invitation-system"],
+					"options": {
+						"jestConfig": "libs/invitation-system/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/invitation-system/src/**/*.ts", "libs/invitation-system/src/**/*.html"]
+					},
+					"outputs": ["{options.outputFile}"]
+				}
+			},
+			"tags": []
+		},
+		"items-models": {
+			"projectType": "library",
+			"root": "libs/items/models",
+			"sourceRoot": "libs/items/models/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/items/models"],
+					"options": {
+						"jestConfig": "libs/items/models/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/items/models/**/*.ts", "libs/items/models/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"items-page": {
+			"projectType": "library",
+			"root": "libs/items/pages",
+			"sourceRoot": "libs/items/pages/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/items/pages"],
+					"options": {
+						"jestConfig": "libs/items/pages/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/items/pages/**/*.ts", "libs/items/pages/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"items-state": {
+			"projectType": "library",
+			"root": "libs/items/state",
+			"sourceRoot": "libs/items/state/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/items/state"],
+					"options": {
+						"jestConfig": "libs/items/state/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/items/state/**/*.ts", "libs/items/state/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"items-ui": {
+			"projectType": "library",
+			"root": "libs/items/ui",
+			"sourceRoot": "libs/items/ui/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/items/ui"],
+					"options": {
+						"jestConfig": "libs/items/ui/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/items/ui/**/*.ts", "libs/items/ui/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"layout-state": {
+			"projectType": "library",
+			"root": "libs/layout/state",
+			"sourceRoot": "libs/layout/state/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/layout/state"],
+					"options": {
+						"jestConfig": "libs/layout/state/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/layout/state/**/*.ts", "libs/layout/state/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"links-models": {
+			"projectType": "library",
+			"root": "libs/links/models",
+			"sourceRoot": "libs/links/models/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/links/models"],
+					"options": {
+						"jestConfig": "libs/links/models/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/links/models/**/*.ts", "libs/links/models/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"links-services": {
+			"projectType": "library",
+			"root": "libs/links/services",
+			"sourceRoot": "libs/links/services/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/links/services"],
+					"options": {
+						"jestConfig": "libs/links/services/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/links/services/**/*.ts", "libs/links/services/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"links-ui": {
+			"projectType": "library",
+			"root": "libs/links/ui",
+			"sourceRoot": "libs/links/ui/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/links/ui"],
+					"options": {
+						"jestConfig": "libs/links/ui/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/links/ui/**/*.ts", "libs/links/ui/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"loading": {
+			"$schema": "../../node_modules/nx/schemas/project-schema.json",
+			"projectType": "library",
+			"root": "libs/loading",
+			"sourceRoot": "libs/loading/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/loading"],
+					"options": {
+						"jestConfig": "libs/loading/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/loading/src/**/*.ts", "libs/loading/src/**/*.html"]
+					},
+					"outputs": ["{options.outputFile}"]
+				}
+			},
+			"tags": []
+		},
+		"mega-store": {
+			"$schema": "../../node_modules/nx/schemas/project-schema.json",
+			"projectType": "library",
+			"root": "libs/mega-store",
+			"sourceRoot": "libs/mega-store/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/mega-store"],
+					"options": {
+						"jestConfig": "libs/mega-store/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/mega-store/src/**/*.ts", "libs/mega-store/src/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"mixes-layout": {
+			"$schema": "../../node_modules/nx/schemas/project-schema.json",
+			"projectType": "library",
+			"root": "libs/mixes-layout",
+			"sourceRoot": "libs/mixes-layout/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/mixes-layout"],
+					"options": {
+						"jestConfig": "libs/mixes-layout/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/mixes-layout/src/**/*.ts", "libs/mixes-layout/src/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"mixes-system": {
+			"$schema": "../../node_modules/nx/schemas/project-schema.json",
+			"projectType": "library",
+			"root": "libs/mixes-system",
+			"sourceRoot": "libs/mixes-system/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/mixes-system"],
+					"options": {
+						"jestConfig": "libs/mixes-system/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/mixes-system/src/**/*.ts", "libs/mixes-system/src/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"mixes-ui": {
+			"projectType": "library",
+			"root": "libs/mixes/ui",
+			"sourceRoot": "libs/mixes/ui/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/mixes/ui"],
+					"options": {
+						"jestConfig": "libs/mixes/ui/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/mixes/ui/**/*.ts", "libs/mixes/ui/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"monitoring-system": {
+			"$schema": "../../node_modules/nx/schemas/project-schema.json",
+			"projectType": "library",
+			"root": "libs/monitoring-system",
+			"sourceRoot": "libs/monitoring-system/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/monitoring-system"],
+					"options": {
+						"jestConfig": "libs/monitoring-system/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/monitoring-system/src/**/*.ts", "libs/monitoring-system/src/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"notes-layout": {
+			"projectType": "library",
+			"root": "libs/notes-layout",
+			"sourceRoot": "libs/notes-layout/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/notes-layout"],
+					"options": {
+						"jestConfig": "libs/notes-layout/jest.config.js",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/notes-layout/src/**/*.ts", "libs/notes-layout/src/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"notes-system": {
+			"projectType": "library",
+			"root": "libs/notes-system",
+			"sourceRoot": "libs/notes-system/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/notes-system"],
+					"options": {
+						"jestConfig": "libs/notes-system/jest.config.js",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/notes-system/src/**/*.ts", "libs/notes-system/src/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"notifications-layout": {
+			"$schema": "../../node_modules/nx/schemas/project-schema.json",
+			"projectType": "library",
+			"root": "libs/notifications-layout",
+			"sourceRoot": "libs/notifications-layout/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/notifications-layout"],
+					"options": {
+						"jestConfig": "libs/notifications-layout/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/notifications-layout/src/**/*.ts", "libs/notifications-layout/src/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"notifications-system": {
+			"$schema": "../../node_modules/nx/schemas/project-schema.json",
+			"projectType": "library",
+			"root": "libs/notifications-system",
+			"sourceRoot": "libs/notifications-system/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/notifications-system"],
+					"options": {
+						"jestConfig": "libs/notifications-system/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/notifications-system/src/**/*.ts", "libs/notifications-system/src/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"objects-models": {
+			"projectType": "library",
+			"root": "libs/objects/models",
+			"sourceRoot": "libs/objects/models/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/objects/models"],
+					"options": {
+						"jestConfig": "libs/objects/models/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/objects/models/**/*.ts", "libs/objects/models/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"objects-prompt": {
+			"projectType": "library",
+			"root": "libs/objects/prompt",
+			"sourceRoot": "libs/objects/prompt/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/objects/prompt"],
+					"options": {
+						"jestConfig": "libs/objects/prompt/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/objects/prompt/**/*.ts", "libs/objects/prompt/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"objects-ui": {
+			"projectType": "library",
+			"root": "libs/objects/ui",
+			"sourceRoot": "libs/objects/ui/src",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/objects/ui"],
+					"options": {
+						"jestConfig": "libs/objects/ui/jest.config.ts"
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/objects/ui/**/*.ts", "libs/objects/ui/**/*.html"]
+					}
+				}
+			}
+		},
+		"pages-pages": {
+			"projectType": "library",
+			"root": "libs/pages/pages",
+			"sourceRoot": "libs/pages/pages/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/pages/pages"],
+					"options": {
+						"jestConfig": "libs/pages/pages/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/pages/pages/**/*.ts", "libs/pages/pages/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"pages-state": {
+			"projectType": "library",
+			"root": "libs/pages/state",
+			"sourceRoot": "libs/pages/state/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/pages/state"],
+					"options": {
+						"jestConfig": "libs/pages/state/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/pages/state/**/*.ts", "libs/pages/state/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"pages-ui": {
+			"projectType": "library",
+			"root": "libs/pages/ui",
+			"sourceRoot": "libs/pages/ui/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/pages/ui"],
+					"options": {
+						"jestConfig": "libs/pages/ui/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/pages/ui/**/*.ts", "libs/pages/ui/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"player-services": {
+			"projectType": "library",
+			"root": "libs/player/services",
+			"sourceRoot": "libs/player/services/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/player/services"],
+					"options": {
+						"jestConfig": "libs/player/services/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/player/services/**/*.ts", "libs/player/services/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"player-sources": {
+			"projectType": "library",
+			"root": "libs/player/sources",
+			"sourceRoot": "libs/player/sources/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/player/sources"],
+					"options": {
+						"jestConfig": "libs/player/sources/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/player/sources/**/*.ts", "libs/player/sources/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"player-specialised": {
+			"projectType": "library",
+			"root": "libs/player/specialised",
+			"sourceRoot": "libs/player/specialised/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/player/specialised"],
+					"options": {
+						"jestConfig": "libs/player/specialised/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/player/specialised/**/*.ts", "libs/player/specialised/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"player-system": {
+			"$schema": "../../node_modules/nx/schemas/project-schema.json",
+			"projectType": "library",
+			"root": "libs/player-system",
+			"sourceRoot": "libs/player-system/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/player-system"],
+					"options": {
+						"jestConfig": "libs/player-system/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/player-system/src/**/*.ts", "libs/player-system/src/**/*.html"]
+					},
+					"outputs": ["{options.outputFile}"]
+				}
+			},
+			"tags": []
+		},
+		"player-ui": {
+			"projectType": "library",
+			"root": "libs/player/ui",
+			"sourceRoot": "libs/player/ui/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/player/ui"],
+					"options": {
+						"jestConfig": "libs/player/ui/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/player/ui/**/*.ts", "libs/player/ui/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"playground": {
+			"$schema": "../../node_modules/nx/schemas/project-schema.json",
+			"projectType": "library",
+			"root": "libs/playground",
+			"sourceRoot": "libs/playground/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/playground"],
+					"options": {
+						"jestConfig": "libs/playground/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/playground/src/**/*.ts", "libs/playground/src/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"playlists-state": {
+			"projectType": "library",
+			"root": "libs/playlists/state",
+			"sourceRoot": "libs/playlists/state/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/playlists/state"],
+					"options": {
+						"jestConfig": "libs/playlists/state/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/playlists/state/**/*.ts", "libs/playlists/state/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"playlists-ui": {
+			"projectType": "library",
+			"root": "libs/playlists/ui",
+			"sourceRoot": "libs/playlists/ui/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/playlists/ui"],
+					"options": {
+						"jestConfig": "libs/playlists/ui/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/playlists/ui/**/*.ts", "libs/playlists/ui/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"profile-layout": {
+			"$schema": "../../node_modules/nx/schemas/project-schema.json",
+			"projectType": "library",
+			"root": "libs/profile-layout",
+			"sourceRoot": "libs/profile-layout/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/profile-layout"],
+					"options": {
+						"jestConfig": "libs/profile-layout/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/profile-layout/src/**/*.ts", "libs/profile-layout/src/**/*.html"]
+					},
+					"outputs": ["{options.outputFile}"]
+				}
+			},
+			"tags": []
+		},
+		"profile-system": {
+			"$schema": "../../node_modules/nx/schemas/project-schema.json",
+			"projectType": "library",
+			"root": "libs/profile-system",
+			"sourceRoot": "libs/profile-system/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/profile-system"],
+					"options": {
+						"jestConfig": "libs/profile-system/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/profile-system/src/**/*.ts", "libs/profile-system/src/**/*.html"]
+					},
+					"outputs": ["{options.outputFile}"]
+				}
+			},
+			"tags": []
+		},
+		"record-services": {
+			"projectType": "library",
+			"root": "libs/record/services",
+			"sourceRoot": "libs/record/services/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/record/services"],
+					"options": {
+						"jestConfig": "libs/record/services/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/record/services/**/*.ts", "libs/record/services/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"record-state": {
+			"projectType": "library",
+			"root": "libs/record/state",
+			"sourceRoot": "libs/record/state/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/record/state"],
+					"options": {
+						"jestConfig": "libs/record/state/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/record/state/**/*.ts", "libs/record/state/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"record-ui": {
+			"projectType": "library",
+			"root": "libs/record/ui",
+			"sourceRoot": "libs/record/ui/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/record/ui"],
+					"options": {
+						"jestConfig": "libs/record/ui/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/record/ui/**/*.ts", "libs/record/ui/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"requests": {
+			"$schema": "../../node_modules/nx/schemas/project-schema.json",
+			"projectType": "library",
+			"root": "libs/requests",
+			"sourceRoot": "libs/requests/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/requests"],
+					"options": {
+						"jestConfig": "libs/requests/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/requests/src/**/*.ts", "libs/requests/src/**/*.html"]
+					},
+					"outputs": ["{options.outputFile}"]
+				}
+			},
+			"tags": []
+		},
+		"rumble-pwa": {
+			"$schema": "../../node_modules/nx/schemas/project-schema.json",
+			"projectType": "application",
+			"root": "apps/rumble-pwa",
+			"sourceRoot": "apps/rumble-pwa/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"build": {
+					"builder": "@angular-devkit/build-angular:browser",
+					"options": {
+						"outputPath": "dist/apps/rumble-pwa",
+						"index": "apps/rumble-pwa/src/index.html",
+						"main": "apps/rumble-pwa/src/main.ts",
+						"polyfills": "apps/rumble-pwa/src/polyfills.ts",
+						"tsConfig": "apps/rumble-pwa/tsconfig.app.json",
+						"inlineStyleLanguage": "scss",
+						"assets": [
+							"apps/rumble-pwa/src/favicon.ico",
+							"apps/rumble-pwa/src/assets",
+							"apps/rumble-pwa/src/i18n",
+							"apps/rumble-pwa/src/manifest.webmanifest",
+							{
+								"glob": "**/*",
+								"input": "libs/auth-layout/src/assets/",
+								"output": "./assets/"
+							},
+							{
+								"glob": "**/*",
+								"input": "libs/app-layout/src/assets/",
+								"output": "./assets/"
+							},
+							{
+								"glob": "**/*",
+								"input": "libs/design-system/src/assets/",
+								"output": "./assets/"
+							}
+						],
+						"styles": [
+							"libs/design-system/src/styles/custom-angular-theme.scss",
+							"apps/rumble-pwa/src/styles.scss",
+							"libs/design-system/src/styles/shepherd-custom.scss",
+							"libs/client-notifications/src/lib/style.scss",
+							"libs/design-system/src/styles/variables.scss",
+							"libs/design-system/src/styles/global.scss"
+						],
+						"scripts": [],
+						"serviceWorker": true,
+						"ngswConfigPath": "apps/rumble-pwa/ngsw-config.json"
+					},
+					"configurations": {
+						"prod": {
+							"outputPath": "dist/apps/rumble-pwa/prod",
+							"budgets": [
+								{
+									"type": "initial",
+									"maximumWarning": "1mb",
+									"maximumError": "5.0mb"
+								},
+								{
+									"type": "anyComponentStyle",
+									"maximumWarning": "2kb",
+									"maximumError": "10kb"
+								}
+							],
+							"fileReplacements": [
+								{
+									"replace": "apps/rumble-pwa/src/environments/environment.ts",
+									"with": "apps/rumble-pwa/src/environments/environment.prod.ts"
+								},
+								{
+									"replace": "libs/profile-system/src/lib/config/demo-form.config.ts",
+									"with": "libs/profile-system/src/lib/config/demo-form.config.prod.ts"
+								}
+							],
+							"outputHashing": "all",
+							"index": {
+								"input": "apps/rumble-pwa/src/index.prod.html",
+								"output": "index.html"
+							}
+						},
+						"dev": {
+							"outputPath": "dist/apps/rumble-pwa/dev",
+							"budgets": [
+								{
+									"type": "initial",
+									"maximumWarning": "1mb",
+									"maximumError": "5.0mb"
+								},
+								{
+									"type": "anyComponentStyle",
+									"maximumWarning": "2kb",
+									"maximumError": "10kb"
+								}
+							],
+							"fileReplacements": [
+								{
+									"replace": "apps/rumble-pwa/src/environments/environment.ts",
+									"with": "apps/rumble-pwa/src/environments/environment.dev.ts"
+								},
+								{
+									"replace": "libs/profile-system/src/lib/config/demo-form.config.ts",
+									"with": "libs/profile-system/src/lib/config/demo-form.config.dev.ts"
+								}
+							],
+							"outputHashing": "all"
+						},
+						"devLocal": {
+							"outputPath": "dist/apps/rumble-pwa/devLocal",
+							"buildOptimizer": false,
+							"optimization": false,
+							"vendorChunk": true,
+							"extractLicenses": false,
+							"sourceMap": true,
+							"namedChunks": true
+						}
+					},
+					"defaultConfiguration": "prod"
+				},
+				"serve": {
+					"builder": "@angular-devkit/build-angular:dev-server",
+					"configurations": {
+						"prod": {
+							"browserTarget": "rumble-pwa:build:prod"
+						},
+						"dev": {
+							"browserTarget": "rumble-pwa:build:dev"
+						},
+						"devLocal": {
+							"browserTarget": "rumble-pwa:build:devLocal"
+						}
+					},
+					"defaultConfiguration": "devLocal"
+				},
+				"extract-i18n": {
+					"builder": "@angular-devkit/build-angular:extract-i18n",
+					"options": {
+						"browserTarget": "rumble-pwa:build"
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["apps/rumble-pwa/src/**/*.ts", "apps/rumble-pwa/src/**/*.html"]
+					},
+					"outputs": ["{options.outputFile}"]
+				},
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/apps/rumble-pwa"],
+					"options": {
+						"jestConfig": "apps/rumble-pwa/jest.config.ts",
+						"passWithNoTests": true
+					}
+				}
+			},
+			"tags": []
+		},
+		"rumble-pwa-admin": {
+			"$schema": "../../node_modules/nx/schemas/project-schema.json",
+			"projectType": "application",
+			"root": "apps/rumble-pwa-admin",
+			"sourceRoot": "apps/rumble-pwa-admin/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"build": {
+					"builder": "@angular-devkit/build-angular:browser",
+					"outputs": ["{options.outputPath}"],
+					"options": {
+						"outputPath": "dist/apps/rumble-pwa-admin",
+						"index": "apps/rumble-pwa-admin/src/index.html",
+						"main": "apps/rumble-pwa-admin/src/main.ts",
+						"polyfills": "apps/rumble-pwa-admin/src/polyfills.ts",
+						"tsConfig": "apps/rumble-pwa-admin/tsconfig.app.json",
+						"inlineStyleLanguage": "scss",
+						"assets": ["apps/rumble-pwa-admin/src/favicon.ico", "apps/rumble-pwa-admin/src/assets"],
+						"styles": [
+							"apps/rumble-pwa-admin/src/styles.scss",
+							"./node_modules/@angular/material/prebuilt-themes/deeppurple-amber.css"
+						],
+						"scripts": []
+					},
+					"configurations": {
+						"production": {
+							"budgets": [
+								{
+									"type": "initial",
+									"maximumWarning": "500kb",
+									"maximumError": "1mb"
+								},
+								{
+									"type": "anyComponentStyle",
+									"maximumWarning": "2kb",
+									"maximumError": "4kb"
+								}
+							],
+							"fileReplacements": [
+								{
+									"replace": "apps/rumble-pwa-admin/src/environments/environment.ts",
+									"with": "apps/rumble-pwa-admin/src/environments/environment.prod.ts"
+								}
+							],
+							"outputHashing": "all"
+						},
+						"development": {
+							"buildOptimizer": false,
+							"optimization": false,
+							"vendorChunk": true,
+							"extractLicenses": false,
+							"sourceMap": true,
+							"namedChunks": true
+						}
+					},
+					"defaultConfiguration": "production"
+				},
+				"serve": {
+					"builder": "@angular-devkit/build-angular:dev-server",
+					"configurations": {
+						"production": {
+							"browserTarget": "rumble-pwa-admin:build:production"
+						},
+						"development": {
+							"browserTarget": "rumble-pwa-admin:build:development"
+						}
+					},
+					"defaultConfiguration": "development"
+				},
+				"extract-i18n": {
+					"builder": "@angular-devkit/build-angular:extract-i18n",
+					"options": {
+						"browserTarget": "rumble-pwa-admin:build"
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["apps/rumble-pwa-admin/src/**/*.ts", "apps/rumble-pwa-admin/src/**/*.html"]
+					}
+				},
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/apps/rumble-pwa-admin"],
+					"options": {
+						"jestConfig": "apps/rumble-pwa-admin/jest.config.ts",
+						"passWithNoTests": true
+					}
+				}
+			},
+			"tags": []
+		},
+		"rumble-pwa-admin-e2e": {
+			"$schema": "../../node_modules/nx/schemas/project-schema.json",
+			"root": "apps/rumble-pwa-admin-e2e",
+			"sourceRoot": "apps/rumble-pwa-admin-e2e/src",
+			"projectType": "application",
+			"architect": {
+				"e2e": {
+					"builder": "@nrwl/cypress:cypress",
+					"options": {
+						"cypressConfig": "apps/rumble-pwa-admin-e2e/cypress.json",
+						"devServerTarget": "rumble-pwa-admin:serve:development"
+					},
+					"configurations": {
+						"production": {
+							"devServerTarget": "rumble-pwa-admin:serve:production"
+						}
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"outputs": ["{options.outputFile}"],
+					"options": {
+						"lintFilePatterns": ["apps/rumble-pwa-admin-e2e/**/*.{js,ts}"]
+					}
+				}
+			},
+			"tags": [],
+			"implicitDependencies": ["rumble-pwa-admin"]
+		},
+		"rumble-pwa-e2e": {
+			"$schema": "../../node_modules/nx/schemas/project-schema.json",
+			"root": "apps/rumble-pwa-e2e",
+			"sourceRoot": "apps/rumble-pwa-e2e/src",
+			"projectType": "application",
+			"architect": {
+				"e2e": {
+					"builder": "@nrwl/cypress:cypress",
+					"options": {
+						"cypressConfig": "apps/rumble-pwa-e2e/cypress.json",
+						"tsConfig": "apps/rumble-pwa-e2e/tsconfig.e2e.json",
+						"devServerTarget": "rumble-pwa:serve:devLocal"
+					},
+					"configurations": {
+						"prod": {
+							"browserTarget": "rumble-pwa:build:prod"
+						},
+						"dev": {
+							"browserTarget": "rumble-pwa:build:dev"
+						},
+						"devLocal": {
+							"browserTarget": "rumble-pwa:build:devLocal"
+						}
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["apps/rumble-pwa-e2e/**/*.{js,ts}"]
+					},
+					"outputs": ["{options.outputFile}"]
+				}
+			},
+			"tags": [],
+			"implicitDependencies": ["rumble-pwa"]
+		},
+		"social-login-system": {
+			"$schema": "../../node_modules/nx/schemas/project-schema.json",
+			"projectType": "library",
+			"root": "libs/social-login-system",
+			"sourceRoot": "libs/social-login-system/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/social-login-system"],
+					"options": {
+						"jestConfig": "libs/social-login-system/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/social-login-system/src/**/*.ts", "libs/social-login-system/src/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"storage": {
+			"$schema": "../../node_modules/nx/schemas/project-schema.json",
+			"projectType": "library",
+			"root": "libs/storage",
+			"sourceRoot": "libs/storage/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/storage"],
+					"options": {
+						"jestConfig": "libs/storage/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/storage/src/**/*.ts", "libs/storage/src/**/*.html"]
+					},
+					"outputs": ["{options.outputFile}"]
+				}
+			},
+			"tags": []
+		},
+		"subscriptions-layout": {
+			"$schema": "../../node_modules/nx/schemas/project-schema.json",
+			"projectType": "library",
+			"root": "libs/subscriptions-layout",
+			"sourceRoot": "libs/subscriptions-layout/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/subscriptions-layout"],
+					"options": {
+						"jestConfig": "libs/subscriptions-layout/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/subscriptions-layout/src/**/*.ts", "libs/subscriptions-layout/src/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"subscriptions-system": {
+			"$schema": "../../node_modules/nx/schemas/project-schema.json",
+			"projectType": "library",
+			"root": "libs/subscriptions-system",
+			"sourceRoot": "libs/subscriptions-system/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/subscriptions-system"],
+					"options": {
+						"jestConfig": "libs/subscriptions-system/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/subscriptions-system/src/**/*.ts", "libs/subscriptions-system/src/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"sw-auto-update": {
+			"$schema": "../../node_modules/nx/schemas/project-schema.json",
+			"projectType": "library",
+			"root": "libs/sw-auto-update",
+			"sourceRoot": "libs/sw-auto-update/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/sw-auto-update"],
+					"options": {
+						"jestConfig": "libs/sw-auto-update/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/sw-auto-update/src/**/*.ts", "libs/sw-auto-update/src/**/*.html"]
+					},
+					"outputs": ["{options.outputFile}"]
+				}
+			},
+			"tags": []
+		},
+		"tab-manager": {
+			"$schema": "../../node_modules/nx/schemas/project-schema.json",
+			"projectType": "library",
+			"root": "libs/tab-manager",
+			"sourceRoot": "libs/tab-manager/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/tab-manager"],
+					"options": {
+						"jestConfig": "libs/tab-manager/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/tab-manager/src/**/*.ts", "libs/tab-manager/src/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"tasks-system": {
+			"$schema": "../../node_modules/nx/schemas/project-schema.json",
+			"projectType": "library",
+			"root": "libs/tasks-system",
+			"sourceRoot": "libs/tasks-system/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/tasks-system"],
+					"options": {
+						"jestConfig": "libs/tasks-system/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/tasks-system/src/**/*.ts", "libs/tasks-system/src/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"test-example": {
+			"$schema": "../../node_modules/nx/schemas/project-schema.json",
+			"projectType": "library",
+			"root": "libs/test-example",
+			"sourceRoot": "libs/test-example/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/test-example"],
+					"options": {
+						"jestConfig": "libs/test-example/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/test-example/src/**/*.ts", "libs/test-example/src/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"todo": {
+			"projectType": "library",
+			"root": "libs/todo",
+			"sourceRoot": "libs/todo/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/todo"],
+					"options": {
+						"jestConfig": "libs/todo/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/todo/**/*.ts", "libs/todo/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"tracks-state": {
+			"projectType": "library",
+			"root": "libs/tracks/state",
+			"sourceRoot": "libs/tracks/state/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/tracks/state"],
+					"options": {
+						"jestConfig": "libs/tracks/state/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/tracks/state/**/*.ts", "libs/tracks/state/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"upgrade-models": {
+			"projectType": "library",
+			"root": "libs/upgrade/models",
+			"sourceRoot": "libs/upgrade/models/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/upgrade/models"],
+					"options": {
+						"jestConfig": "libs/upgrade/models/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/upgrade/models/**/*.ts", "libs/upgrade/models/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"upgrade-ui": {
+			"projectType": "library",
+			"root": "libs/upgrade/ui",
+			"sourceRoot": "libs/upgrade/ui/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/upgrade/ui"],
+					"options": {
+						"jestConfig": "libs/upgrade/ui/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/upgrade/ui/**/*.ts", "libs/upgrade/ui/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"users-models": {
+			"projectType": "library",
+			"root": "libs/users/models",
+			"sourceRoot": "libs/users/models/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/users/models"],
+					"options": {
+						"jestConfig": "libs/users/models/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/users/models/**/*.ts", "libs/users/models/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"users-pages": {
+			"projectType": "library",
+			"root": "libs/users/pages",
+			"sourceRoot": "libs/users/pages/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/users/pages"],
+					"options": {
+						"jestConfig": "libs/users/pages/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/users/pages/**/*.ts", "libs/users/pages/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"users-state": {
+			"projectType": "library",
+			"root": "libs/users/state",
+			"sourceRoot": "libs/users/state/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/users/state"],
+					"options": {
+						"jestConfig": "libs/users/state/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/users/state/**/*.ts", "libs/users/state/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"users-ui": {
+			"projectType": "library",
+			"root": "libs/users/ui",
+			"sourceRoot": "libs/users/ui/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/users/ui"],
+					"options": {
+						"jestConfig": "libs/users/ui/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/users/ui/**/*.ts", "libs/users/ui/**/*.html"]
+					}
+				}
+			},
+			"tags": []
+		},
+		"utils": {
+			"$schema": "../../node_modules/nx/schemas/project-schema.json",
+			"projectType": "library",
+			"root": "libs/utils",
+			"sourceRoot": "libs/utils/src",
+			"prefix": "rumble-pwa",
+			"architect": {
+				"test": {
+					"builder": "@nrwl/jest:jest",
+					"outputs": ["coverage/libs/utils"],
+					"options": {
+						"jestConfig": "libs/utils/jest.config.ts",
+						"passWithNoTests": true
+					}
+				},
+				"lint": {
+					"builder": "@nrwl/linter:eslint",
+					"options": {
+						"lintFilePatterns": ["libs/utils/src/**/*.ts", "libs/utils/src/**/*.html"]
+					},
+					"outputs": ["{options.outputFile}"]
+				}
+			},
+			"tags": []
+		}
+	}
+}

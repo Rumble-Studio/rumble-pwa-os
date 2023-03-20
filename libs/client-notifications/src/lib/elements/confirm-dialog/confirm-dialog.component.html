@@ -1,0 +1,44 @@
+<p
+	*ngIf="data.title"
+	class="confirmationTitle">
+	{{ data.title }}
+</p>
+<p *ngIf="data.subtitle">
+	{{ data.subtitle }}
+</p>
+
+<ng-container *ngIf="data.textForConfirmation && textConfirmForm">
+	<p>
+		Please type "<span class="bold">{{ data.textForConfirmation }}</span
+		>".
+	</p>
+	<mat-form-field
+		class="rs-full-width"
+		[formGroup]="textConfirmForm">
+		<input
+			matInput
+			formControlName="text"
+			name="textForConfirmation"
+			required />
+		<div
+			class="formError"
+			*ngIf="!textConfirmForm.get('text')?.valid && textConfirmForm.get('text')?.touched">
+			The confirmation text is required.
+		</div>
+	</mat-form-field>
+</ng-container>
+
+<div class="confirmationOptions">
+	<button
+		*ngIf="data.cancelTerm"
+		mat-stroked-button
+		(click)="cancel()">
+		{{ data.cancelTerm }}</button
+	>&nbsp;
+	<button
+		*ngIf="data.confirmTerm"
+		mat-raised-button
+		(click)="confirm()">
+		{{ data.confirmTerm }}
+	</button>
+</div>

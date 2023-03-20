@@ -1,0 +1,67 @@
+.rs-file-drop-area {
+	margin: 0 auto;
+}
+
+.fake-btn {
+	border: 1px solid #4f4f4f;
+	border-radius: 3px;
+	padding: 8px 15px;
+	margin-right: 8px;
+	font-size: 12px;
+	text-transform: uppercase;
+}
+
+.file-msg {
+	font-size: small;
+	font-weight: 300;
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	display: inline-block;
+	max-width: calc(100% - 130px);
+	vertical-align: middle;
+}
+
+.file-input {
+	position: absolute;
+	left: 0;
+	top: 0;
+	height: 100%;
+	width: 100%;
+	cursor: pointer;
+	opacity: 0;
+}
+
+.file-input:focus {
+	outline: none;
+}
+
+.file-details {
+	width: 100%;
+	display: flex;
+	.original-name {
+		font-weight: bolder;
+	}
+	.size-info {
+		opacity: 0.8;
+		margin-left: 3px;
+	}
+}
+
+.preview-container {
+	margin: 3px;
+	audio,
+	video {
+		max-width: 100%;
+		max-height: 70px;
+	}
+	img {
+		max-width: 100%;
+		max-height: 70px;
+		background-color: #cccccc55;
+	}
+}
+
+.with-padding {
+	padding: 10px;
+}

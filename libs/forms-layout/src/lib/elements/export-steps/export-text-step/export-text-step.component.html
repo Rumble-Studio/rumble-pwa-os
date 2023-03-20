@@ -1,0 +1,37 @@
+<div class="export-text-step-container">
+	<span class="step-kind">Text request</span>
+	<span class="step-title">{{ steptitle }}</span>
+	<span
+		*ngIf="stepdescription"
+		class="step-hint"
+		>{{ stepdescription }}</span
+	>
+
+	<div *ngIf="answerAttrs; else noAnswer">
+		<form class="export-text-form">
+			<mat-form-field
+				class="text-input rs-full-width"
+				appearance="outline">
+				<mat-label>Answer</mat-label>
+				<input
+					[(ngModel)]="textanswer"
+					disabled="true"
+					matInput
+					name="firstname"
+					type="text" />
+
+				<button
+					*ngIf="textanswer && textanswer !== 'No answer'"
+					[cdkCopyToClipboard]="textanswer"
+					(cdkCopyToClipboardCopied)="processCopyToClipboardEvent($event)"
+					mat-button
+					class="content-copy"
+					[matTooltip]="'Copy guest answer to clipboard'">
+					<mat-icon>content_copy</mat-icon>
+				</button>
+			</mat-form-field>
+		</form>
+	</div>
+
+	<ng-template #noAnswer><span class="no-answer"> No answer available </span></ng-template>
+</div>

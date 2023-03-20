@@ -1,0 +1,576 @@
+<!-- MENU FOR OTHER ITEMS  -->
+<div
+	[matMenuTriggerFor]="otherItemMenu"
+	#otherItemMenuTrigger="matMenuTrigger"></div>
+<mat-menu #otherItemMenu="matMenu">
+	<button
+		mat-menu-item
+		*ngFor="let availableForm of availableForms"
+		[value]="availableForm.id"
+		(click)="selectForm(availableForm.id)">
+		{{ availableForm.title }}
+	</button>
+</mat-menu>
+
+<!-- MAIN PART OF THE PAGE -->
+<ng-container *ngIf="form$$$.$ | async as form; else noFormTpl">
+	<div class="host-container">
+		<!-- MAIN CONTENT -->
+		<div
+			#body
+			class="body">
+			<!-- MAIN ACTION CONTENT -->
+			<mat-tab-group
+				mat-align-tabs="center"
+				#matTabGroupActions
+				[selectedIndex]="sectionActionIndex"
+				(selectedTabChange)="tabChanged($event)">
+				<!-- editor -->
+				<mat-tab [disabled]="hasDifference()">
+					<ng-template mat-tab-label>
+						1. Create
+						<!-- <span class="material-icons-outlined"> edit </span> -->
+						<span class="material-icons-outlined"> dns </span>
+					</ng-template>
+					<ng-template matTabContent>
+						<!-- MAIN SELECTION DAD -->
+						<div
+							*ngIf="!propertyInterviewPreventEditing; else editingPreventedTpl"
+							class="selection-dad-container">
+							<!-- collapse all buttons -->
+							<section class="full-list-actions">
+								<todo
+									[todo]="{
+										id: 'todo:form-editor-collapse-all',
+										title: 'Collapse steps',
+										description: 'Collapse or expands all steps in the form.'
+									}">
+								</todo>
+								<mat-button-toggle-group>
+									<mat-button-toggle
+										(click)="toggleCollapseAll(true)"
+										[matTooltip]="'Collapse all'"
+										><i class="material-icons-outlined">unfold_less</i>
+									</mat-button-toggle>
+									<mat-button-toggle
+										(click)="toggleCollapseAll(false)"
+										[matTooltip]="'Expand all'"
+										><i class="material-icons-outlined">unfold_more</i>
+									</mat-button-toggle>
+								</mat-button-toggle-group>
+							</section>
+							<!-- step list source (left menu) -->
+							<div
+								class="source-step-list-container"
+								[ngClass]="{ mobile: isMobile, tablet: isTablet }">
+								<div
+									class="extra-options"
+									*ngIf="isDesktop">
+									<button
+										mat-raised-button
+										(click)="openMultiQuestionModal()">
+										Generate multiple steps
+									</button>
+								</div>
+								<div
+									#sourceStepsList
+									id="sourceSteps-list"
+									cdkDropList
+									[cdkDropListData]="sourceStepInstances"
+									[cdkDropListEnterPredicate]="noReturnPredicate"
+									class="sourceSteps-list"
+									cdkDropListSortingDisabled
+									(cdkDropListDropped)="drop($event)"
+									[cdkDropListConnectedTo]="['formStepsList']">
+									<ng-container *ngFor="let category of STEP_CATEGORIES">
+										<ng-container
+											*ngIf="category[1].id !== 'private-steps' && category[0] !== 'system-steps'">
+											<div>{{ category[1].name }}</div>
+											<ng-container *ngFor="let sourceStep of sourceStepInstances; let index = index">
+												<ng-container
+													*ngIf="
+														!sourceStep.stepDetail.isPrivate &&
+														category[1] === sourceStep.stepCategory
+													">
+													<div
+														class="example-box"
+														[attr.sourceStepIndex]="index"
+														cdkDrag
+														[trackClick]="{
+															customTextContent: 'new-step',
+															customEventProperties: sourceStep
+														}"
+														[cdkDragStartDelay]="{ touch: 200, mouse: 0 }">
+														<ng-container
+															*ngTemplateOutlet="
+																sourceStepTpl;
+																context: { stepDetail: sourceStep.stepDetail }
+															">
+														</ng-container>
+													</div>
+												</ng-container>
+											</ng-container>
+										</ng-container>
+									</ng-container>
+								</div>
+								<div *ngIf="favoriteSteps.length > 0">
+									<div class="favorite-steps-header">
+										<span>Favorite steps:</span>
+
+										<div
+											class="favorite-step-kinds-select-button"
+											(click)="favoriteStepsFilterEl.open()">
+											<mat-icon>filter_list</mat-icon>
+											<mat-select
+												#favoriteStepsFilterEl
+												[(value)]="favoriteStepsFilter"
+												multiple>
+												<mat-option
+													[value]="filterFavoriteStepsOption.stepInstance.stepDetail.name"
+													*ngFor="let filterFavoriteStepsOption of filterFavoriteStepsOptions">
+													<span class="favorite-step-kinds-select-item">
+														{{ filterFavoriteStepsOption.stepInstance.stepDetail.menuText }}
+														<mat-icon>
+															{{
+																filterFavoriteStepsOption.stepInstance.stepDetail.icon
+															}}</mat-icon
+														>
+													</span>
+												</mat-option>
+											</mat-select>
+										</div>
+									</div>
+									<div
+										#favoriteStepsList
+										id="favoriteSteps-list"
+										cdkDropList
+										[cdkDropListData]="favoriteSteps"
+										[cdkDropListEnterPredicate]="noReturnPredicate"
+										class="sourceSteps-list favorite-step-list"
+										cdkDropListSortingDisabled
+										(cdkDropListDropped)="drop($event)"
+										[cdkDropListConnectedTo]="['formStepsList']">
+										<ng-container *ngFor="let favoriteStep of favoriteSteps; let index = index">
+											<div
+												[attr.favoriteStepIndex]="index"
+												cdkDrag
+												[cdkDragStartDelay]="{ touch: 200, mouse: 0 }">
+												<ng-container
+													*ngTemplateOutlet="
+														favoriteStepTpl;
+														context: {
+															stepDetail: getFavoriteStepDetails(favoriteStep),
+															stepId: favoriteStep.id
+														}
+													">
+												</ng-container>
+											</div>
+										</ng-container>
+									</div>
+								</div>
+							</div>
+							<!-- step list (main editor) -->
+							<div
+								id="formStepsList"
+								cdkDropList
+								[cdkDropListData]="basketSteps"
+								(cdkDropListDropped)="drop($event)">
+								<todo-open
+									class="todo-how-to-grag-steps-top-editor"
+									[todo]="{
+										id: 'todo:how-to-grag-steps-top-editor',
+										title: 'Fill your interview',
+										description:
+											'Drag or click on steps from the left menu to add more questions to your interviews. <br> You can preview the result on the right while editing on the left.',
+										img: '/assets/todos/todo-drag-steps.gif'
+									}">
+								</todo-open>
+								<ng-container *ngFor="let step of basketSteps; let stepInstanceIndex = index">
+									<div
+										[id]="'step-' + step.id"
+										class="form-step-container"
+										cdkDrag
+										[cdkDragStartDelay]="{ touch: 200, mouse: 0 }">
+										<rumble-pwa-form-editable-step
+											[details]="{
+												step,
+												isLastStep: stepInstanceIndex === basketSteps.length - 1,
+												index: stepInstanceIndex,
+												canYouEdit,
+												formId: form$$$.id,
+												selectedProviders,
+												collapsed:collapseAll,
+												formCustomisation:customisationData
+											}"
+											(askToDuplicate)="duplicate(stepInstanceIndex)"
+											(askToMove)="moveItem(stepInstanceIndex, $event)"
+											(askForUpdateSteps)="updateSteps()"
+											(askForUpdateProviders)="processProviderSelection($event)"
+											(focused)="setStepFocusedFromEditableStep(step.id)">
+											<span
+												class="handle"
+												cdkDragHandle
+												[matTooltip]="'Drag this step'">
+												<svg
+													width="24px"
+													fill="currentColor"
+													viewBox="0 0 24 24">
+													<path
+														d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z"></path>
+													<path
+														d="M0 0h24v24H0z"
+														fill="none"></path>
+												</svg>
+											</span>
+										</rumble-pwa-form-editable-step>
+									</div>
+								</ng-container>
+
+								<div class="example-box invitation-to-drop">
+									<div class="dad-img-container">
+										<img
+											src="/assets/draganddrop-yellow.svg"
+											height="100px"
+											alt="" />
+										<p>Drag and drop the steps you want from the left menu to build your interview.</p>
+									</div>
+								</div>
+							</div>
+						</div>
+						<ng-template #editingPreventedTpl>
+							<div class="no-editing-msg">
+								The editing on this interview is currently disabled. You can change this option in the
+								<span
+									class="rs-link rs-clickable"
+									(click)="openFormPromptEditor(form.id)"
+									>Settings</span
+								>
+								menu.
+							</div>
+						</ng-template>
+					</ng-template>
+				</mat-tab>
+
+				<!-- Preview & Theme -->
+				<mat-tab>
+					<ng-template mat-tab-label>
+						2. Preview & Theme
+						<span class="material-icons-outlined"> preview </span>
+					</ng-template>
+					<ng-template matTabContent>
+						<div class="preview-theme-container">
+							<div class="preview-browser-container">
+								<h3>This is what your guests will see</h3>
+								<rumble-pwa-rs-browser
+									[formUrl]="formUrl"
+									(viewModeChange)="previewLayoutSize = $event === 'desktop' ? 3 : 0">
+									<rumble-pwa-form
+										[formId]="form.id"
+										[previewMode]="true"
+										[providerId]="'default-participant'"
+										[forceMobile]="previewLayoutSize < 1"
+										[formCustomisation]="customisationData"
+										[profile]="profile">
+									</rumble-pwa-form>
+								</rumble-pwa-rs-browser>
+							</div>
+
+							<div class="theme-container">
+								<rumble-pwa-form-customisation
+									[canYouEdit]="canYouEdit"
+									[originalCustomisationData]="originalCustomisationData"
+									[customisationData]="customisationData"
+									(customisationDataChange)="processCustomisationDataChange($event)"
+									(customisationDataToSave)="saveCustomisationData($event)">
+								</rumble-pwa-form-customisation>
+							</div>
+						</div>
+					</ng-template>
+				</mat-tab>
+
+				<!-- share -->
+				<mat-tab [disabled]="hasDifference()">
+					<ng-template mat-tab-label>
+						3. Share
+						<span class="material-icons-outlined"> share </span>
+					</ng-template>
+					<ng-template matTabContent="">
+						<div class="sharing-container">
+							<div class="interview-details-container">
+								<h3>Interview details</h3>
+								<div class="interview-available">
+									<p>This interview is:</p>
+									<mat-button-toggle-group
+										[(ngModel)]="propertyInterviewIsOffline"
+										[ngClass]="{ mobile: layoutSize < 1 }">
+										<mat-button-toggle [value]="true"
+											>Disabled<i
+												*ngIf="propertyInterviewIsOffline"
+												class="material-icons-outlined mat-icon-aligned"
+												>check</i
+											></mat-button-toggle
+										>
+										<mat-button-toggle [value]="false"
+											>Available to participants<i
+												*ngIf="!propertyInterviewIsOffline"
+												class="material-icons-outlined mat-icon-aligned"
+												>check</i
+											></mat-button-toggle
+										>
+									</mat-button-toggle-group>
+									<explanation
+										[msg]="
+											'This option allows you to deactivate this interview in order to refuse new participations. For example, once this interview is over.'
+										">
+									</explanation>
+								</div>
+							</div>
+
+							<div class="interview-link-container">
+								<h3>Your interview invitation links</h3>
+
+								<div class="links">
+									<mat-card class="invitation-link link">
+										<p>Invite anyone to participate by sharing this invitation link.</p>
+										<!-- into emails, chats, or blog posts .</p> -->
+										<mat-select
+											*ngIf="pages.length > 0"
+											[(ngModel)]="selectedPage"
+											placeholder="Pages">
+											<mat-option
+												*ngFor="let page of pages"
+												[value]="page">
+												{{ page.name }}
+											</mat-option>
+											<mat-option [value]="undefined"> Use app.rumble.studio domain</mat-option>
+											<mat-option
+												class="rs-vertical-center"
+												(click)="openPageObjectPrompt()">
+												Create a new page <mat-icon>add</mat-icon></mat-option
+											>
+										</mat-select>
+										<div
+											[cdkCopyToClipboard]="formUrl"
+											(cdkCopyToClipboardCopied)="processCopyToClipboardEvent($event)"
+											class="textToCopy"
+											[matTooltip]="'Copy content to clipboard'">
+											{{ layoutSize < 1 ? 'Copy to clipboard' : formUrl }}
+											<mat-icon class="copy-icon">content_copy</mat-icon>
+										</div>
+
+										<div class="sharing-actions">
+											<a
+												[href]="
+													'mailto:?subject=' +
+													form.title +
+													'&body=Be the guest in my next episode by recording yourself here: ' +
+													formUrl +
+													' powered by @rumble_studio'
+												"
+												target="_blank">
+												<button
+													mat-raised-button
+													class="sharing-action-btn">
+													Email invitation link
+													<mat-icon>email</mat-icon>
+												</button>
+											</a>
+											<a
+												[href]="
+													'https://twitter.com/intent/tweet?text=Be the guest in my next episode by recording yourself here: ' +
+													formUrl +
+													' powered by @rumble_studio&hashtags=audio,podcast,asyncInterview'
+												"
+												target="_blank">
+												<button
+													mat-raised-button
+													class="sharing-action-btn">
+													Tweet invitation link
+													<svg
+														fill="#000000"
+														xmlns="http://www.w3.org/2000/svg"
+														viewBox="0 0 50 50"
+														width="25px"
+														height="25px">
+														<path
+															d="M 50.0625 10.4375 C 48.214844 11.257813 46.234375 11.808594 44.152344 12.058594 C 46.277344 10.785156 47.910156 8.769531 48.675781 6.371094 C 46.691406 7.546875 44.484375 8.402344 42.144531 8.863281 C 40.269531 6.863281 37.597656 5.617188 34.640625 5.617188 C 28.960938 5.617188 24.355469 10.21875 24.355469 15.898438 C 24.355469 16.703125 24.449219 17.488281 24.625 18.242188 C 16.078125 17.8125 8.503906 13.71875 3.429688 7.496094 C 2.542969 9.019531 2.039063 10.785156 2.039063 12.667969 C 2.039063 16.234375 3.851563 19.382813 6.613281 21.230469 C 4.925781 21.175781 3.339844 20.710938 1.953125 19.941406 C 1.953125 19.984375 1.953125 20.027344 1.953125 20.070313 C 1.953125 25.054688 5.5 29.207031 10.199219 30.15625 C 9.339844 30.390625 8.429688 30.515625 7.492188 30.515625 C 6.828125 30.515625 6.183594 30.453125 5.554688 30.328125 C 6.867188 34.410156 10.664063 37.390625 15.160156 37.472656 C 11.644531 40.230469 7.210938 41.871094 2.390625 41.871094 C 1.558594 41.871094 0.742188 41.824219 -0.0585938 41.726563 C 4.488281 44.648438 9.894531 46.347656 15.703125 46.347656 C 34.617188 46.347656 44.960938 30.679688 44.960938 17.09375 C 44.960938 16.648438 44.949219 16.199219 44.933594 15.761719 C 46.941406 14.3125 48.683594 12.5 50.0625 10.4375 Z" />
+													</svg>
+												</button>
+											</a>
+										</div>
+										<br />
+										<button
+											type="button"
+											mat-raised-button
+											(click)="numberOfAvailablePages > 0 ? openPageObjectPrompt() : upgrade.doAction()">
+											<upgrade
+												#upgrade
+												(click)="$event.stopImmediatePropagation()"
+												[upgrade]="{
+													id: 'upgrade:' + 'domain unvailable to create page in share tab',
+													title: 'domain',
+													description: 'This option is not available with your current plan.',
+													customCondition: numberOfAvailablePages === 0
+												}">
+											</upgrade>
+											Create a page for this interview
+											<mat-icon>add</mat-icon>
+										</button>
+									</mat-card>
+
+									<mat-card class="qr-code link">
+										<p>Share this QR code:</p>
+
+										<div class="qr-code-container">
+											<rumble-pwa-qrcode
+												[elementType]="'url'"
+												[errorCorrectionLevel]="'L'"
+												[value]="formUrl"
+												[showDownloadBtn]="true"
+												[formTitle]="form.title"
+												alt="Interview on Rumble Studio"
+												cssClass="">
+											</rumble-pwa-qrcode>
+										</div>
+									</mat-card>
+
+									<mat-card class="iframe link">
+										<p>
+											Embed your interview on a web page by pasting this code where you need it. See
+											webflow tutorial:
+											<a
+												href="https://university.webflow.com/lesson/custom-code-embed"
+												target="_blank"
+												>link</a
+											>
+											WARNING: Safari browser does not support this feature perfectly. We are working on
+											it.
+										</p>
+										<div
+											[cdkCopyToClipboard]="embeddingCode"
+											(cdkCopyToClipboardCopied)="processCopyToClipboardEvent($event)"
+											class="textToCopy"
+											[matTooltip]="'Copy content to clipboard'">
+											{{ layoutSize < 1 ? 'Copy to clipboard' : embeddingCode }}
+											<mat-icon class="copy-icon">content_copy</mat-icon>
+										</div>
+									</mat-card>
+
+									<!-- <mat-card class="pdf link">
+										<div class="small-layout-example vertical">
+											<div class="text-empty"></div>
+											<div class="text">
+												<div class="text-1"></div>
+												<div class="text-2"></div>
+											</div>
+											<div class="qr-code-example">
+												<rumble-pwa-qrcode
+													[elementType]="'url'"
+													[errorCorrectionLevel]="'L'"
+													[value]="formUrl">
+												</rumble-pwa-qrcode>
+											</div>
+											<div class="image-example"></div>
+
+											<div class="text bottom">
+												<div class="text-3"></div>
+											</div>
+										</div>
+										<button
+											mat-raised-button
+											(click)="generatePdf()">
+											<mat-icon>insert_drive_file</mat-icon>
+											Generate a PDF flyer
+										</button>
+									</mat-card> -->
+								</div>
+							</div>
+						</div>
+					</ng-template>
+				</mat-tab>
+
+				<!-- listen -->
+				<mat-tab [disabled]="hasDifference()">
+					<ng-template mat-tab-label>
+						4. Answers&nbsp;
+						<span class="material-icons-outlined"> groups </span>
+					</ng-template>
+					<ng-template matTabContent="">
+						<div class="listen-container">
+							<rumble-pwa-recording-session-list
+								[defaultRecordingSessionName]="form.title"
+								[recordingSessions]="recordingSessionListItems$$$.value ?? []"
+								[(displayArchivedSessions)]="displayArchivedSessions"
+								[(displaySessionsWithAudioOnly)]="displaySessionsWithAudioOnly"
+								(navigateTo)="navigateTo($event)"></rumble-pwa-recording-session-list>
+						</div>
+					</ng-template>
+				</mat-tab>
+			</mat-tab-group>
+		</div>
+	</div>
+</ng-container>
+
+<!-- ALTERNATIVE TEMPLATE IF NO FORM -->
+<ng-template #noFormTpl>
+	<!-- NO SCRIPT TPL -->
+
+	<div class="not-loaded-container">
+		<button
+			mat-raised-button
+			[routerLink]="'/forms'">
+			<mat-icon>arrow_back</mat-icon>
+			Go back to all interviews
+		</button>
+		<p>Interview not loaded yet. Do you have the right to access it?</p>
+	</div>
+</ng-template>
+
+<!-- SOURCE DAD -->
+
+<!-- SOURCE STEP (in drawer) -->
+<ng-template
+	#sourceStepTpl
+	let-stepDetail="stepDetail">
+	<rumble-pwa-form-source-step
+		(click)="appendItem(stepDetail)"
+		[menuHint]="stepDetail.menuHint"
+		[icon]="stepDetail.icon"
+		[isDesktop]="isDesktop"
+		[menuText]="stepDetail.menuText"></rumble-pwa-form-source-step>
+</ng-template>
+
+<!-- FAVORITE STEP (in drawer) -->
+<ng-template
+	#favoriteStepTpl
+	let-stepDetail="stepDetail"
+	let-stepId="stepId">
+	<div
+		class="favorite-step"
+		[matTooltip]="stepDetail.menuHint">
+		<rumble-pwa-form-source-step
+			class="rs-full-width"
+			(click)="appendFavoriteStep(stepId)"
+			[menuHint]="stepDetail.menuHint"
+			[icon]="stepDetail.icon"
+			[isDesktop]="isDesktop"
+			[menuText]="stepDetail.menuText"
+			[favoriteStep]="true">
+		</rumble-pwa-form-source-step>
+		<generic-favorite [favoriteDetails]="{ objectId: stepId, objectKind: 'step' }"> </generic-favorite>
+	</div>
+</ng-template>
+
+<!-- TEMPLATE TO FILL THE TOP BAR -->
+<ng-template #centralTemplate>
+	<button
+		class="export-button"
+		mat-raised-button
+		[cdkCopyToClipboard]="formUrl"
+		(cdkCopyToClipboardCopied)="processCopyToClipboardEvent($event, 'Interview link copied to clipboard!')"
+		[matTooltip]="'Copy public interview link to clipboard'">
+		<span *ngIf="isDesktop; else lessTextTpl"> Copy public link to clipboard </span>
+		<ng-template #lessTextTpl>Get link </ng-template>&nbsp;
+		<mat-icon class="rs-clickable"> content_copy </mat-icon>
+	</button>
+</ng-template>

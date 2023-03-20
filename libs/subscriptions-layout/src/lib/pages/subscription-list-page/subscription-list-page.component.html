@@ -1,0 +1,15 @@
+<header class="rs-header">
+	<button
+		class="rs-goback"
+		*ngIf="layoutSize < 1"
+		mat-stroked-button
+		[routerLink]="'/dashboard'">
+		<mat-icon>arrow_back</mat-icon>
+	</button>
+	<section class="title">
+		<span class="object-category">Subscriptions</span>
+	</section>
+</header>
+
+<rumble-pwa-subscription-list
+	[subscriptions]="subscriptions"></rumble-pwa-subscription-list>

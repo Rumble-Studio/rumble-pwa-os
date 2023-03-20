@@ -1,0 +1,31 @@
+<div class="export-video-step-container">
+	<span class="step-kind">Video request</span>
+	<span class="step-title">{{ steptitle }}</span>
+	<span
+		*ngIf="stepdescription"
+		class="step-hint"
+		>{{ stepdescription }}</span
+	>
+
+	<div *ngIf="videoPath; else noAnswerTpl">
+		<div class="video-container">
+			<video controls>
+				<source
+					[src]="videoPath"
+					type="video/webm" />
+
+				<source
+					[src]="videoPath"
+					type="video/mp4" />
+
+				<source
+					[src]="videoPath"
+					type="video/avi" />
+
+				Sorry, your browser does not support embedded videos.
+			</video>
+		</div>
+	</div>
+
+	<ng-template #noAnswerTpl><span class="no-answer"> No video uploaded </span></ng-template>
+</div>

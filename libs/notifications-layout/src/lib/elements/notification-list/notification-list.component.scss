@@ -1,0 +1,66 @@
+table {
+	width: (100%);
+}
+
+.table-header {
+	margin-top: 20px;
+	flex-wrap: wrap;
+	display: flex;
+	align-items: baseline;
+	.header-actions {
+		display: flex;
+		margin-left: auto;
+		button {
+			margin: 0 5px 10px;
+		}
+	}
+}
+
+.mat-column-description {
+	flex: 4;
+	.cell-container {
+		max-width: calc(100% - 5px);
+		text-overflow: ellipsis;
+		overflow: hidden;
+		white-space: nowrap;
+	}
+}
+
+.mat-column-checkbox {
+	width: 100px;
+	flex: none;
+}
+
+.mat-column-title {
+	.title-container {
+		display: flex;
+		align-items: center;
+	}
+}
+
+mat-cell,
+mat-header-cell,
+mat-footer-cell {
+	&:not(mat-cell.mat-column-title) {
+		justify-content: center;
+	}
+}
+
+tr.mat-no-data-row {
+	display: flex;
+	width: 100%;
+	td {
+		width: 100%;
+		display: flex;
+		align-items: center;
+	}
+}
+
+.notification-row {
+	&.unseen {
+		background-color: var(--rs-yellow-light);
+		mat-cell.mat-column-title {
+			font-weight: bold;
+		}
+	}
+}

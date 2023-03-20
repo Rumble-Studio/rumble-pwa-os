@@ -1,0 +1,19 @@
+<ng-container *ngIf="grant$$$.$ | async as grant; else grantNotAvailableTpl">
+	<ng-container [ngSwitch]="grant?.permissionId">
+		<ng-container *ngSwitchCase="'script-read'">
+			<i class="truc-icon material-icons-outlined">wysiwyg</i>
+			<span class="no-select grant-container-name"> {{ getForm()?.title }}</span>
+		</ng-container>
+		<ng-container *ngSwitchCase="'brand-read'">
+			<i class="truc-icon material-icons-outlined">format_paint</i>
+			<span class="no-select grant-container-name"> {{ getBrand()?.name }}</span>
+		</ng-container>
+		<ng-container *ngSwitchDefault>
+			<i class="truc-icon material-icons-outlined">warning_amber</i>
+		</ng-container>
+	</ng-container>
+</ng-container>
+<ng-template #grantNotAvailableTpl>
+	<i class="truc-icon material-icons-outlined">warning_amber</i>
+	<span class="no-select grant-container-name">Element not available</span>
+</ng-template>

@@ -1,0 +1,56 @@
+<ng-container *ngIf="collection$$$.$ | async as collection; else noCollection">
+	<div
+		class="collection-container gap"
+		[ngClass]="{ vertical: layoutSize < 1 }">
+		<div class="collection-artwork">
+			<image
+				*ngIf="artworkUrl"
+				[imageUrl]="artworkUrl"
+				[passive]="true"
+				[objectFit]="'contain'">
+			</image>
+		</div>
+		<div
+			class="rs-flex-start-nowrap vertical"
+			[ngClass]="{ gap: layoutSize < 1 }">
+			<span class="title">{{ collection.title }}</span>
+			<span class="description">{{ collection.description }}</span>
+			<div class="rs-flex-start-wrap rs-full-width gap">
+				<span class="rs-flex-start-nowrap"><mat-icon>person</mat-icon>{{ collection.publicAuthorName }}</span>
+				<span
+					class="rs-flex-start-nowrap"
+					*ngIf="language">
+					<mat-icon>language</mat-icon>{{ language.fullName }}
+				</span>
+				<span
+					class="rs-flex-start-nowrap"
+					*ngIf="collection.isExplicit"
+					><mat-icon>explicit</mat-icon>Explicit content</span
+				>
+			</div>
+			<mat-chip-list class="categories">
+				<mat-chip
+					[disableRipple]="true"
+					*ngFor="let category of collection.categoryIds"
+					class="yellow-chip"
+					>{{ displayValueCaterogy(category) }}</mat-chip
+				>
+			</mat-chip-list>
+		</div>
+	</div>
+	<ng-container *ngFor="let itemRank of collection.ranks">
+		<div class="item-with-rank">
+			<span class="rs-flex-center">{{ itemRank[1] + 1 }}.</span>
+			<div class="rs-no-select rs-full-width">
+				<rumble-pwa-item
+					[itemId]="itemRank[0]"
+					[collectionId]="collection$$$.id"
+					[rank]="itemRank[1]"></rumble-pwa-item>
+			</div>
+		</div>
+	</ng-container>
+</ng-container>
+
+<ng-template #noCollection>
+	<div class="collection-editor-container">Collection not loaded yet.</div>
+</ng-template>

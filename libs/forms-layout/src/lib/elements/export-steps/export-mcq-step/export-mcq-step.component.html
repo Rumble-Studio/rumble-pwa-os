@@ -1,0 +1,29 @@
+<div class="export-mcq-step-container">
+	<span class="step-kind">MCQ</span>
+	<span class="step-title">{{ stepQuestion }}</span>
+
+	<div
+		*ngIf="stepOptions.length; else noAnswer"
+		class="export-mcq-step-options">
+		<div *ngFor="let item of stepOptions">
+			<span class="options full-width">
+				<ng-container *ngIf="multipleChoicesAllowed; else radioButtonTpl">
+					<mat-checkbox
+						[disabled]="true"
+						[checked]="!!stepanswer?.includes(item)"
+						>{{ item }}
+					</mat-checkbox>
+				</ng-container>
+				<ng-template #radioButtonTpl>
+					<mat-radio-button
+						[disabled]="true"
+						[checked]="!!stepanswer?.includes(item)">
+						{{ item }}
+					</mat-radio-button>
+				</ng-template>
+			</span>
+		</div>
+	</div>
+
+	<ng-template #noAnswer><span class="no-answer"> No answer available </span></ng-template>
+</div>

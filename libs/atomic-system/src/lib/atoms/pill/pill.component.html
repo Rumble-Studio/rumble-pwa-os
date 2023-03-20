@@ -1,0 +1,8 @@
+<ng-content></ng-content
+><span
+	*ngIf="contentToCopy"
+	class="material-icons-outlined rs-clickable rs-text-smaller rs-no-select"
+	[cdkCopyToClipboard]="contentToCopy"
+	(cdkCopyToClipboardCopied)="processCopyToClipboardEvent($event)"
+	>copy</span
+>

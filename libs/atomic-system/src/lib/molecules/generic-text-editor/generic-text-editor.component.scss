@@ -1,0 +1,35 @@
+.text-container {
+	padding: 7px;
+	position: relative;
+	.quote-icon {
+		position: absolute;
+		top: 0px;
+		left: 0px;
+		opacity: 0.2;
+	}
+	.text-body {
+		position: relative;
+		background-color: var(--rs-yellow-super-light);
+		border-radius: 5px;
+		padding: 15px 3px 3px 6px;
+		font-style: italic;
+
+		textarea {
+			width: 100%;
+		}
+
+		.inner-text {
+			max-height: 300px;
+			overflow-y: auto;
+		}
+
+		.text-action {
+			opacity: 0.6;
+			position: absolute;
+			top: 1px;
+			right: 1px;
+			font-size: small;
+			cursor: pointer;
+		}
+	}
+}

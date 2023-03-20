@@ -1,0 +1,20 @@
+<header class="rs-header">
+	<button
+		class="rs-goback"
+		*ngIf="layoutSize < 1"
+		mat-stroked-button
+		[routerLink]="'/dashboard'">
+		<mat-icon>arrow_back</mat-icon>
+	</button>
+
+	<section class="title">
+		<span class="object-category">Notifications</span>
+	</section>
+</header>
+
+<mat-slide-toggle [(ngModel)]="displayReadNotifications">Display read notifications</mat-slide-toggle>
+
+<rumble-pwa-notification-list
+	[notifications]="notifications"
+	[layoutSize]="layoutSize">
+</rumble-pwa-notification-list>

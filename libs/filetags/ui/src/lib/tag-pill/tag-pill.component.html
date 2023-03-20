@@ -1,0 +1,26 @@
+<ng-container *ngIf="filetag">
+	<ng-container *ngIf="filetag.description; else noDescriptionTpl">
+		<pill
+			class="rs-no-select"
+			[ngClass]="{ blue: filetag.kind === 'custom' }"
+			[matTooltip]="filetag.description"
+			>{{ filetag.title ?? filetag.value }}<ng-container [ngTemplateOutlet]="deleteTpl"></ng-container
+		></pill>
+	</ng-container>
+	<ng-template #noDescriptionTpl>
+		<pill
+			[ngClass]="{ blue: filetag.kind === 'custom' }"
+			class="rs-no-select"
+			>{{ filetag.title ?? filetag.value }}<ng-container [ngTemplateOutlet]="deleteTpl"></ng-container
+		></pill>
+	</ng-template>
+</ng-container>
+
+<ng-template #deleteTpl>
+	<mat-icon
+		*ngIf="displayRemoveBtn"
+		class="rs-clickable"
+		(click)="processRemoveBtnClickEvent()"
+		>clear</mat-icon
+	>
+</ng-template>

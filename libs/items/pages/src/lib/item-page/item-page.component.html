@@ -1,0 +1,182 @@
+<!-- MENU FOR OTHER ITEMS  -->
+<div
+	[matMenuTriggerFor]="otherItemMenu"
+	#otherItemMenuTrigger="matMenuTrigger"></div>
+<mat-menu #otherItemMenu="matMenu">
+	<button
+		mat-menu-item
+		*ngFor="let item of itemsForTopMenu"
+		[value]="item.id"
+		(click)="navigateToItemById(item.id)">
+		{{ item.title }}
+	</button>
+</mat-menu>
+
+<ng-container *ngIf="item$$$.$ | async as item; else noItemTpl">
+	<header class="rs-header">
+		<button
+			*ngIf="layoutSize < 1"
+			class="rs-goback"
+			mat-stroked-button
+			[routerLink]="'/collections'">
+			<mat-icon>arrow_back</mat-icon>
+		</button>
+		<section class="title">
+			<h2>
+				<span class="object-category">Item:</span>&nbsp;<em>{{ item.title }}</em>
+			</h2>
+		</section>
+
+		<button
+			mat-raised-button
+			(click)="editItem()"
+			class="rs-btn-new btn-edit-item">
+			<mat-icon>edit</mat-icon>
+		</button>
+	</header>
+	<div class="item-editor-container">
+		<section class="item-property">
+			<div class="header">
+				<h3>Description</h3>
+			</div>
+			<div class="body">
+				<span *ngIf="(item.description ?? '').length > 0; else noDescriptionTpl">
+					{{ item.description }}
+				</span>
+				<ng-template #noDescriptionTpl>
+					<span>
+						No description defined yet.
+						<button
+							mat-stroked-button
+							(click)="editItem()">
+							Edit
+						</button>
+					</span>
+				</ng-template>
+			</div>
+
+			<div class="header">
+				<h3>Artwork</h3>
+			</div>
+			<div class="body">
+				<image
+					*ngIf="artworkUrl; else noArtworkTpl"
+					[imageUrl]="artworkUrl"
+					[displaySelectButton]="false"
+					[displayDeleteButton]="true"
+					[objectFit]="'contain'"
+					(deleteImageEvent)="deleteArtwork()">
+				</image>
+				<ng-template #noArtworkTpl>
+					<div class="rs-file-drop-area">
+						<span>Choose an image</span>
+						<input
+							class="rs-drop-btn"
+							[multiple]="false"
+							[accept]="acceptedFileExtensionsString"
+							(change)="handleArtworkFileList($event)"
+							(click)="$event.preventDefault(); handleArtworkFileList(undefined)"
+							type="file" /></div
+				></ng-template>
+			</div>
+
+			<div class="header">
+				<h3>Audio content</h3>
+			</div>
+			<div class="body">
+				<span *ngIf="item.fileId; else noFileTpl">
+					<div class="rs-flex-center-no-wrap">
+						<rumble-pwa-file-player
+							class="rs-flex-grow"
+							[connectDropTo]="[]"
+							[displayDetails]="false"
+							[fileId]="item.fileId"></rumble-pwa-file-player>
+						<mat-icon
+							class="rs-clickable"
+							(click)="removeFileFromItemById()"
+							>delete</mat-icon
+						>
+					</div>
+				</span>
+				<ng-template #noFileTpl>
+					<div class="rs-file-drop-area">
+						<span>Choose an audio or video</span>
+						<input
+							class="rs-drop-btn"
+							[multiple]="false"
+							[accept]="acceptedFileExtensionsString"
+							(click)="$event.preventDefault(); editItem()"
+							type="file" />
+					</div>
+				</ng-template>
+			</div>
+
+			<div class="header">
+				<h3>Used in the following collections:</h3>
+			</div>
+			<div class="body">
+				<mat-menu #collectionCandidatesMenu>
+					<ng-container *ngFor="let availableCollection of availableCollections">
+						<button
+							(click)="addCollectionToItem(availableCollection.id)"
+							mat-menu-item>
+							{{ availableCollection.title }}
+						</button>
+					</ng-container>
+				</mat-menu>
+
+				<mat-menu #collectionMenu="matMenu">
+					<ng-template
+						matMenuContent
+						let-rank="rank">
+						<button
+							(click)="goToCollection(rank[0])"
+							mat-menu-item>
+							<mat-icon>launch</mat-icon>
+							Go to
+						</button>
+						<button
+							(click)="unlistCollectionFromItem(rank[0], rank[1])"
+							mat-menu-item>
+							<mat-icon>delete</mat-icon>
+							Remove from
+						</button>
+					</ng-template>
+				</mat-menu>
+
+				<mat-chip-list>
+					<ng-container *ngFor="let rank of item.ranks">
+						<mat-chip
+							mat-menu-item
+							*ngIf="getCollectionById(rank[0])?.state === 'default'"
+							[matMenuTriggerFor]="collectionMenu"
+							[matMenuTriggerData]="{rank}"
+							class="collection-chip">
+							<span class="rs-clickable">{{ getCollectionById(rank[0])?.title }} {{ ' #' + (rank[1] + 1) }}</span>
+						</mat-chip>
+					</ng-container>
+					<mat-chip
+						*ngIf="availableCollections.length > 0"
+						mat-menu-item
+						[matMenuTriggerFor]="collectionCandidatesMenu">
+						<span class="rs-clickable">
+							<mat-icon>add</mat-icon>
+							Add to a collection
+						</span>
+					</mat-chip>
+				</mat-chip-list>
+			</div>
+		</section>
+	</div>
+</ng-container>
+
+<ng-template #noItemTpl>
+	<button
+		mat-raised-button
+		[routerLink]="'/items'">
+		<mat-icon>arrow_back</mat-icon>
+		Go back to all items
+	</button>
+
+	<div class="item-editor-container">Item not loaded yet.</div>
+</ng-template>

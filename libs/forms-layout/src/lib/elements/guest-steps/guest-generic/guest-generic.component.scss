@@ -1,0 +1,44 @@
+:host {
+	display: block;
+	width: 100%;
+	height: 100%;
+	overflow-y: auto;
+	--footer-height: 56px;
+}
+
+.step-container {
+	width: 100%;
+	padding: 10px;
+
+	max-width: 500px;
+	margin: 0 auto;
+	padding-bottom: calc(var(--footer-height) + 10px); // --footer-height + marge
+	// background-color: aqua;
+	min-height: calc(100% - var(--footer-height) - 10px);
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
+.form-provider-section {
+	border-radius: 7px;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	// background-color: #00000011;
+	// background-color: var(--rs-yellow-super-light-a);
+	margin-bottom: 20px;
+	padding: 5px;
+
+	&.host-content,
+	&.guest-content {
+		border-radius: 13px;
+		border: 1px solid inherit;
+	}
+	&.host-content {
+		background-color: rgba(0, 0, 0, 0.01);
+	}
+	&.guest-content {
+		background-color: rgba(0, 0, 0, 0.05);
+	}
+}

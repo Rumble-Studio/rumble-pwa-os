@@ -1,0 +1,39 @@
+.container {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	position: relative;
+	justify-content: center;
+	padding: 20px;
+}
+
+.object-property {
+	padding: 0 20px 20px;
+	border: 1px solid lightgrey;
+	border-radius: 10px;
+	background-color: white;
+	margin-bottom: 20px;
+}
+
+.object-title {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.property {
+	min-height: 30px;
+	margin: 5px 0;
+	.property-title {
+		font-weight: bold;
+	}
+}
+
+.task {
+	display: flex;
+	gap: 1rem;
+}
+
+.gotomix-btn {
+	margin-right: 5px;
+}

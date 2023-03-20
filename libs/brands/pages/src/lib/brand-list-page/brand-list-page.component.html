@@ -1,0 +1,33 @@
+<header class="rs-header">
+	<button
+		class="rs-goback"
+		*ngIf="layoutSize < 1"
+		mat-stroked-button
+		[routerLink]="'/dashboard'">
+		<mat-icon>arrow_back</mat-icon>
+	</button>
+	<section class="title">
+		<span class="object-category">Branding kits</span>
+		<button
+			(click)="openPromptEditor()"
+			mat-raised-button
+			class="rs-btn-new">
+			<mat-icon>add</mat-icon>
+			New
+		</button>
+	</section>
+</header>
+<todo-open
+	[todo]="{
+		id: 'todo:what-is-a-branding-kit',
+		title: 'What is a branding kit?',
+		description:
+			'A branding kit is a reusable set of assets (images, fonts, audio files...) that can be used through Rumble to customise interviews, public pages, and new features yet to come.'
+	}">
+</todo-open>
+
+<rumble-pwa-brand-list
+	(tableClickEventEmitter)="processTableClick($event)"
+	[brands]="brands"
+	[(displayArchivedBrands)]="displayArchivedBrands">
+</rumble-pwa-brand-list>

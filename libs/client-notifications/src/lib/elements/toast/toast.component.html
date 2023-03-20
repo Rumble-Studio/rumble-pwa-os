@@ -1,0 +1,17 @@
+<div class="toast">
+	<section
+		class="close pointer"
+		(click)="dismiss()">
+		<mat-icon class="pointer">close</mat-icon>
+	</section>
+	<section
+		*ngIf="title"
+		class="title">
+		{{ title }}
+	</section>
+	<section
+		*ngIf="body"
+		class="body">
+		{{ body }}
+	</section>
+</div>

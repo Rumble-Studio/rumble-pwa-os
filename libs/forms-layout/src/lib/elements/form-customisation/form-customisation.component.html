@@ -1,0 +1,1158 @@
+<div class="title-and-actions">
+	<h3>Customise guest experience{{ hasDifference() ? '*' : '' }}</h3>
+	<span
+		*ngIf="hasDifference()"
+		class="bottom-actions">
+		<button
+			class="flat-btn"
+			mat-flat-button
+			(click)="reset()">
+			Reset
+		</button>
+		<button
+			class="save-btn blink"
+			mat-raised-button
+			(click)="save()">
+			Save
+		</button>
+	</span>
+</div>
+
+<div
+	class="customisation"
+	*ngIf="canYouEdit; else noEditTpl">
+	<!-- branding kit -->
+	<mat-form-field
+		class="rs-full-width"
+		appearance="outline">
+		<mat-label>Branding kit</mat-label>
+		<mat-select
+			[(ngModel)]="brand$$$.id"
+			name="brandId">
+			<mat-option [routerLink]="'/brands'"
+				><i class="material-icons-outlined">edit</i>Open branding kits page
+			</mat-option>
+
+			<ng-container *ngIf="maxBrandingKitsReached$$ | async; else canCreateNewBrandingKitTpl">
+				<mat-option (click)="upgrade.doAction()">
+					<upgrade
+						#upgrade
+						[upgrade]="{
+							id: 'upgrade:branding-kits-amount',
+							title: 'You have reached the maximum number of branding kits allowed.',
+							description: 'You can delete a branding kit or upgrade your plan.',
+							tooltip: 'You have reached the maximum number of branding kits allowed',
+							customCondition: !!(maxBrandingKitsReached$$ | async)
+						}">
+					</upgrade>
+					<i class="material-icons-outlined">add</i>
+					New branding kit
+				</mat-option>
+			</ng-container>
+			<ng-template #canCreateNewBrandingKitTpl>
+				<mat-option (click)="openBrandEditor()">
+					<i class="material-icons-outlined">add</i>
+					New branding kit
+				</mat-option>
+			</ng-template>
+			<mat-option [value]="undefined">No branding kit</mat-option>
+
+			<ng-container *ngIf="brands$ | async as brands">
+				<mat-option
+					*ngFor="let brand of brands"
+					[value]="brand.id">
+					<mat-icon
+						class="shared-icon"
+						*ngIf="brand.ownerId !== profile?.id"
+						[matTooltip]="'Shared brand'">
+						groups</mat-icon
+					>
+					{{ brand.name }}
+				</mat-option>
+			</ng-container>
+		</mat-select>
+	</mat-form-field>
+
+	<!-- theme / presets -->
+	<mat-form-field
+		class="rs-full-width"
+		appearance="outline">
+		<mat-label>Themes</mat-label>
+		<mat-select
+			(selectionChange)="customisationData = $event.value; emitCustomisationDetails()"
+			name="brandId"
+			[placeholder]="'Select a template'">
+			<ng-container *ngIf="brand$$$.value?.id">
+				<ng-container *ngIf="formCustomisationsFromBrandWithName.length > 0">
+					<mat-option
+						*ngFor="let formCustomisationFromBrandWithName of formCustomisationsFromBrandWithName"
+						[value]="formCustomisationFromBrandWithName.formCustomisationDetails"
+						>{{ formCustomisationFromBrandWithName.name }}</mat-option
+					>
+				</ng-container>
+			</ng-container>
+			<ng-container *ngIf="CUSTOMISATION_LIBRARY.length > 0">
+				<mat-option
+					*ngFor="let customisation of CUSTOMISATION_LIBRARY"
+					class="theme-example"
+					[value]="customisation.customisationData"
+					>{{ customisation.name }} (example)</mat-option
+				>
+			</ng-container>
+		</mat-select>
+	</mat-form-field>
+
+	<!-- saving the theme -->
+	<ng-container *ngIf="brand$$$.value?.name">
+		<todo-open
+			[todo]="{
+				id: 'todo:about-saving-a-theme-in-a-branding-kit',
+				title: 'Saving your theme',
+				description:
+					'You can use a branding kit as the root of your customization. But each interview may need a different color, font or image. Once you are satisfied with all the settings below, you can save them under the selected branding kit to use it later in another interview'
+			}">
+		</todo-open>
+
+		<p>
+			Save this theme under your branding kit
+			<em>{{ brand$$$.value?.name }}</em
+			>:
+
+			<button
+				type="button"
+				mat-stroked-button
+				(click)="saveCurrentFormCustomisationToBrandingKit(); $event.preventDefault()">
+				<mat-icon>save</mat-icon>
+				Save
+			</button>
+		</p>
+	</ng-container>
+
+	<mat-accordion
+		class="example-headers-align"
+		multi>
+		<!-- colors -->
+		<mat-expansion-panel [expanded]="true">
+			<mat-expansion-panel-header>
+				<mat-panel-title>
+					<mat-icon>palette</mat-icon> Colors
+					<!-- <span
+						*ngIf="pageLowContrast"
+						[matTooltip]="'The contrast between the text on the page and the background is insufficient.'">
+						<mat-icon color="warn">warning</mat-icon>
+					</span>
+
+					<span
+						*ngIf="buttonLowContrast"
+						[matTooltip]="'The contrast between the button text and the button background is insufficient.'">
+						<mat-icon color="warn">warning</mat-icon>
+					</span> -->
+				</mat-panel-title>
+			</mat-expansion-panel-header>
+
+			<!-- BACKGROUND COLOR -->
+			<h4>Background color</h4>
+			<div class="colors-list">
+				<!-- display clear icon-->
+				<div
+					[ngClass]="{
+						selected: !customisationData.color || customisationData.color === DEFAULT_CUSTOMISATION_DETAILS.color
+					}"
+					class="color-item"
+					(click)="customisationData.color = DEFAULT_CUSTOMISATION_DETAILS.color; emitCustomisationDetails()">
+					<div class="color-preview"></div>
+					<mat-icon class="clear-icon">not_interested</mat-icon>
+				</div>
+				<!-- display brand colors -->
+				<ng-container *ngFor="let brandColor of brand$$$.value?.colors?.split(';') ?? []">
+					<div
+						class="color-item"
+						[ngClass]="{
+							selected: customisationData.color === brandColor
+						}"
+						(click)="customisationData.color = brandColor; emitCustomisationDetails()">
+						<div
+							class="color-preview"
+							[style.background-color]="brandColor"></div>
+					</div>
+				</ng-container>
+
+				<!-- display extra color -->
+				<div
+					*ngIf="
+						customisationData.color &&
+						customisationData.color !== DEFAULT_CUSTOMISATION_DETAILS.color &&
+						!(brand$$$.value?.colors?.split(';') ?? []).includes(customisationData.color)
+					"
+					class="color-item selected"
+					(click)="customisationData.color = undefined; emitCustomisationDetails()">
+					<div
+						class="color-preview"
+						[style.background-color]="customisationData.color"></div>
+					<mat-icon class="trash-icon">delete</mat-icon>
+				</div>
+
+				<!-- display icon for extra color (loop/add) -->
+				<div
+					class="color-item new-color"
+					(click)="backgroundColorPicker.click(); backgroundColorPicker.focus()">
+					<mat-icon>{{
+						customisationData.color &&
+						!(brand$$$.value?.colors?.split(';') ?? []).includes(customisationData.color) &&
+						customisationData.color !== DEFAULT_CUSTOMISATION_DETAILS.color
+							? 'loop'
+							: 'add'
+					}}</mat-icon>
+
+					<!-- color picker for "color"-->
+					<input
+						[style.opacity]="0"
+						[style.width]="'0px'"
+						type="color"
+						id="color"
+						name="color"
+						[value]="customisationData.color ?? '#c2c2c2'"
+						(change)="customisationData.color = backgroundColorPicker.value; emitCustomisationDetails()"
+						#backgroundColorPicker />
+				</div>
+			</div>
+
+			<mat-divider></mat-divider>
+
+			<!-- FONT COLOR -->
+			<h4>Text color</h4>
+			<div class="colors-list">
+				<!-- display clear icon-->
+				<div
+					[ngClass]="{
+						selected: customisationData.fontColor === DEFAULT_CUSTOMISATION_DETAILS.fontColor
+					}"
+					class="color-item"
+					(click)="customisationData.fontColor = DEFAULT_CUSTOMISATION_DETAILS.fontColor; emitCustomisationDetails()">
+					<div class="color-preview"></div>
+					<mat-icon class="clear-icon">not_interested</mat-icon>
+				</div>
+				<!-- display brand colors -->
+				<ng-container *ngFor="let brandColor of brand$$$.value?.colors?.split(';') ?? []">
+					<div
+						class="color-item"
+						[ngClass]="{
+							selected: customisationData.fontColor === brandColor
+						}"
+						(click)="customisationData.fontColor = brandColor; emitCustomisationDetails()">
+						<div
+							class="color-preview"
+							[style.background-color]="brandColor"></div>
+					</div>
+				</ng-container>
+
+				<!-- display one other color -->
+				<div
+					*ngIf="
+						customisationData.fontColor &&
+						customisationData.fontColor !== DEFAULT_CUSTOMISATION_DETAILS.fontColor &&
+						!(brand$$$.value?.colors?.split(';') ?? []).includes(customisationData.fontColor)
+					"
+					class="color-item selected"
+					(click)="customisationData.fontColor = DEFAULT_CUSTOMISATION_DETAILS.fontColor; emitCustomisationDetails()">
+					<div
+						class="color-preview"
+						[style.background-color]="customisationData.fontColor"></div>
+					<mat-icon class="trash-icon">delete</mat-icon>
+				</div>
+
+				<!-- display icon for extra color (loop/add) -->
+				<div
+					class="color-item new-color"
+					(click)="fontColorPicker.click(); fontColorPicker.focus()">
+					<mat-icon>{{
+						customisationData.fontColor &&
+						customisationData.fontColor !== DEFAULT_CUSTOMISATION_DETAILS.fontColor &&
+						!(brand$$$.value?.colors?.split(';') ?? []).includes(customisationData.fontColor)
+							? 'loop'
+							: 'add'
+					}}</mat-icon>
+
+					<!-- color picker for "fontColor"-->
+					<input
+						[style.opacity]="0"
+						[style.width]="'0px'"
+						type="color"
+						id="fontColor"
+						name="fontColor"
+						[value]="customisationData.fontColor ?? '#c2c2c2'"
+						(change)="customisationData.fontColor = fontColorPicker.value; emitCustomisationDetails()"
+						#fontColorPicker />
+				</div>
+			</div>
+			<mat-divider></mat-divider>
+
+			<!-- ACTION BTN FONT COLOR -->
+			<h4>Buttons text color</h4>
+			<div class="colors-list">
+				<!-- display clear icon-->
+				<div
+					[ngClass]="{
+						selected: customisationData.actionBtnFontColor === DEFAULT_CUSTOMISATION_DETAILS.actionBtnFontColor
+					}"
+					class="color-item"
+					(click)="
+						customisationData.actionBtnFontColor = DEFAULT_CUSTOMISATION_DETAILS.actionBtnFontColor;
+						emitCustomisationDetails()
+					">
+					<div class="color-preview"></div>
+					<mat-icon class="clear-icon">not_interested</mat-icon>
+				</div>
+				<!-- display brand colors for BTN FONT COLOR -->
+				<ng-container *ngFor="let brandColor of brand$$$.value?.colors?.split(';') ?? []">
+					<div
+						class="color-item"
+						[ngClass]="{
+							selected: customisationData.actionBtnFontColor === brandColor
+						}"
+						(click)="customisationData.actionBtnFontColor = brandColor; emitCustomisationDetails()">
+						<div
+							class="color-preview"
+							[style.background-color]="brandColor"></div>
+					</div>
+				</ng-container>
+
+				<!-- display one other color for BTN FONT COLOR-->
+				<div
+					*ngIf="
+						customisationData.actionBtnFontColor &&
+						customisationData.actionBtnFontColor !== DEFAULT_CUSTOMISATION_DETAILS.actionBtnFontColor &&
+						!(brand$$$.value?.colors?.split(';') ?? []).includes(customisationData.actionBtnFontColor)
+					"
+					class="color-item selected"
+					(click)="
+						customisationData.actionBtnFontColor = DEFAULT_CUSTOMISATION_DETAILS.actionBtnFontColor;
+						emitCustomisationDetails()
+					">
+					<div
+						class="color-preview"
+						[style.background-color]="customisationData.actionBtnFontColor"></div>
+					<mat-icon class="trash-icon">delete</mat-icon>
+				</div>
+
+				<!-- display icon for extra color (loop/add) -->
+				<div
+					class="color-item new-color"
+					(click)="actionBtnFontColorPicker.click(); actionBtnFontColorPicker.focus()">
+					<mat-icon>{{
+						customisationData.actionBtnFontColor &&
+						customisationData.actionBtnFontColor !== DEFAULT_CUSTOMISATION_DETAILS.actionBtnFontColor &&
+						(brand$$$.value?.colors?.split(';') ?? []).indexOf(customisationData.actionBtnFontColor) < 0
+							? 'loop'
+							: 'add'
+					}}</mat-icon>
+
+					<!-- color picker for "color"-->
+
+					<input
+						[style.opacity]="0"
+						[style.width]="'0px'"
+						type="color"
+						id="actionBtnFontColor"
+						name="actionBtnFontColor"
+						[value]="customisationData.actionBtnFontColor ?? '#c2c2c2'"
+						(change)="
+							customisationData.actionBtnFontColor = actionBtnFontColorPicker.value; emitCustomisationDetails()
+						"
+						#actionBtnFontColorPicker />
+				</div>
+			</div>
+
+			<mat-divider></mat-divider>
+
+			<!-- ACTION BTN BG COLOR -->
+			<h4>Buttons background color</h4>
+			<div class="colors-list">
+				<!-- display clear icon-->
+				<div
+					[ngClass]="{
+						selected:
+							customisationData.actionBtnBackgroundColor ===
+							DEFAULT_CUSTOMISATION_DETAILS.actionBtnBackgroundColor
+					}"
+					class="color-item"
+					(click)="
+						customisationData.actionBtnBackgroundColor = DEFAULT_CUSTOMISATION_DETAILS.actionBtnBackgroundColor;
+						emitCustomisationDetails()
+					">
+					<div class="color-preview"></div>
+					<mat-icon class="clear-icon">not_interested</mat-icon>
+				</div>
+				<!-- display brand colors -->
+				<div
+					*ngFor="let brandColor of brand$$$.value?.colors?.split(';') ?? []"
+					class="color-item"
+					[ngClass]="{
+						selected: customisationData.actionBtnBackgroundColor === brandColor
+					}"
+					(click)="customisationData.actionBtnBackgroundColor = brandColor; emitCustomisationDetails()">
+					<div
+						class="color-preview"
+						[style.background-color]="brandColor"></div>
+				</div>
+
+				<!-- display one other color -->
+				<div
+					*ngIf="
+						customisationData.actionBtnBackgroundColor &&
+						customisationData.actionBtnBackgroundColor !== DEFAULT_CUSTOMISATION_DETAILS.actionBtnBackgroundColor &&
+						!(brand$$$.value?.colors?.split(';') ?? []).includes(customisationData.actionBtnBackgroundColor)
+					"
+					class="color-item selected"
+					(click)="
+						customisationData.actionBtnBackgroundColor = DEFAULT_CUSTOMISATION_DETAILS.actionBtnBackgroundColor;
+						emitCustomisationDetails()
+					">
+					<div
+						class="color-preview"
+						[style.background-color]="customisationData.actionBtnBackgroundColor"></div>
+					<mat-icon class="trash-icon">delete</mat-icon>
+				</div>
+
+				<!-- display icon for extra color (loop/add) -->
+				<div
+					class="color-item new-color"
+					(click)="actionBtnBackgroundColorPicker.click(); actionBtnBackgroundColorPicker.focus()">
+					<mat-icon>{{
+						customisationData.actionBtnBackgroundColor &&
+						customisationData.actionBtnBackgroundColor !== DEFAULT_CUSTOMISATION_DETAILS.actionBtnBackgroundColor &&
+						(brand$$$.value?.colors?.split(';') ?? []).indexOf(customisationData.actionBtnBackgroundColor) < 0
+							? 'loop'
+							: 'add'
+					}}</mat-icon>
+
+					<!-- color picker for "button background color"-->
+					<input
+						[style.opacity]="0"
+						[style.width]="'0px'"
+						type="color"
+						id="actionBtnBackgroundColor"
+						name="actionBtnBackgroundColor"
+						[value]="customisationData.actionBtnBackgroundColor ?? '#c2c2c2'"
+						(change)="
+							customisationData.actionBtnBackgroundColor = actionBtnBackgroundColorPicker.value;
+							emitCustomisationDetails()
+						"
+						#actionBtnBackgroundColorPicker />
+				</div>
+			</div>
+
+			<mat-divider></mat-divider>
+
+			<!-- PROGRESS BAR COLOR -->
+			<h4>
+				Progress bar color<explanation
+					[msg]="'The progress bar is displayed at the top of the interview as a progress indicator'">
+				</explanation>
+			</h4>
+			<div class="colors-list">
+				<!-- display clear icon-->
+				<div
+					[ngClass]="{
+						selected: customisationData.progressBarColor === DEFAULT_CUSTOMISATION_DETAILS.progressBarColor
+					}"
+					class="color-item"
+					(click)="
+						customisationData.progressBarColor = DEFAULT_CUSTOMISATION_DETAILS.progressBarColor;
+						emitCustomisationDetails()
+					">
+					<div class="color-preview"></div>
+					<mat-icon class="clear-icon">not_interested</mat-icon>
+				</div>
+				<!-- display brand colors -->
+				<div
+					class="color-item"
+					*ngFor="let brandColor of brand$$$.value?.colors?.split(';') ?? []"
+					[ngClass]="{
+						selected: customisationData.progressBarColor === brandColor
+					}"
+					(click)="customisationData.progressBarColor = brandColor; emitCustomisationDetails()">
+					<div
+						class="color-preview"
+						[style.background-color]="brandColor"></div>
+				</div>
+
+				<!-- display one other color -->
+				<div
+					*ngIf="
+						customisationData.progressBarColor &&
+						customisationData.progressBarColor !== DEFAULT_CUSTOMISATION_DETAILS.progressBarColor &&
+						!(brand$$$.value?.colors?.split(';') ?? []).includes(customisationData.progressBarColor)
+					"
+					class="color-item selected"
+					(click)="
+						customisationData.progressBarColor = DEFAULT_CUSTOMISATION_DETAILS.progressBarColor;
+						emitCustomisationDetails()
+					">
+					<div
+						class="color-preview"
+						[style.background-color]="customisationData.progressBarColor"></div>
+					<mat-icon class="trash-icon">delete</mat-icon>
+				</div>
+
+				<!-- display icon for extra color (loop/add) -->
+				<div
+					class="color-item new-color"
+					(click)="progressBarColorPicker.click(); progressBarColorPicker.focus()">
+					<mat-icon>{{
+						customisationData.progressBarColor &&
+						(brand$$$.value?.colors?.split(';') ?? []).indexOf(customisationData.progressBarColor) < 0
+							? 'loop'
+							: 'add'
+					}}</mat-icon>
+
+					<!-- color picker for "progress bar color"-->
+					<input
+						[style.opacity]="0"
+						[style.width]="'0px'"
+						type="color"
+						id="progressBarColor"
+						name="progressBarColor"
+						[value]="customisationData.progressBarColor ?? '#f5ca1b'"
+						(change)="customisationData.progressBarColor = progressBarColorPicker.value; emitCustomisationDetails()"
+						#progressBarColorPicker />
+				</div>
+			</div>
+
+			<mat-divider></mat-divider>
+
+			<!-- ACTION BTN BG COLOR -->
+			<h4>Seekbars color</h4>
+			<div class="colors-list">
+				<!-- display clear icon-->
+				<div
+					[ngClass]="{
+						selected: customisationData.playbarColor === DEFAULT_CUSTOMISATION_DETAILS.playbarColor
+					}"
+					class="color-item"
+					(click)="
+						customisationData.playbarColor = DEFAULT_CUSTOMISATION_DETAILS.playbarColor; emitCustomisationDetails()
+					">
+					<div class="color-preview"></div>
+					<mat-icon class="clear-icon">not_interested</mat-icon>
+				</div>
+				<!-- display brand colors -->
+				<div
+					*ngFor="let brandColor of brand$$$.value?.colors?.split(';') ?? []"
+					class="color-item"
+					[ngClass]="{
+						selected: customisationData.playbarColor === brandColor
+					}"
+					(click)="customisationData.playbarColor = brandColor; emitCustomisationDetails()">
+					<div
+						class="color-preview"
+						[style.background-color]="brandColor"></div>
+				</div>
+
+				<!-- display one other color -->
+				<div
+					*ngIf="
+						customisationData.playbarColor &&
+						customisationData.playbarColor !== DEFAULT_CUSTOMISATION_DETAILS.playbarColor &&
+						!(brand$$$.value?.colors?.split(';') ?? []).includes(customisationData.playbarColor)
+					"
+					class="color-item selected"
+					(click)="
+						customisationData.playbarColor = DEFAULT_CUSTOMISATION_DETAILS.playbarColor; emitCustomisationDetails()
+					">
+					<div
+						class="color-preview"
+						[style.background-color]="customisationData.playbarColor"></div>
+					<mat-icon class="trash-icon">delete</mat-icon>
+				</div>
+
+				<!-- display icon for extra color (loop/add) -->
+				<div
+					class="color-item new-color"
+					(click)="playbarColorPicker.click(); playbarColorPicker.focus()">
+					<mat-icon>{{
+						customisationData.playbarColor &&
+						customisationData.playbarColor !== DEFAULT_CUSTOMISATION_DETAILS.playbarColor &&
+						(brand$$$.value?.colors?.split(';') ?? []).indexOf(customisationData.playbarColor) < 0
+							? 'loop'
+							: 'add'
+					}}</mat-icon>
+
+					<!-- color picker for "button background color"-->
+					<input
+						[style.opacity]="0"
+						[style.width]="'0px'"
+						type="color"
+						id="playbarColor"
+						name="playbarColor"
+						[value]="customisationData.playbarColor ?? '#c2c2c2'"
+						(change)="customisationData.playbarColor = playbarColorPicker.value; emitCustomisationDetails()"
+						#playbarColorPicker />
+				</div>
+			</div>
+		</mat-expansion-panel>
+
+		<!-- fonts -->
+		<mat-expansion-panel>
+			<mat-expansion-panel-header>
+				<mat-panel-title> <mat-icon> text_fields</mat-icon> Font </mat-panel-title>
+			</mat-expansion-panel-header>
+
+			<!-- FONT FAMILY -->
+			<h4>Font family</h4>
+			<div class="fonts-list">
+				<!-- brand fonts -->
+				<div
+					*ngFor="let font of brandData?.fonts ?? []"
+					(click)="customisationData.font = font; emitCustomisationDetails()">
+					<div
+						class="font"
+						[ngClass]="{
+							selected: customisationData.font === font
+						}">
+						<p
+							class="font-preview"
+							[style.font-family]="getFontStyle(font)"
+							[style.color]="customisationData.fontColor">
+							{{ font }}
+						</p>
+					</div>
+				</div>
+				<!-- other font -->
+				<ng-container
+					*ngIf="
+						!customisationData.font || (brandData?.fonts ?? []).indexOf(customisationData.font) >= 0;
+						else customFontTpl
+					">
+					<div
+						class="font-empty"
+						(click)="openFontModal()">
+						<mat-icon>add</mat-icon>New
+					</div>
+				</ng-container>
+				<ng-template #customFontTpl>
+					<div
+						class="font font-edit selected"
+						(click)="customisationData.font = undefined; emitCustomisationDetails()">
+						<p
+							class="font-preview"
+							[style.font-family]="getFontStyle(customisationData.font!)"
+							[style.color]="customisationData.fontColor">
+							{{ customisationData.font }}
+						</p>
+						<mat-icon class="font-delete">delete</mat-icon>
+					</div>
+				</ng-template>
+			</div>
+
+			<div class="slider-section">
+				<h4>Font size</h4>
+				<button
+					class="flat-btn"
+					mat-flat-button
+					(click)="customisationData.fontSizePx = originalCustomisationData.fontSizePx; emitCustomisationDetails()"
+					[disabled]="customisationData.fontSizePx === originalCustomisationData.fontSizePx">
+					Reset
+				</button>
+			</div>
+			<mat-slider
+				thumbLabel
+				tickInterval="5"
+				step="1"
+				min="10"
+				max="30"
+				aria-label="units"
+				[value]="customisationData.fontSizePx"
+				(input)="customisationData.fontSizePx = $event.value ?? 0; emitCustomisationDetails()">
+			</mat-slider>
+		</mat-expansion-panel>
+
+		<!-- layout and images -->
+		<mat-expansion-panel>
+			<mat-expansion-panel-header>
+				<mat-panel-title> <mat-icon>grid_on</mat-icon> Layout and images </mat-panel-title>
+			</mat-expansion-panel-header>
+
+			<h4>Layout</h4>
+			<p>
+				To improve guest experience we hide the decoration image on small screens (unless you chose the background
+				layout).
+			</p>
+
+			<mat-slide-toggle
+				(click)="$event.stopPropagation()"
+				#toggleForceDisplay
+				[checked]="customisationData.forceDisplayOnSmallScreen"
+				(change)="customisationData.forceDisplayOnSmallScreen = toggleForceDisplay.checked; emitCustomisationDetails()">
+				Force display on small screens
+			</mat-slide-toggle>
+
+			<div class="layout-examples">
+				<div
+					class="small-layout-example"
+					[ngClass]="{
+						selected: customisationData.layout === 'NO_IMAGE'
+					}"
+					(click)="customisationData.layout = 'NO_IMAGE'; emitCustomisationDetails()">
+					<div class="text full-width">
+						<div class="text-1"></div>
+						<div class="text-2"></div>
+						<div class="text-3"></div>
+					</div>
+				</div>
+
+				<div
+					class="small-layout-example"
+					[ngClass]="{
+						selected: customisationData.layout === 'IMAGE_AS_BACKGROUND'
+					}"
+					(click)="customisationData.layout = 'IMAGE_AS_BACKGROUND'; checkOpacity(); emitCustomisationDetails()">
+					<div class="image-example full-width"></div>
+					<div class="text full-width white">
+						<div class="text-1"></div>
+						<div class="text-2"></div>
+						<div class="text-3"></div>
+					</div>
+				</div>
+
+				<div
+					class="small-layout-example"
+					[ngClass]="{
+						selected: customisationData.layout === 'IMAGE_LEFT_FULL'
+					}"
+					(click)="customisationData.layout = 'IMAGE_LEFT_FULL'; checkOpacity(); emitCustomisationDetails()">
+					<div class="image-example"></div>
+					<div class="text">
+						<div class="text-1"></div>
+						<div class="text-2"></div>
+						<div class="text-3"></div>
+					</div>
+				</div>
+
+				<div
+					class="small-layout-example reversed"
+					[ngClass]="{
+						selected: customisationData.layout === 'IMAGE_RIGHT_FULL'
+					}"
+					(click)="customisationData.layout = 'IMAGE_RIGHT_FULL'; checkOpacity(); emitCustomisationDetails()">
+					<div class="image-example"></div>
+					<div class="text">
+						<div class="text-1"></div>
+						<div class="text-2"></div>
+						<div class="text-3"></div>
+					</div>
+				</div>
+
+				<div
+					class="small-layout-example vertical"
+					[ngClass]="{
+						selected: customisationData.layout === 'IMAGE_TOP_FULL'
+					}"
+					(click)="customisationData.layout = 'IMAGE_TOP_FULL'; checkOpacity(); emitCustomisationDetails()">
+					<div class="image-example"></div>
+					<div class="text">
+						<div class="text-1"></div>
+						<div class="text-2"></div>
+						<div class="text-3"></div>
+					</div>
+				</div>
+
+				<div
+					class="small-layout-example vertical reversed"
+					[ngClass]="{
+						selected: customisationData.layout === 'IMAGE_BOTTOM_FULL'
+					}"
+					(click)="customisationData.layout = 'IMAGE_BOTTOM_FULL'; checkOpacity(); emitCustomisationDetails()">
+					<div class="image-example"></div>
+					<div class="text">
+						<div class="text-1"></div>
+						<div class="text-2"></div>
+						<div class="text-3"></div>
+					</div>
+				</div>
+
+				<div
+					class="small-layout-example centered"
+					[ngClass]="{
+						selected: customisationData.layout === 'IMAGE_LEFT_CENTERED'
+					}"
+					(click)="customisationData.layout = 'IMAGE_LEFT_CENTERED'; checkOpacity(); emitCustomisationDetails()">
+					<div class="image-example"></div>
+					<div class="text">
+						<div class="text-1"></div>
+						<div class="text-2"></div>
+						<div class="text-3"></div>
+					</div>
+				</div>
+
+				<div
+					class="small-layout-example reversed centered"
+					[ngClass]="{
+						selected: customisationData.layout === 'IMAGE_RIGHT_CENTERED'
+					}"
+					(click)="customisationData.layout = 'IMAGE_RIGHT_CENTERED'; checkOpacity(); emitCustomisationDetails()">
+					<div class="image-example"></div>
+					<div class="text">
+						<div class="text-1"></div>
+						<div class="text-2"></div>
+						<div class="text-3"></div>
+					</div>
+				</div>
+
+				<div
+					class="small-layout-example vertical centered"
+					[ngClass]="{
+						selected: customisationData.layout === 'IMAGE_TOP_CENTERED'
+					}"
+					(click)="customisationData.layout = 'IMAGE_TOP_CENTERED'; checkOpacity(); emitCustomisationDetails()">
+					<div class="image-example"></div>
+					<div class="text">
+						<div class="text-1"></div>
+						<div class="text-2"></div>
+						<div class="text-3"></div>
+					</div>
+				</div>
+
+				<div
+					class="small-layout-example vertical reversed centered"
+					[ngClass]="{
+						selected: customisationData.layout === 'IMAGE_BOTTOM_CENTERED'
+					}"
+					(click)="customisationData.layout = 'IMAGE_BOTTOM_CENTERED'; checkOpacity(); emitCustomisationDetails()">
+					<div class="image-example"></div>
+					<div class="text">
+						<div class="text-1"></div>
+						<div class="text-2"></div>
+						<div class="text-3"></div>
+					</div>
+				</div>
+			</div>
+
+			<ng-container *ngIf="customisationData.layout !== 'NO_IMAGE' && customisationData.layout !== 'IMAGE_AS_BACKGROUND'">
+				<div class="slider-section">
+					<p>Image size</p>
+					<button
+						class="flat-btn"
+						mat-flat-button
+						(click)="
+							customisationData.imageSizeRatio = originalCustomisationData.imageSizeRatio;
+							emitCustomisationDetails()
+						"
+						[disabled]="customisationData.imageSizeRatio === originalCustomisationData.imageSizeRatio">
+						Reset
+					</button>
+				</div>
+
+				<mat-slider
+					thumbLabel
+					[displayWith]="formatLabel"
+					tickInterval="0.1"
+					step="0.01"
+					min="0.1"
+					max=".5"
+					aria-label="zoom"
+					[value]="customisationData.imageSizeRatio"
+					(input)="customisationData.imageSizeRatio = $event.value ?? 0; emitCustomisationDetails()">
+				</mat-slider>
+			</ng-container>
+
+			<ng-container *ngIf="customisationData.layout !== 'NO_IMAGE'">
+				<mat-divider></mat-divider>
+				<div class="rs-file-drop-area">
+					<span>Upload an image</span>
+
+					<input
+						class="rs-drop-btn"
+						[multiple]="false"
+						[accept]="acceptedFileExtensionsString"
+						(change)="handleFileList($event, 'imageSrc')"
+						(click)="$event.preventDefault(); handleFileList(undefined, 'imageSrc')"
+						type="file" />
+				</div>
+				<!-- <div class="image-chip-select">
+					<span>Images from: </span>
+					<mat-chip-list
+						class="chip-list"
+						[multiple]="true"
+						cdkDropList
+						cdkDropListOrientation="horizontal">
+						<mat-chip
+							class="custom-chip"
+							[selected]="imagesFromBrandingKit && !!brandData?.images?.length"
+							(click)="imagesFromBrandingKit = !imagesFromBrandingKit">
+							<mat-icon *ngIf="imagesFromBrandingKit && !!brandData?.images?.length">check</mat-icon>
+							Branding kit ({{ brandData?.images?.length ?? '0' }})
+						</mat-chip>
+						<mat-chip
+							class="custom-chip"
+							[selected]="imagesFromLibrary"
+							(click)="imagesFromLibrary = !imagesFromLibrary">
+							<mat-icon *ngIf="imagesFromLibrary">check</mat-icon>File library ({{ libraryImagesSrc.length }})
+						</mat-chip>
+						<mat-chip
+							class="custom-chip"
+							[selected]="imagesFromStock"
+							(click)="imagesFromStock = !imagesFromStock">
+							<mat-icon *ngIf="imagesFromStock">check</mat-icon>Stock images ({{
+								STOCK_IMAGES_SRC?.length ?? '0'
+							}})
+						</mat-chip>
+					</mat-chip-list>
+				</div>
+				<div class="images-list">
+					<ng-container *ngIf="imagesFromBrandingKit">
+						<div *ngFor="let imageSrc of brandData?.images ?? []">
+							<image
+								*ngIf="filesRepository.convertRSurlToUrl$(imageSrc) | async as imageUrl"
+								[displaySelectButton]="true"
+								[displayDeleteButton]="false"
+								(imageSelectionEvent)="customisationData.imageSrc = imageSrc; emitCustomisationDetails()"
+								[imageUrl]="imageUrl">
+							</image>
+						</div>
+					</ng-container>
+
+					<ng-container *ngIf="imagesFromLibrary">
+						<div *ngFor="let imageSrc of libraryImagesSrc">
+							<image
+								*ngIf="filesRepository.convertRSurlToUrl$(imageSrc) | async as imageUrl"
+								[displaySelectButton]="true"
+								[displayDeleteButton]="false"
+								(imageSelectionEvent)="customisationData.imageSrc = imageSrc; emitCustomisationDetails()"
+								[imageUrl]="imageUrl">
+							</image>
+						</div>
+					</ng-container>
+
+					<ng-container *ngIf="imagesFromStock">
+						<div *ngFor="let imageSrc of STOCK_IMAGES_SRC">
+							<image
+								*ngIf="filesRepository.convertRSurlToUrl$(imageSrc) | async as imageUrl"
+								[displaySelectButton]="true"
+								[displayDeleteButton]="false"
+								(imageSelectionEvent)="customisationData.imageSrc = imageSrc; emitCustomisationDetails()"
+								[imageUrl]="imageUrl">
+							</image>
+						</div>
+					</ng-container>
+				</div> -->
+				<div class="custom-image">
+					<mat-divider></mat-divider>
+					<ng-container *ngIf="customisationData.imageSrc">
+						<h4>Selected image</h4>
+
+						<div class="slider-section">
+							<p>Image opacity</p>
+							<button
+								class="flat-btn"
+								mat-flat-button
+								(click)="
+									customisationData.imageOpacity = originalCustomisationData.imageOpacity;
+									emitCustomisationDetails()
+								"
+								[disabled]="customisationData.imageOpacity === originalCustomisationData.imageOpacity">
+								Reset
+							</button>
+						</div>
+
+						<mat-slider
+							thumbLabel
+							[displayWith]="formatLabel"
+							tickInterval="10"
+							step="0.01"
+							min="0"
+							max="1"
+							aria-label="units"
+							[value]="customisationData.imageOpacity"
+							(input)="customisationData.imageOpacity = $event.value ?? 0; emitCustomisationDetails()">
+						</mat-slider>
+
+						<image
+							*ngIf="filesRepository.convertRSurlToUrl$(customisationData.imageSrc) | async as imageUrl"
+							[displayDeleteButton]="true"
+							(deleteImageEvent)="clearCustomImageSrc()"
+							[imageUrl]="imageUrl">
+						</image>
+					</ng-container>
+				</div>
+			</ng-container>
+		</mat-expansion-panel>
+
+		<!-- Miscellaneous -->
+		<mat-expansion-panel>
+			<mat-expansion-panel-header>
+				<mat-panel-title> <mat-icon>style</mat-icon> Miscellaneous </mat-panel-title>
+			</mat-expansion-panel-header>
+
+			<h4>Player</h4>
+			<mat-expansion-panel #customPlayerAvatarPanel>
+				<mat-expansion-panel-header>
+					<mat-panel-title>
+						<mat-slide-toggle
+							(click)="$event.stopPropagation()"
+							#toggle
+							[checked]="
+								!!originalCustomisationData.customPlayerAvatarSrc || customisationData.customPlayerAvatarSrc
+							"
+							(change)="customAvatartoggleChanged($event, customPlayerAvatarPanel)">
+							Custom avatar
+						</mat-slide-toggle>
+					</mat-panel-title>
+					<mat-panel-description
+						*ngIf="customisationData.customPlayerAvatarSrc && !isMobile && !customPlayerAvatarPanel.expanded">
+					</mat-panel-description>
+				</mat-expansion-panel-header>
+				<div class="rs-file-drop-area">
+					<span>Upload an image</span>
+					<input
+						class="rs-drop-btn"
+						[multiple]="false"
+						[accept]="acceptedFileExtensionsString"
+						(change)="handleFileList($event, 'customPlayerAvatarSrc')"
+						(click)="$event.preventDefault(); handleFileList(undefined, 'customPlayerAvatarSrc')"
+						type="file" />
+				</div>
+
+				<!-- <div class="image-chip-select">
+					<span>Images from: </span>
+					<mat-chip-list
+						class="chip-list"
+						[multiple]="true"
+						cdkDropList
+						cdkDropListOrientation="horizontal">
+						<mat-chip
+							class="custom-chip"
+							[selected]="imagesFromBrandingKit && !!brandData?.images?.length"
+							(click)="imagesFromBrandingKit = !imagesFromBrandingKit">
+							<mat-icon *ngIf="imagesFromBrandingKit && !!brandData?.images?.length">check</mat-icon>
+							Branding kit ({{ brandData?.images?.length ?? '0' }})
+						</mat-chip>
+						<mat-chip
+							class="custom-chip"
+							[selected]="imagesFromLibrary"
+							(click)="imagesFromLibrary = !imagesFromLibrary">
+							<mat-icon *ngIf="imagesFromLibrary">check</mat-icon>File library ({{ libraryImagesSrc.length }})
+						</mat-chip>
+						<mat-chip
+							class="custom-chip"
+							[selected]="imagesFromStock"
+							(click)="imagesFromStock = !imagesFromStock">
+							<mat-icon *ngIf="imagesFromStock">check</mat-icon>Stock images ({{
+								STOCK_IMAGES_SRC?.length ?? '0'
+							}})
+						</mat-chip>
+					</mat-chip-list>
+				</div>
+				<div class="images-list">
+					
+					<ng-container *ngIf="imagesFromBrandingKit">
+						<div *ngFor="let imageSrc of brandData?.images ?? []">
+							<image
+								*ngIf="filesRepository.convertRSurlToUrl$(imageSrc) | async as imageUrl"
+								[displaySelectButton]="true"
+								[displayDeleteButton]="false"
+								(imageSelectionEvent)="
+									customisationData.customPlayerAvatarSrc = imageSrc; emitCustomisationDetails()
+								"
+								[imageUrl]="imageUrl">
+							</image>
+						</div>
+					</ng-container>
+
+					<ng-container *ngIf="imagesFromLibrary">
+						<div *ngFor="let imageSrc of libraryImagesSrc">
+							<image
+								*ngIf="filesRepository.convertRSurlToUrl$(imageSrc) | async as imageUrl"
+								[displaySelectButton]="true"
+								[displayDeleteButton]="false"
+								(imageSelectionEvent)="
+									customisationData.customPlayerAvatarSrc = imageSrc; emitCustomisationDetails()
+								"
+								[imageUrl]="imageUrl">
+							</image>
+						</div>
+					</ng-container>
+
+					<ng-container *ngIf="imagesFromStock">
+						<div *ngFor="let imageSrc of STOCK_IMAGES_SRC">
+							<image
+								*ngIf="filesRepository.convertRSurlToUrl$(imageSrc) | async as imageUrl"
+								[displayDeleteButton]="false"
+								(imageSelectionEvent)="
+									customisationData.customPlayerAvatarSrc = imageSrc; emitCustomisationDetails()
+								"
+								[imageUrl]="imageUrl">
+							</image>
+						</div>
+					</ng-container>
+				</div> -->
+				<div
+					class="custom-image"
+					*ngIf="customisationData.customPlayerAvatarSrc">
+					<mat-divider></mat-divider>
+
+					<h4>Selected image</h4>
+					<image
+						*ngIf="filesRepository.convertRSurlToUrl$(customisationData.customPlayerAvatarSrc) | async as imageUrl"
+						[displayDeleteButton]="true"
+						(deleteImageEvent)="clearcustomPlayerAvatarSrc()"
+						[imageUrl]="imageUrl">
+					</image>
+				</div>
+			</mat-expansion-panel>
+
+			<h4>Step list</h4>
+			<mat-slide-toggle
+				(click)="$event.stopPropagation()"
+				#toggleStepList
+				[checked]="customisationData.hideStepList"
+				(change)="customisationData.hideStepList = toggleStepList.checked; emitCustomisationDetails()">
+				Hide step list
+			</mat-slide-toggle>
+
+			<h4>Progress bar</h4>
+			<mat-slide-toggle
+				(click)="$event.stopPropagation()"
+				#toggleProgressBar
+				[checked]="customisationData.hideProgressBar"
+				(change)="customisationData.hideProgressBar = toggleProgressBar.checked; emitCustomisationDetails()">
+				Hide progress bar
+			</mat-slide-toggle>
+
+			<h4>Button shape</h4>
+
+			<mat-slider
+				thumbLabel
+				tickInterval="5"
+				step="1"
+				min="0"
+				max="25"
+				aria-label="units"
+				[value]="customisationData.borderRadius"
+				(input)="customisationData.borderRadius = $event.value ?? 0; emitCustomisationDetails()">
+			</mat-slider>
+
+			<!-- <div class="panel-header">
+				<mat-slide-toggle
+					#toggle
+					[checked]="!!originalCustomisationData.customPlayerAvatarSrc"
+					(change)="customAvatartoggleChanged($event)">
+					Custom avatar
+				</mat-slide-toggle>
+				<ng-container *ngIf="customisationData.customPlayerAvatarSrc">
+					<rumble-pwa-image-loader
+						class="custom-avatar-preview selected"
+						[url]="customisationData.customPlayerAvatarSrc!"
+						[style.width]="'50px'"
+						[style.height]="'50px'"
+						[style.borderRadius]="'50%'">
+					</rumble-pwa-image-loader>
+				</ng-container>
+			</div> -->
+		</mat-expansion-panel>
+	</mat-accordion>
+</div>
+
+<ng-template #noEditTpl>
+	<span class="no-edit">You are not the owner of this form. Therefore, you can't customize it.</span>
+</ng-template>

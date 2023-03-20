@@ -1,0 +1,94 @@
+<object-list
+	[objects]="mixes"
+	(tableClickEvent)="processTableClick($event)"
+	[middleActionTpl]="includeArchivedToggleTpl">
+	<object-column
+		[columnId]="'name'"
+		[header]="'Name'">
+	</object-column>
+
+	<object-column
+		[columnId]="'description'"
+		[header]="'Description'"
+		[template]="descriptionTpl">
+	</object-column>
+	<ng-template
+		#descriptionTpl
+		let-object="object">
+		<span class="description">{{
+			object.description.length > 47 ? object.description.slice(0, 47) + '...' : object.description
+		}}</span>
+	</ng-template>
+
+	<object-column
+		*ngIf="isDesktop"
+		[columnId]="'timeCreation'"
+		[header]="'Creation time'"
+		[template]="timeCreationTpl">
+	</object-column>
+	<ng-template
+		#timeCreationTpl
+		let-object="object">
+		{{ object.timeCreation * 1000 | date: 'short' }}
+	</ng-template>
+
+	<object-column
+		*ngIf="isDesktop"
+		[columnId]="'timeUpdate'"
+		[header]="'Last edited time'"
+		[template]="timeUpdateTpl">
+	</object-column>
+	<ng-template
+		#timeUpdateTpl
+		let-object="object">
+		{{ object.timeUpdate * 1000 | date: 'short' }}
+	</ng-template>
+	<object-column
+		[sortable]="false"
+		[columnId]="'options'"
+		[template]="optionsTpl"></object-column>
+	<ng-template
+		#optionsTpl
+		let-object="object">
+		<button
+			mat-icon-button
+			[matMenuTriggerFor]="menu"
+			(click)="$event.stopPropagation()">
+			<mat-icon>more_vert</mat-icon>
+		</button>
+		<mat-menu #menu="matMenu">
+			<button
+				mat-menu-item
+				(click)="openDialog(object)">
+				<mat-icon>edit</mat-icon>
+				<span>Edit</span>
+			</button>
+			<button
+				mat-menu-item
+				(click)="duplicateFormWithConfirmation(object)">
+				<mat-icon>content_copy</mat-icon>
+				<span>Duplicate</span>
+			</button>
+			<button
+				mat-menu-item
+				(click)="object.state === 'archived' ? restoreMix(object) : archiveMix(object)">
+				<mat-icon>{{ object.state === 'archived' ? 'unarchive' : 'archive' }}</mat-icon>
+				<span>{{ object.state === 'archived' ? 'Restore' : 'Archive' }}</span>
+			</button>
+			<button
+				mat-menu-item
+				(click)="deleteForm(object)">
+				<mat-icon class="material-icons-outlined"> delete</mat-icon>
+				<span>Delete</span>
+			</button>
+		</mat-menu>
+	</ng-template>
+</object-list>
+
+<ng-template #includeArchivedToggleTpl>
+	<mat-slide-toggle
+		*ngIf="displayArchivedToggle"
+		[(ngModel)]="displayArchivedMixes"
+		>Display archived mixes</mat-slide-toggle
+	>
+</ng-template>

@@ -1,0 +1,62 @@
+<div id="dismiss-container">
+	<button
+		type="button"
+		mat-flat-button
+		class="mat-elevation-z1"
+		id="dismiss"
+		(click)="dismiss(); $event.preventDefault()">
+		<mat-icon>close</mat-icon>
+	</button>
+</div>
+<form
+	[formGroup]="subscriptionForm"
+	(ngSubmit)="saveSubscriptionToLocalStore()"
+	class="subscription-form">
+	<h2>
+		{{ !data?.subscription ? 'Create a new subscription' : 'Edit the subscription' }}
+	</h2>
+
+	<!-- name -->
+	<div
+		class="formError"
+		*ngIf="subscriptionForm.controls.name.dirty && subscriptionForm.controls.name.errors">
+		<ng-template [ngIf]="subscriptionForm.controls.name.errors.required"> A name is required </ng-template>
+		<ng-template [ngIf]="subscriptionForm.controls.name.errors.maxlength"> This name is too long </ng-template>
+	</div>
+	<mat-form-field
+		class="full-width"
+		appearance="outline">
+		<mat-label>Title</mat-label>
+		<input
+			matInput
+			formControlName="name"
+			type="text"
+			required
+			placeholder="Ex. Guests of New Planet Podcast"
+			data-cy="subscription-name" />
+	</mat-form-field>
+
+	<section class="rs-flex-center bottom-actions">
+		<!-- actions -->
+		<button
+			class="margin-button"
+			type="button"
+			mat-stroked-button
+			(click)="dismiss(); $event.preventDefault()">
+			<mat-icon>clear</mat-icon>
+			Cancel
+		</button>
+
+		<button
+			class="margin-button"
+			type="submit"
+			mat-raised-button
+			id="save-button"
+			(click)="saveSubscriptionToLocalStore(); $event.preventDefault()"
+			[disabled]="!subscriptionForm.valid"
+			data-cy="create-update-subscription-button">
+			<mat-icon>save</mat-icon>
+			{{ !data?.subscription ? 'Create' : 'Update' }}
+		</button>
+	</section>
+</form>

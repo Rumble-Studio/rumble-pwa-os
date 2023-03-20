@@ -1,0 +1,31 @@
+<p>test-storage works!</p>
+
+<ul>
+	<li>get fileS in memory</li>
+	<li>display the list (use repository?)</li>
+	<li>avoid local storage: it does not work everywhere!</li>
+</ul>
+
+<input
+	type="file"
+	id="file-input"
+	accept=".mp3"
+	(change)="onFileChange($event)"
+	multiple
+	#fileInput />
+
+<br />
+<br />
+reload button:
+<button (click)="reload()">reload</button>
+
+<br />
+<br />
+upload generic
+<!-- <button (click)="openUploadGeneric()">generic (audio video image)</button>
+<button (click)="openUploadGeneric('audio')">generic (audio)</button>
+<button (click)="openUploadGeneric('video')">generic (video)</button>
+<button (click)="openUploadGeneric('image')">generic (image)</button> -->
+
+<br />
+<br />

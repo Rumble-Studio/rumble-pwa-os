@@ -1,0 +1,42 @@
+<ng-container *ngIf="data.subscription; else createTpl">
+	<h3>Current subscription:</h3>
+	<p>{{ data.subscription.name ?? data.subscription.grantMapping }}</p>
+
+	<h3>Change to:</h3>
+</ng-container>
+
+<ng-template #createTpl>
+	<h3>New subscription:</h3>
+</ng-template>
+
+<mat-form-field
+	appearance="outline"
+	class="rs-full-width">
+	<mat-label>Choose an option</mat-label>
+	<mat-select [(ngModel)]="optionSelected">
+		<mat-option
+			[value]="planOption"
+			*ngFor="let planOption of planOptions"
+			>{{ planOption.name }} {{ subscriptionAlreadyOwned(planOption) ? '(already a beneficiary)' : '' }}</mat-option
+		>
+	</mat-select>
+</mat-form-field>
+
+<section class="rs-flex-center">
+	<!-- actions -->
+	<button
+		type="button"
+		mat-stroked-button
+		(click)="close(); $event.preventDefault()">
+		<mat-icon>clear</mat-icon>
+		Cancel
+	</button>
+
+	<button
+		type="submit"
+		mat-raised-button
+		(click)="save(); $event.preventDefault()"
+		[disabled]="!optionSelected">
+		<mat-icon>save</mat-icon>{{ data.subscription ? 'Change' : 'Create' }}
+	</button>
+</section>

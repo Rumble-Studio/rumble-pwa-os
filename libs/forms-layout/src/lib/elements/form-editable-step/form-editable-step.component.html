@@ -1,0 +1,181 @@
+<div class="item-basket">
+	<div
+		*ngIf="formStepInstance"
+		class="item-basket-settings">
+		<header
+			(click)="toggleCollapse()"
+			class="rs-no-select"
+			[ngClass]="valid">
+			<span
+				class="item-basket-settings-title"
+				[matTooltip]="formStepInstance.stepDetail.menuHint">
+				<i class="material-icons-outlined">{{ formStepInstance.stepDetail.icon }}</i>
+				&nbsp;&nbsp;{{ step ? step.rank + 1 : '' }}.&nbsp;{{ getPreviewText(formStepInstance) }}
+
+				<span
+					class="invalid-msg"
+					*ngIf="valid === 'INVALID'"
+					>(incomplete)</span
+				>
+			</span>
+
+			<span
+				class="providers-checkboxes"
+				(click)="$event.stopImmediatePropagation()">
+				<span class="container">
+					<mat-checkbox
+						class="provider-checkbox"
+						*ngFor="let defaultProvider of defaultProviders"
+						[checked]="selectedProviders.includes(defaultProvider)"
+						(change)="toggleProvider(defaultProvider.id)"
+						>{{ defaultProvider.displayName }}</mat-checkbox
+					>
+					<todo
+						*ngIf="step?.rank === 0"
+						[todo]="{
+							id: 'todo:toggle-step-provider',
+							title: 'Hide/show a provider',
+							description:
+								'<p>You can hide the participant preview if needed.</p><p>As the creator you provide the questions, and participant(s) provide(s) the answers. Rumble will support more providers in the future to allow for complex conversations.</p>',
+							priority: 1
+						}">
+					</todo>
+				</span>
+			</span>
+
+			<span
+				class="item-basket-settings-actions"
+				[ngClass]="{ mobile: isMobile }">
+				<span
+					class="item-basket-settings-close rs-clickable"
+					*ngIf="collapsed; else expandBtnTpl"
+					[matTooltip]="'Expand this step'"
+					><i class="material-icons-outlined">unfold_more</i>
+				</span>
+				<ng-template #expandBtnTpl>
+					<span
+						class="item-basket-settings-close rs-clickable"
+						[matTooltip]="'Collapse this step'"
+						><i class="material-icons-outlined">unfold_less</i>
+					</span>
+				</ng-template>
+				<span
+					class="item-basket-settings-close rs-clickable"
+					[ngClass]="shiftKeyPressed ? 'no-confirmation' : ''"
+					(click)="$event.stopImmediatePropagation(); removeItem()"
+					[matTooltip]="'Delete this step'"
+					><i class="material-icons-outlined">delete</i>
+				</span>
+				<span
+					class="item-basket-settings-duplicate rs-clickable"
+					(click)="$event.stopImmediatePropagation(); askToDuplicate.emit()"
+					[matTooltip]="'Duplicate this step'"
+					><i class="material-icons-outlined">copy</i>
+				</span>
+				<generic-favorite
+					*ngIf="step?.id"
+					[favoriteDetails]="{
+						objectId: step!.id,
+						objectKind: 'step'
+					}">
+				</generic-favorite>
+				<span
+					[ngClass]="{ 'item-basket-settings-actions-arrows': index === 0 }"
+					class="item-basket-settings-move-up rs-clickable"
+					(click)="$event.stopImmediatePropagation(); moveItem('up')"
+					[matTooltip]="'Move this step up'"
+					><i class="material-icons-outlined">arrow_drop_up</i>
+				</span>
+				<span
+					[ngClass]="{ 'item-basket-settings-actions-arrows': isLastStep }"
+					class="item-basket-settings-move-down rs-clickable"
+					(click)="$event.stopImmediatePropagation(); moveItem('down')"
+					[matTooltip]="'Move this step down'"
+					><i class="material-icons-outlined">arrow_drop_down</i>
+				</span>
+				<ng-content></ng-content>
+			</span>
+		</header>
+		<!-- ALL PROVIDER SCREENS -->
+		<div
+			(click)="focused.emit(true)"
+			class="provider-details"
+			*ngIf="!collapsed">
+			<!-- <mat-button-toggle-group
+				(change)="processProviderSelection($event)"
+				class="views-toggle"
+				name="views"
+				multiple>
+				<mat-button-toggle
+					(click)="$event.stopImmediatePropagation()"
+					*ngFor="let defaultProvider of defaultProviders"
+					[value]="defaultProvider"
+					[checked]="selectedProviders.includes(defaultProvider)"
+					>{{ defaultProvider.displayName }}
+				</mat-button-toggle>
+			</mat-button-toggle-group> -->
+
+			<section
+				*ngIf="step"
+				class="provider-screens-container">
+				<ng-container *ngFor="let provider of selectedProviders">
+					<div class="provider-screen">
+						<ng-container [ngSwitch]="provider.id">
+							<!-- DEFAULT CREATOR PROVIDER SCREEN -->
+							<ng-container *ngSwitchCase="'creator'">
+								<rumble-pwa-form-provider
+									(attributeChangeEmitter)="processChange($event.value, $event.stepAttribute)"
+									[details]="{step,providerId:'creator', previewMode:false}"
+									(validChange)="valid = $event">
+								</rumble-pwa-form-provider>
+							</ng-container>
+							<!-- DEFAULT PARTICIPANT PROVIDER SCREEN -->
+							<ng-container *ngSwitchCase="'default-participant'">
+								<div>
+									<p class="rs-centered">
+										This is a simplified preview of the participant screen.
+										<span
+											(click)="removeProvider('default-participant')"
+											class="rs-link rs-clickable rs-no-select"
+											>hide it</span
+										>
+									</p>
+									<rumble-pwa-rs-browser
+										(clickColorEvent)="processClickColorEvent($event)"
+										[formUrl]="formUrl">
+										<div class="rs-ribbon right">
+											<span>Preview</span>
+										</div>
+										<rumble-pwa-step
+											[previewMode]="true"
+											[recordingSessionId]="undefined"
+											[stepDetails]="{
+												step,
+												index,
+												providerId:'default-participant',
+												formCustomisation
+											}"
+											[style.color]="formCustomisation?.fontColor ?? 'black'"
+											[style.backgroundColor]="formCustomisation?.color ?? 'white'">
+										</rumble-pwa-step>
+									</rumble-pwa-rs-browser>
+								</div>
+							</ng-container>
+							<!-- DEFAULT EDITOR PROVIDER SCREEN -->
+							<ng-container *ngSwitchDefault>
+								Other provider not implemented yet: {{ provider | json }}
+							</ng-container>
+						</ng-container>
+					</div>
+				</ng-container>
+				<ng-container *ngIf="selectedProviders.length === 0">
+					Use the checkboxes above to display at least one provider (creator or participant)<explanation
+						[msg]="
+							'As the creator you provide the questions, and participant(s) provide(s) the answers. Rumble will support more providers in the future to allow for complex conversations.'
+						"></explanation
+					>.
+				</ng-container>
+			</section>
+		</div>
+	</div>
+</div>

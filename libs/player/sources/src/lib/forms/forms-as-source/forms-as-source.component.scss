@@ -1,0 +1,40 @@
+:host {
+	--title-height: 30px;
+	--selector-height: 80px;
+}
+
+.sessions-list {
+	height: var(--selector-height);
+}
+
+.exporter-container {
+	height: 100%;
+}
+
+.example-container {
+	height: calc(100% - var(--selector-height));
+	.virtual-playlist {
+		height: 100%;
+	}
+}
+
+.builder-title {
+	height: var(--title-height);
+	overflow: hidden;
+	display: block;
+}
+
+.mat-select-trigger {
+	height: 300px;
+}
+
+.add-all-btn {
+	margin-top: 4px;
+}
+
+.shared-icon {
+	margin-right: 5px;
+}
+mat-slide-toggle {
+	margin-bottom: 10px;
+}

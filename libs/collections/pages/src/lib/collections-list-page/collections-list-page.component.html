@@ -1,0 +1,56 @@
+<header class="rs-header">
+	<button
+		class="rs-goback"
+		*ngIf="layoutSize < 1"
+		mat-stroked-button
+		[routerLink]="'/dashboard'">
+		<mat-icon>arrow_back</mat-icon>
+	</button>
+	<section class="title">
+		<span class="object-category">Collections</span>
+		<button
+			(click)="openCollectionPrompt()"
+			mat-raised-button
+			class="rs-btn-new"
+			data-cy="create-collection-more-button">
+			<mat-icon>add</mat-icon>
+			New collection
+		</button>
+	</section>
+</header>
+
+<rumble-pwa-collection-list
+	[collections]="collections"
+	[(displayArchivedCollections)]="displayArchivedCollections"
+	(tableClickEventEmitter)="processCollectionTableClick($event)"></rumble-pwa-collection-list>
+
+<br />
+
+<header class="rs-header">
+	<button
+		class="rs-goback"
+		*ngIf="layoutSize < 1"
+		mat-stroked-button
+		[routerLink]="'/dashboard'">
+		<mat-icon>arrow_back</mat-icon>
+	</button>
+
+	<section class="title">
+		<span class="object-category">Items</span>
+
+		<button
+			(click)="openItemPrompt()"
+			mat-raised-button
+			class="rs-btn-new"
+			data-cy="create-item-more-button">
+			<mat-icon>add</mat-icon>
+			New item
+		</button>
+	</section>
+</header>
+
+<rumble-pwa-item-list
+	[(displayArchivedItems)]="displayArchivedItems"
+	(tableClickEventEmitter)="processItemTableClick($event)"
+	[items]="items">
+</rumble-pwa-item-list>

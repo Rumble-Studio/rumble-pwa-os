@@ -1,0 +1,82 @@
+<div class="add-parent">
+	<h2>Add a child to {{ data.group.id }}</h2>
+	<form class="example-form">
+		<!-- <mat-form-field class="full-width" appearance="outline">
+      <mat-label>Group ID</mat-label>
+      <input
+        type="text"
+        placeholder="Ex. group1"
+        aria-label="Text"
+        matInput
+        [formControl]="groupControl"
+        [matAutocomplete]="auto"
+      />
+      <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+        <mat-option
+          *ngFor="let group of filteredGroups | async"
+          [value]="group"
+        >
+          {{ group }}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field> -->
+		<mat-form-field
+			class="selected-groups"
+			appearance="outline">
+			<mat-label>
+				Shared with
+				{{ selectedGroups.length > 1 ? selectedGroups.length + ' groups:' : selectedGroups.length + ' group:' }}
+			</mat-label>
+			<mat-chip-list
+				#chipList
+				aria-label="Group selection">
+				<mat-chip
+					*ngFor="let group of selectedGroups"
+					(removed)="removeGroup(group)">
+					<div class="group-container">
+						<rumble-pwa-group-item-generic [groupId]="group.id"></rumble-pwa-group-item-generic>
+					</div>
+					<button matChipRemove>
+						<mat-icon>cancel</mat-icon>
+					</button>
+				</mat-chip>
+				<input
+					placeholder="New group..."
+					#groupInput
+					[formControl]="groupCtrl"
+					[matAutocomplete]="auto"
+					[matChipInputFor]="chipList"
+					[matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+					(matChipInputTokenEnd)="addGroupWithInput()" />
+			</mat-chip-list>
+			<mat-autocomplete
+				#auto="matAutocomplete"
+				(optionSelected)="selectGroup($event)">
+				<mat-option
+					*ngFor="let group of filteredGroups | async"
+					[value]="group">
+					<div class="group-container">
+						<rumble-pwa-group-item-generic [groupId]="group.id"></rumble-pwa-group-item-generic>
+					</div>
+				</mat-option>
+			</mat-autocomplete>
+		</mat-form-field>
+	</form>
+	<div class="full-width horizontal">
+		<button
+			type="button"
+			mat-stroked-button
+			(click)="dismiss()">
+			<mat-icon>close</mat-icon>
+			Cancel
+		</button>
+
+		<button
+			type="submit"
+			mat-raised-button
+			(click)="save()">
+			<mat-icon>add</mat-icon>
+			Add
+		</button>
+	</div>
+</div>

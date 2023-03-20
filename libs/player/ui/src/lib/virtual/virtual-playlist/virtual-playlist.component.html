@@ -1,0 +1,71 @@
+<div
+	*ngIf="state; else noStateTpl"
+	class="drop-list"
+	cdkDropList
+	[id]="playlistIdentifier"
+	[cdkDropListData]="state.virtualPlaylist.virtualTracks"
+	[cdkDropListDisabled]="!canEdit && !canDrag"
+	[cdkDropListConnectedTo]="connectDropTo"
+	(cdkDropListDropped)="drop($event)">
+	<ng-container *ngFor="let trackState of state.virtualTrackWithStreamStates; let trackIndex = index; trackBy: trackByFn">
+		<rumble-pwa-virtual-track
+			[displaySelected]="displaySelected"
+			*ngIf="trackState.virtualTrack.active || (!trackState.virtualTrack.active && displayUnactiveTracks)"
+			[displayFavorite]="displayFavorite"
+			[trackState]="trackState"
+			[displayTranscript]="displayTranscript"
+			[displayActions]="displayTrackActions"
+			[displayDetails]="displayDetails"
+			[formCustomisationDetails]="formCustomisationDetails"
+			[displayTrackPlayerActions]="displayTrackPlayerActions"
+			[displayDownload]="displayDownload"
+			[displayTrackMode]="displayTrackMode"
+			[deleteDirectlyHoldingShiftKey]="deleteDirectlyHoldingShiftKey"
+			[(selected)]="virtualTracksSelected[trackIndex]"
+			(seekMultiEvent)="processSeekMultiEvent($event, trackState)"
+			(deleteTrackEvent)="processDeleteTrackEvent(trackIndex)"
+			(toggleActiveTrackEvent)="processToggleActiveTrackEvent(trackIndex)"
+			(newTextEvent)="processNewTextEvent($event, trackState)"
+			(click)="processClick(trackState)"
+			[cdkDragData]="trackState"
+			[cdkDragStartDelay]="{ touch: 200, mouse: 0 }"
+			cdkDrag>
+			<ng-container *ngIf="canDrag && displayTrackActions">
+				<mat-icon
+					cdkDragHandle
+					style="cursor: move; display: inline"
+					>drag_handle</mat-icon
+				>
+			</ng-container>
+		</rumble-pwa-virtual-track>
+	</ng-container>
+	<div
+		*ngIf="displayEndOfPlaylist"
+		class="end-of-playlist-msg">
+		End of playlist
+	</div>
+	<div
+		*ngIf="displayDragHelp"
+		class="invitation-to-drop"
+		cdkDrag
+		[cdkDragDisabled]="true">
+		<img
+			src="/assets/draganddrop-yellow.svg"
+			height="40px"
+			alt="" />
+		<p>Drag and drop the segments in here to fill this playlist.</p>
+	</div>
+	<div
+		*ngIf="state.representativeState.containsVideo && displayVideo"
+		class="video-placeholder">
+		<canvas
+			(dblclick)="doubleClickFunction()"
+			(click)="simpleClickFunction()"
+			#canvasElement
+			class="canvasElement"></canvas>
+		<!-- <div class="canvas-actions-container">
+				<mat-icon class="fullscreen-btn">fullscreen</mat-icon>
+			</div> -->
+	</div>
+</div>
+<ng-template #noStateTpl>{{ defaultNoStateMsg }}</ng-template>

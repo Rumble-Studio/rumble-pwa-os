@@ -1,0 +1,49 @@
+.mix-image {
+	object-fit: contain;
+	background-color: white;
+
+	height: 40px;
+	width: 40px;
+	margin-right: 10px;
+	// border-radius: 50%;
+}
+
+table {
+	width: 100%;
+}
+
+.mat-column-description {
+	flex: 3;
+}
+
+.description {
+	text-overflow: ellipsis;
+	overflow: hidden;
+	width: calc(100% - 15px);
+	white-space: nowrap;
+}
+
+.script-row {
+	cursor: pointer;
+	&:hover {
+		background-color: var(--rs-yellow-lighter);
+	}
+}
+
+mat-cell,
+mat-header-cell,
+mat-footer-cell {
+	&:not(mat-cell.mat-column-description) {
+		justify-content: center;
+	}
+}
+
+tr.mat-no-data-row {
+	display: flex;
+	width: 100%;
+	td {
+		width: 100%;
+		display: flex;
+		align-items: center;
+	}
+}

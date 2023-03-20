@@ -1,0 +1,6 @@
+<div
+	class="favorite rs-clickable"
+	[matTooltip]="whyToFavorite ?? ''"
+	(click)="toggleFavoriteItemState(); $event.stopPropagation()">
+	<mat-icon class="mat-icon">{{ isFavorite ? 'favorite' : 'favorite_border' }}</mat-icon>
+</div>

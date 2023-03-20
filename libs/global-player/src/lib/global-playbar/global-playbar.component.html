@@ -1,0 +1,83 @@
+<div
+	#handle
+	class="handle rs-handle rs-no-select">
+	<i
+		[matTooltip]="settings.playlist.collapsed ? 'Show playlist' : 'Hide playlist'"
+		class="material-icons-outlined action-icon rs-clickable"
+		[ngClass]="{ active: !settings.playlist.collapsed }"
+		(click)="togglePlaylistCollapse()"
+		>queue_music</i
+	>
+	<i
+		(click)="collapse()"
+		class="material-icons-outlined rs-clickable"
+		>expand_more</i
+	>
+	<ng-content></ng-content>
+</div>
+
+<div class="global-playbar">
+	<rumble-pwa-virtual-details
+		[pictureSRCs]="settings.playbar.pictureSRCs ?? []"
+		[title]="settings.title"
+		[description]="settings.description"></rumble-pwa-virtual-details>
+	<section
+		class="seekbar-details-actions"
+		*ngIf="state; else notStateTpl">
+		<ng-container *ngIf="state.representativeState.unlocked; else lockedTpl">
+			<rumble-pwa-virtual-seekbar
+				(seekMultiEvent)="processSeekMultiEvent($event)"
+				[durations]="state.representativeState.durations"
+				[indexBeingPlayed]="state.representativeState.lastIndexBeingPlayed"
+				[percentageOfCurrentSong]="state.representativeState.percentageOfLastElementBeingPlayed"
+				[hideTimes]="true"></rumble-pwa-virtual-seekbar>
+		</ng-container>
+		<ng-template #lockedTpl>
+			<div class="rs-fake-play-bar rs-no-select">Click to load audio</div>
+		</ng-template>
+
+		<section class="below-seekbar">
+			<div class="time-info rs-clickable rs-no-select">
+				{{ state.representativeState.cumulatedPlayedDuration | duration }}
+			</div>
+			<div class="player-actions">
+				<!-- <span
+					mat-fab
+					*ngIf="state.representativeState.nbOfActiveTracks > 1"
+					(click)="notImplemented()"
+					class="rs-clickable rs-no-select">
+					<i class="material-icons-outlined player-action-icon">skip_previous</i>
+				</span> -->
+				<span
+					(click)="togglePlay()"
+					class="rs-clickable rs-no-select">
+					<i class="material-icons player-action-icon play">{{
+						state.representativeState.playing ? 'pause' : 'play_arrow'
+					}}</i>
+				</span>
+				<!-- <span
+					(click)="notImplemented()"
+					*ngIf="state.representativeState.nbOfActiveTracks > 1"
+					class="rs-clickable rs-no-select">
+					<i class="material-icons-outlined player-action-icon">skip_next</i>
+				</span> -->
+			</div>
+			<div class="time-info rs-clickable rs-no-select">
+				{{ state.representativeState.duration | duration }}
+			</div>
+		</section>
+
+		<ng-container *ngIf="displayFavorite && state.virtualPlaylist.source">
+			<generic-favorite
+				[favoriteDetails]="{
+					objectId: state.virtualPlaylist.source.id,
+					objectKind: state.virtualPlaylist.source.kind
+				}"></generic-favorite>
+		</ng-container>
+	</section>
+	<ng-template #notStateTpl>
+		<section class="seekbar-details-actions">Nothing here for now.</section>
+	</ng-template>
+
+	<ng-template #noPlaylistTpl> Nothing being played. </ng-template>
+</div>

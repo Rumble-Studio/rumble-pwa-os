@@ -1,0 +1,96 @@
+<div class="dismiss-container">
+	<button
+		type="button"
+		mat-flat-button
+		class="mat-elevation-z1"
+		(click)="dismiss()">
+		<mat-icon>close</mat-icon>
+	</button>
+</div>
+
+<form
+	[formGroup]="mixForm"
+	(ngSubmit)="save()">
+	<h2>
+		{{ data.mix ? 'Mix: ' + data.mix?.name : 'New mix' }}
+	</h2>
+
+	<div
+		class="formError"
+		*ngIf="mixForm.controls.name.dirty && mixForm.controls.name.errors">
+		<ng-template [ngIf]="mixForm.controls.name.errors.required"> A name is required </ng-template>
+	</div>
+	<mat-form-field
+		class="full-width"
+		appearance="outline">
+		<mat-label>Name</mat-label>
+		<input
+			matInput
+			rumblePwaAutoFocus
+			formControlName="name"
+			type="text"
+			required
+			data-cy="interview-name" />
+	</mat-form-field>
+
+	<mat-form-field
+		class="full-width"
+		appearance="outline">
+		<mat-label>Optional description</mat-label>
+		<textarea
+			rows="3"
+			matInput
+			formControlName="description"
+			data-cy="mix-description"></textarea>
+	</mat-form-field>
+
+	<ng-container *ngIf="forms.length > 0 && !this.data.mix">
+		<p>Do you want to start your mix using some guest answers?</p>
+		<mat-button-toggle-group
+			name="fillWithAForm"
+			formControlName="fillWithAForm">
+			<mat-button-toggle
+				id="fillWithAForm-no"
+				[value]="false"
+				>No</mat-button-toggle
+			>
+			<mat-button-toggle
+				id="fillWithAForm-yes"
+				[value]="true"
+				>Yes</mat-button-toggle
+			>
+		</mat-button-toggle-group>
+		<br />
+		<br />
+		<rumble-pwa-forms-as-source
+			*ngIf="!!mixForm.get('fillWithAForm')?.value"
+			[recordingSessionListItem]="this.data.recordingSessionListItem"
+			#formAsSource></rumble-pwa-forms-as-source>
+	</ng-container>
+
+	<br /><br />
+
+	<section class="rs-flex-center">
+		<!-- actions -->
+		<button
+			class="margin-button"
+			type="button"
+			mat-stroked-button
+			(click)="dismiss(); $event.preventDefault()">
+			<mat-icon>clear</mat-icon>
+			Cancel
+		</button>
+
+		<button
+			class="margin-button"
+			type="submit"
+			mat-raised-button
+			id="save-button"
+			(click)="save(); $event.preventDefault()"
+			[disabled]="!mixForm.valid"
+			data-cy="create-update-button">
+			<mat-icon *ngIf="!!data.mix">save</mat-icon>
+			{{ !data.mix ? 'Create' : 'Update' }}
+		</button>
+	</section>
+</form>

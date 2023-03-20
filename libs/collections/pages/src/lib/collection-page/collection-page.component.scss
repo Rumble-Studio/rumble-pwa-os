@@ -1,0 +1,32 @@
+.collection-container {
+	padding: 10px 10px 20px;
+	display: flex;
+	flex-direction: row;
+
+	&.vertical {
+		flex-direction: column;
+		align-items: center;
+	}
+
+	.title {
+		font-weight: bold;
+		font-size: 1.5rem;
+	}
+	.description {
+		height: 100%;
+	}
+
+	.categories {
+		margin-top: 5px;
+	}
+}
+
+.item-with-rank {
+	padding: 10px;
+	display: flex;
+	align-items: center;
+}
+
+.gap {
+	gap: 10px;
+}

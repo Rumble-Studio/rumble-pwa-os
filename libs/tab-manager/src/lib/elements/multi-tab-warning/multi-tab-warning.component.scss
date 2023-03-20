@@ -1,0 +1,55 @@
+.overlay {
+	width: 100%;
+	min-height: 100%;
+	z-index: 0;
+	position: relative;
+	display: block;
+
+	background-color: #4f5d75;
+	color: white;
+	z-index: 5;
+	&::after {
+		content: '';
+		background: url('/assets/logo-pattern-repeat.svg');
+		background-size: 150%;
+		background-position: -100px -10px;
+		opacity: 0.75;
+		top: 0;
+		left: 0;
+		bottom: 0;
+		right: 0;
+		position: absolute;
+		z-index: -1;
+		mask-image: radial-gradient(rgba(0, 0, 0, 1), rgba(0, 0, 0, 0));
+		-webkit-mask-image: radial-gradient(rgba(0, 0, 0, 1), rgba(0, 0, 0, 0));
+
+		@media screen and (max-width: 500px) {
+			background-size: 900px;
+			mask-image: unset;
+			-webkit-mask-image: unset;
+		}
+	}
+}
+.message {
+	width: 100%;
+	// height: 500px;
+	// background-color: red;
+	max-width: 400px;
+	// padding: 15px;
+	margin: 0px auto 0px auto;
+	height: 200px;
+	z-index: 2;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+// .overlay {
+//   z-index: 5;
+//   position: absolute;
+//   width: 300px;
+//   // height: 300px;
+//   bottom: 0px;
+//   left: 0px;
+//   background-color: rgba(255, 255, 255, 0.3);
+// }

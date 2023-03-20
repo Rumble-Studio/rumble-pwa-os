@@ -1,0 +1,78 @@
+<div class="dialog-container">
+	<button
+		type="button"
+		mat-raised-button
+		(click)="dismiss()">
+		<mat-icon>close</mat-icon>
+	</button>
+
+	<div class="full-width">
+		<h2>Pick your recording session</h2>
+
+		<!-- <label id="example-radio-group-label">Pick your favorite season</label> -->
+		<mat-radio-group
+			*ngIf="recordingSessionIds.length > 0; else noSessionIds"
+			class="example-radio-group"
+			[(ngModel)]="selectedSession">
+			<mat-radio-button
+				class="example-radio-button"
+				*ngFor="let sessionId of recordingSessionIds; let index = index"
+				[value]="sessionId">
+				{{ sessionId | date: 'medium' }} ({{ answersPerSession[index] }} answer{{
+					answersPerSession[index] > 1 ? 's' : ''
+				}}
+				already recorded)
+			</mat-radio-button>
+		</mat-radio-group>
+
+		<ng-template #noSessionIds>
+			No session available on this form.
+
+			<button
+				type="button"
+				mat-raised-button
+				disabled>
+				<mat-icon>send</mat-icon>
+				Confirm
+			</button>
+		</ng-template>
+
+		<!-- <mat-form-field class="full-width" appearance="outline">
+        <mat-label>Session name</mat-label>
+        <input matInput type="text" name="sessionName" />
+    </mat-form-field> -->
+
+		<!-- <div>Your favorite season is: {{selectedSession}}</div> -->
+	</div>
+
+	<div
+		*ngIf="recordingSessionIds.length > 0"
+		class="full-width horizontal">
+		<button
+			type="button"
+			mat-raised-button
+			(click)="confirm()">
+			<mat-icon>send</mat-icon>
+			Confirm
+		</button>
+		<button
+			type="button"
+			mat-raised-button
+			(click)="dismiss()">
+			<mat-icon>cancel</mat-icon>
+			Dismiss
+		</button>
+	</div>
+
+	<div class="or-container">
+		<h3>or</h3>
+	</div>
+
+	<h2>Start a new recording session</h2>
+
+	<button
+		mat-raised-button
+		(click)="generateNewSession()">
+		<mat-icon>add</mat-icon> New session
+	</button>
+</div>

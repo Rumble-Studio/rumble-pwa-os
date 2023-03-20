@@ -1,0 +1,107 @@
+<h2>Edit user</h2>
+
+<form
+	[formGroup]="userForm"
+	(ngSubmit)="onSubmit()"
+	class="user-form">
+	<mat-form-field
+		class="full-width"
+		appearance="outline">
+		<mat-label>Email</mat-label>
+		<input
+			matInput
+			formControlName="email"
+			name="email"
+			required />
+		<div
+			class="formError"
+			*ngIf="userForm.dirty && userForm.controls.email.errors">
+			<ng-template [ngIf]="userForm.controls.email.errors.required"> A email is required </ng-template>
+		</div>
+	</mat-form-field>
+
+	<mat-form-field
+		class="full-width"
+		appearance="outline">
+		<mat-label>Fullname</mat-label>
+		<input
+			matInput
+			formControlName="fullName"
+			name="fullName"
+			required />
+		<div
+			class="formError"
+			*ngIf="userForm.dirty && userForm.controls.fullName.errors">
+			<ng-template [ngIf]="userForm.controls.fullName.errors.required"> A fullName is required </ng-template>
+		</div>
+	</mat-form-field>
+
+	<mat-form-field
+		class="full-width"
+		appearance="outline">
+		<mat-label>First name</mat-label>
+		<input
+			matInput
+			formControlName="firstName"
+			name="firstName"
+			required />
+		<div
+			class="formError"
+			*ngIf="userForm.dirty && userForm.controls.firstName.errors">
+			<ng-template [ngIf]="userForm.controls.firstName.errors.required"> The first name is required </ng-template>
+		</div>
+	</mat-form-field>
+
+	<mat-form-field
+		class="full-width"
+		appearance="outline">
+		<mat-label>Last name</mat-label>
+		<input
+			matInput
+			formControlName="lastName"
+			name="lastName"
+			required />
+		<div
+			class="formError"
+			*ngIf="userForm.dirty && userForm.controls.lastName.errors">
+			<ng-template [ngIf]="userForm.controls.lastName.errors.required"> The last name is required </ng-template>
+		</div>
+	</mat-form-field>
+
+	<mat-checkbox formControlName="isTest">isTest</mat-checkbox>
+	<mat-checkbox formControlName="isSuperuser">isSuperuser</mat-checkbox>
+	<mat-checkbox formControlName="isActive">isActive</mat-checkbox>
+	<mat-checkbox formControlName="newsletterSubscribed">newsletterSubscribed</mat-checkbox>
+	hasPassword? {{ !!data.user.hasPassword }}
+	<mat-checkbox formControlName="invited">invited</mat-checkbox>
+	<mat-checkbox formControlName="emailValidated">emailValidated</mat-checkbox>
+	<mat-checkbox formControlName="anonymous">anonymous</mat-checkbox>
+
+	<mat-form-field
+		class="full-width"
+		appearance="outline">
+		<mat-label>Data</mat-label>
+		<input
+			matInput
+			type="textarea"
+			formControlName="data"
+			name="data" />
+	</mat-form-field>
+
+	<div class="full-width horizontal">
+		<button
+			type="button"
+			mat-stroked-button
+			(click)="onClose()">
+			<mat-icon>close</mat-icon>
+			Cancel
+		</button>
+
+		<button
+			type="submit"
+			mat-raised-button
+			(click)="onSubmit()">
+			<mat-icon>save</mat-icon>
+		</button>
+	</div>
+</form>

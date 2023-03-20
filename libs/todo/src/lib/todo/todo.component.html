@@ -1,0 +1,7 @@
+<div
+	(mouseenter)="toggleAnimation(false)"
+	(mouseleave)="toggleAnimation(true)"
+	[matTooltip]="todo?.tooltip ?? ''"
+	(click)="$event.stopImmediatePropagation(); openDialog()"
+	class="dot rs-clickable"
+	[ngClass]="{ noAnimation: !animate, canBeDone: this.canBeDone }"></div>

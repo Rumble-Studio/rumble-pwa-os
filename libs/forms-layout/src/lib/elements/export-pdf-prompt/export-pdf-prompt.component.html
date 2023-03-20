@@ -1,0 +1,181 @@
+<form
+	[formGroup]="exportForm"
+	class="export-form rs-full-width"
+	(ngSubmit)="save()">
+	<h2>Generate a PDF flyer with a QRcode</h2>
+	<p>The QRCode will lead guests directly to the interview page.</p>
+	<mat-form-field
+		class="rs-full-width"
+		appearance="outline">
+		<mat-label>Top title</mat-label>
+		<input
+			matInput
+			placeholder="Give your feedback"
+			formControlName="header"
+			required />
+	</mat-form-field>
+
+	<mat-form-field
+		class="rs-full-width"
+		appearance="outline">
+		<mat-label>Body text</mat-label>
+		<textarea
+			matInput
+			placeholder="Scan the QRCode and take part in a quick interview!"
+			formControlName="extraText"
+			required>
+		</textarea>
+	</mat-form-field>
+
+	<mat-form-field
+		class="rs-full-width"
+		appearance="outline">
+		<mat-label>Bottom text</mat-label>
+		<input
+			matInput
+			placeholder="Powered by Rumble Studio"
+			formControlName="footer"
+			required />
+	</mat-form-field>
+
+	<h4>Background color</h4>
+
+	<div class="colors-list">
+		<!-- display brand colors -->
+		<ng-container *ngFor="let color of brand$$$.value?.colors?.split(';') ?? []">
+			<div
+				class="color-item"
+				[ngClass]="{ selected: exportForm.get('backgroundColor')?.value === color }"
+				(click)="exportForm.patchValue({ backgroundColor: color })">
+				<div
+					class="color-preview"
+					[style.background-color]="color"></div>
+				<span class="color-text"> {{ color }}</span>
+			</div>
+		</ng-container>
+
+		<!-- display one other color -->
+		<ng-container
+			*ngIf="
+				!exportForm.get('backgroundColor')?.value ||
+					(brand$$$.value?.colors?.split(';') ?? []).indexOf(exportForm.get('backgroundColor')?.value) >= 0;
+				else customBackgroundColorTpl
+			">
+			<div
+				class="color-item new-color"
+				(click)="backgroundColorPicker.click(); backgroundColorPicker.focus()">
+				<mat-icon>add</mat-icon>New
+
+				<input
+					[style.opacity]="0"
+					[style.width]="'0px'"
+					type="color"
+					id="color"
+					name="color"
+					[value]="exportForm.get('backgroundColor')?.value ?? '#c2c2c2'"
+					(change)="exportForm.patchValue({ backgroundColor: backgroundColorPicker.value })"
+					#backgroundColorPicker />
+			</div>
+		</ng-container>
+
+		<ng-template #customBackgroundColorTpl>
+			<div
+				class="color-item selected"
+				(click)="exportForm.patchValue({ backgroundColor: undefined })">
+				<div
+					class="color-preview"
+					[style.background-color]="exportForm.get('backgroundColor')?.value"></div>
+				<span class="color-text"> {{ exportForm.get('backgroundColor')?.value }}</span>
+				<mat-icon class="trash-icon">delete</mat-icon>
+			</div>
+		</ng-template>
+	</div>
+
+	<h4>Font color</h4>
+
+	<div class="colors-list">
+		<!-- display brand colors -->
+		<ng-container *ngFor="let color of brand$$$.value?.colors?.split(';') ?? []">
+			<div
+				class="color-item"
+				[ngClass]="{ selected: exportForm.get('fontColor')?.value === color }"
+				(click)="exportForm.patchValue({ fontColor: color })">
+				<div
+					class="color-preview"
+					[style.background-color]="color"></div>
+				<span class="color-text"> {{ color }}</span>
+			</div>
+		</ng-container>
+
+		<!-- display one other color -->
+		<ng-container
+			*ngIf="
+				!exportForm.get('fontColor')?.value ||
+					(brand$$$.value?.colors?.split(';') ?? []).indexOf(exportForm.get('fontColor')?.value) >= 0;
+				else customFontColorTpl
+			">
+			<div
+				class="color-item new-color"
+				(click)="fontColorPicker.click(); fontColorPicker.focus()">
+				<mat-icon>add</mat-icon>New
+
+				<input
+					[style.opacity]="0"
+					[style.width]="'0px'"
+					type="color"
+					id="color"
+					name="color"
+					[value]="exportForm.get('fontColor')?.value ?? '#c2c2c2'"
+					(change)="exportForm.patchValue({ fontColor: fontColorPicker.value })"
+					#fontColorPicker />
+			</div>
+		</ng-container>
+
+		<ng-template #customFontColorTpl>
+			<div
+				class="color-item selected"
+				(click)="exportForm.patchValue({ fontColor: undefined })">
+				<div
+					class="color-preview"
+					[style.background-color]="exportForm.get('fontColor')?.value"></div>
+				<span class="color-text"> {{ exportForm.get('fontColor')?.value }}</span>
+				<mat-icon class="trash-icon">delete</mat-icon>
+			</div>
+		</ng-template>
+	</div>
+
+	<!-- <h4>Font Family</h4>
+
+	<mat-form-field
+		class="rs-full-width"
+		appearance="outline">
+		<mat-select
+			formControlName="fontFamily"
+			name="fontFamily">
+			<mat-option [value]="undefined">None</mat-option>
+			<mat-option
+				*ngFor="let fontFamily of fontFamilyOptions"
+				[value]="fontFamily">
+				{{ fontFamily }}
+			</mat-option>
+		</mat-select>
+	</mat-form-field> -->
+
+	<div class="rs-full-width horizontal footer">
+		<button
+			type="button"
+			mat-stroked-button
+			(click)="close()">
+			<mat-icon>close</mat-icon>
+			Cancel
+		</button>
+
+		<button
+			type="submit"
+			mat-raised-button
+			[disabled]="!exportForm.valid && exportForm.dirty">
+			<mat-icon>build</mat-icon>
+			Generate
+		</button>
+	</div>
+</form>

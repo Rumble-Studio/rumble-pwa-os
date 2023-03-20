@@ -1,0 +1,21 @@
+{
+	"singleQuote": true,
+	"bracketSameLine": true,
+	"singleAttributePerLine": true,
+
+	"useTabs": true,
+	"tabWidth": 4,
+	"printWidth": 128,
+	"trailingComma": "es5",
+	"bracketSpacing": true,
+	"semi": true,
+	"arrowParens": "always",
+	"overrides": [
+		{
+			"files": "*.md",
+			"options": {
+				"tabWidth": 1
+			}
+		}
+	]
+}

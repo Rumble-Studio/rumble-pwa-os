@@ -1,0 +1,275 @@
+<div class="dismiss-container">
+	<button
+		type="button"
+		mat-flat-button
+		class="mat-elevation-z1"
+		(click)="dismiss()">
+		<mat-icon>close</mat-icon>
+	</button>
+</div>
+
+<ng-container *ngIf="exportForm">
+	<form
+		class="script-form"
+		[formGroup]="exportForm"
+		(ngSubmit)="save()">
+		<h2>
+			Generate a new export{{
+				this.data.exportSource?.displayNameAtExportTime
+					? ' for "' + this.data.exportSource!.displayNameAtExportTime + '"'
+					: ''
+			}}
+		</h2>
+		<mat-form-field
+			class="rs-full-width"
+			appearance="outline">
+			<mat-label>Export name</mat-label>
+			<input
+				matInput
+				rumblePwaAutoFocus
+				placeholder="Ex. Episode 007"
+				formControlName="name"
+				name="name"
+				data-cy="export-name" />
+			<div
+				class="formError"
+				*ngIf="exportForm.dirty && exportForm.controls['name'].errors">
+				<ng-template [ngIf]="exportForm.controls['name'].errors['required']"> A name is required </ng-template>
+				<ng-template [ngIf]="exportForm.controls['name'].errors['maxlength']">
+					This name is too long ({{ exportForm.get('name')?.value.length }}/{{ nameMaxLength }})</ng-template
+				>
+			</div>
+		</mat-form-field>
+
+		<mat-form-field
+			class="rs-full-width"
+			appearance="outline">
+			<mat-label>Export description</mat-label>
+			<textarea
+				rows="5"
+				matInput
+				formControlName="description"
+				name="description"
+				placeholder="Ex. Export to be used for next episode..."
+				data-cy="export-description"></textarea>
+		</mat-form-field>
+
+		<mat-form-field
+			class="rs-full-width"
+			appearance="outline">
+			<mat-label>Choose what to export</mat-label>
+			<mat-hint>We can build a ZIP archive file with all source files recorded (no enhancement).</mat-hint>
+			<mat-select
+				formControlName="onlyRawData"
+				name="onlyRawData">
+				<mat-option [value]="false">{{
+					data.virtualPlaylists.length > 1
+						? 'Get one merged audio file per guest'
+						: 'Merge all segments into one audio file'
+				}}</mat-option>
+				<mat-option [value]="true"
+					>Generate a ZIP archive with all original segments (audio and video included)</mat-option
+				>
+			</mat-select>
+		</mat-form-field>
+		<section class="raw-data-choices">
+			<div
+				class="raw-data-choice rs-clickable"
+				[ngClass]="{ selected: !exportForm.controls['onlyRawData'].value }"
+				(click)="
+					exportForm.controls['onlyRawData'].setValue(false); exportForm.controls['audioFormat'].setValue('mp3_ld')
+				">
+				<span class="material-icons"> audio_file </span>
+				<span class="choice-description"> Merged audio file{{ data.virtualPlaylists.length > 1 ? 's' : '' }} </span>
+			</div>
+			<div
+				class="raw-data-choice rs-clickable"
+				[ngClass]="{ selected: !!exportForm.controls['onlyRawData'].value }"
+				(click)="
+					exportForm.controls['onlyRawData'].setValue(true); exportForm.controls['audioFormat'].setValue('mp3_ld')
+				">
+				<span class="material-icons"> snippet_folder </span>
+				<span class="choice-description"> ZIP archive with all original segments (audio & video) </span>
+			</div>
+		</section>
+		<br />
+		<br />
+
+		<mat-form-field
+			class="rs-full-width"
+			appearance="outline">
+			<mat-label>Select an audio format for each files</mat-label>
+
+			<mat-select
+				formControlName="audioFormat"
+				name="audioFormat">
+				<mat-option
+					*ngIf="!!exportForm.controls['onlyRawData']?.value"
+					[value]="'original'">
+					🎤 ORIGINAL: get the original files (no processing), video and audio
+				</mat-option>
+				<mat-option [value]="'standard'">
+					🎬 FLAC 48kHz 24b: open source with lossless compression format ⭐️ (audio only)
+				</mat-option>
+				<mat-option [value]="'mp3_hd'">
+					🎬 MP3 320kb/s (HD): proprietary lossy compression but lightweight 💿 (audio only)</mat-option
+				>
+				<mat-option [value]="'mp3_ld'">
+					🎬 MP3 96kb/s (SD): proprietary lossy compression but lightweight 💿 (audio only)</mat-option
+				>
+			</mat-select>
+		</mat-form-field>
+
+		<section class="raw-data-choices">
+			<div
+				*ngIf="!!exportForm.controls['onlyRawData']?.value"
+				class="raw-data-choice rs-clickable"
+				[ngClass]="{ selected: exportForm.controls['audioFormat'].value === 'original' }"
+				(click)="exportForm.controls['audioFormat'].setValue('original')">
+				<span class="choice-description">
+					🎤 Original <br />
+					(audio/video)
+				</span>
+			</div>
+			<div
+				class="raw-data-choice rs-clickable"
+				[ngClass]="{ selected: exportForm.controls['audioFormat'].value === 'standard' }"
+				(click)="exportForm.controls['audioFormat'].setValue('standard')">
+				<span class="choice-description">
+					🎬 FLAC 48kHz 24b <br />
+					(audio)
+				</span>
+			</div>
+			<div
+				class="raw-data-choice rs-clickable"
+				[ngClass]="{ selected: exportForm.controls['audioFormat'].value === 'mp3_hd' }"
+				(click)="exportForm.controls['audioFormat'].setValue('mp3_hd')">
+				<span class="choice-description">
+					🎬 MP3 320kb/s <br />
+					(HD audio)
+				</span>
+			</div>
+			<div
+				class="raw-data-choice rs-clickable"
+				[ngClass]="{ selected: exportForm.controls['audioFormat'].value === 'mp3_ld' }"
+				(click)="exportForm.controls['audioFormat'].setValue('mp3_ld')">
+				<span class="choice-description">
+					🎬 MP3 96kb/s <br />
+					(SD audio)
+				</span>
+			</div>
+		</section>
+
+		<ul class="rs-full-width">
+			<li *ngIf="!!exportForm.controls['onlyRawData']?.value">
+				Original files from participants can vary based on the browser, the device or the uploads (ogg, webm, mp3,
+				41.1kHz, 16kHz, etc... ).
+			</li>
+			<li>
+				🎬 Processed by Rumble (EBU R128 normalization -16 LUFS, denoising, leading and closing silence trimming...)
+			</li>
+			<li>
+				<a
+					href="https://help.rumble.studio/hc/flac-vs-wav"
+					target="_blank"
+					class="rs-link">
+					About FLAC and WAV (click to read)
+				</a>
+			</li>
+		</ul>
+
+		<br />
+
+		<br />
+
+		<p
+			class="quota-impact-warning"
+			*ngIf="data.estimatedExportDuration">
+			This export is estimated to use
+			<span class="quota-impact-value">{{ data.estimatedExportDuration | duration: 'showUnits' }}</span> of your quota.
+		</p>
+		<p *ngIf="data.displayMixWarning">
+			To have a better control of which segments are exported and which are not, you could start a mix instead.
+		</p>
+
+		<mat-form-field
+			class="rs-full-width"
+			appearance="outline">
+			<mat-label>Select a subscription</mat-label>
+			<mat-hint>The number of exported minutes will be associated with this subscription.</mat-hint>
+
+			<ng-template
+				#subscriptionDetails
+				let-subscription="subscription"
+				let-maxDurationExportedReached="maxDurationExportedReached">
+				<span>
+					{{ subscription.name }}
+				</span>
+				<span
+					[ngClass]="{
+						red: maxDurationExportedReached
+					}"
+					[matTooltip]="
+						maxDurationExportedReached
+							? 'Monthly export limit reached.'
+							: (subscription.maxDurationExported - subscription.durationExported | duration: 'showUnits') +
+							  ' left'
+					">
+					{{ subscription.durationExported | duration: 'showUnits' }} /
+					{{ subscription.maxDurationExported | duration: 'showUnits' }}
+				</span>
+
+				<rumble-pwa-group-item-generic
+					class="group-item"
+					[groupId]="subscription.beneficiaryId">
+				</rumble-pwa-group-item-generic>
+			</ng-template>
+
+			<mat-select
+				formControlName="subscription"
+				name="selectedFormTemplate">
+				<mat-select-trigger>
+					<ng-container *ngIf="exportForm.controls['subscription'].value">
+						<ng-container
+							*ngTemplateOutlet="
+								subscriptionDetails;
+								context: { subscription: exportForm.controls['subscription'].value }
+							"></ng-container>
+					</ng-container>
+				</mat-select-trigger>
+				<mat-option
+					*ngFor="let subscription of subscriptions"
+					[disabled]="isSubscriptionDisabled(subscription)"
+					[value]="subscription">
+					<ng-container
+						*ngTemplateOutlet="
+							subscriptionDetails;
+							context: {
+								subscription: subscription,
+								maxDurationExportedReached: subscriptionExportLeft(subscription) <= 0
+							}
+						"></ng-container>
+				</mat-option>
+			</mat-select>
+		</mat-form-field>
+
+		<div class="rs-full-width horizontal">
+			<button
+				type="button"
+				mat-stroked-button
+				(click)="dismiss()">
+				<mat-icon>close</mat-icon>
+				Cancel
+			</button>
+
+			<button
+				type="submit"
+				mat-raised-button
+				[disabled]="!exportForm.valid && exportForm.dirty"
+				data-cy="create-update-button">
+				<mat-icon>check</mat-icon>
+				Export this mix
+			</button>
+		</div>
+	</form>
+</ng-container>

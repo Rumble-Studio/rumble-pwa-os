@@ -1,0 +1,28 @@
+.export-audio-step-container {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	margin: 0 auto;
+
+	.step-kind {
+		text-align: end;
+		margin-right: 10px;
+	}
+	.step-title {
+		font-weight: bold;
+		margin-left: 10px;
+	}
+	.step-hint {
+		font-style: italic;
+		margin-left: 10px;
+	}
+	.host-player-container {
+		margin: 10px;
+	}
+	.no-answer {
+		margin: 10px;
+		font-style: italic;
+		text-align: center;
+	}
+}

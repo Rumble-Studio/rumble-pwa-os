@@ -1,0 +1,332 @@
+<ng-container *transloco="let t; read: 'recordUi.recordActions'">
+	<div
+		*ngIf="mediaMode === null; else grantsTpl"
+		class="media-mode-choice-container">
+		<div
+			*ngIf="displayAudiodBtn"
+			class="rs-clickable media-mode-btn rs-no-select"
+			[ngClass]="{
+				selected: mediaMode === MediaModeOptions.audio,
+				compact: isMobile
+			}"
+			[trackClick]="{ customTextContent: 'record-choice', customEventProperties: { choice: 'audio' } }"
+			[style.backgroundColor]="backgroundColor"
+			[style.color]="fontColor"
+			[style.borderColor]="borderColor"
+			(click)="setMediaMode(MediaModeOptions.audio)">
+			<mat-icon>mic</mat-icon>
+			<span *ngIf="!isMobile">{{ t('audio') }}</span>
+		</div>
+
+		<div
+			*ngIf="displayVideoBtn"
+			class="rs-clickable media-mode-btn rs-no-select"
+			[ngClass]="{
+				selected: mediaMode === MediaModeOptions.video,
+				compact: isMobile
+			}"
+			[trackClick]="{ customTextContent: 'record-choice', customEventProperties: { choice: 'video' } }"
+			[style.backgroundColor]="backgroundColor"
+			[style.color]="fontColor"
+			[style.borderColor]="borderColor"
+			(click)="setMediaMode(MediaModeOptions.video)">
+			<mat-icon>videocam</mat-icon>
+			<span
+				*ngIf="!isMobile"
+				[style.color]="fontColor"
+				>{{ t('video') }}</span
+			>
+		</div>
+
+		<div
+			*ngIf="displayScreenCaptureWithVideoBtn"
+			class="rs-clickable media-mode-btn rs-no-select"
+			[ngClass]="{
+				selected: mediaMode === MediaModeOptions.screenCaptureAndVideo,
+				compact: isMobile
+			}"
+			[trackClick]="{ customTextContent: 'record-choice', customEventProperties: { choice: 'screenCaptureAndVideo' } }"
+			[style.backgroundColor]="backgroundColor"
+			[style.color]="fontColor"
+			[style.borderColor]="borderColor"
+			(click)="setMediaMode(MediaModeOptions.screenCaptureAndVideo)">
+			<mat-icon>monitor</mat-icon>
+			<span
+				*ngIf="!isMobile"
+				[style.color]="fontColor"
+				>{{ t('screen') }}</span
+			>
+		</div>
+
+		<div
+			*ngIf="displayUploadBtn"
+			class="rs-clickable media-mode-btn"
+			[ngClass]="{
+				compact: isMobile
+			}"
+			[trackClick]="{ customTextContent: 'record-choice', customEventProperties: { choice: 'file' } }"
+			[style.backgroundColor]="backgroundColor"
+			[style.color]="fontColor"
+			[style.borderColor]="borderColor"
+			(click)="openFileSelector()">
+			<mat-icon>upload</mat-icon>
+			<span *ngIf="!isMobile">{{ t('file') }}</span>
+		</div>
+	</div>
+
+	<!-- GET GRANTS -->
+	<ng-template #grantsTpl>
+		<ng-container *ngIf="!isEverythingGranted(); else previewTpl">
+			<div class="grant-requests">
+				<div
+					class="grant-request"
+					*ngIf="!recordingProps.microphoneAccessGranted">
+					<div class="grant-request-msg">{{ t('You must grant access to your microphone to record audio.') }}</div>
+					<button
+						mat-raised-button
+						[trackClick]="{
+							customTextContent: 'record-grant',
+							customEventProperties: { permission: 'microphone' }
+						}"
+						(click)="requestMicrophoneAccess()">
+						{{ t('Grant microphone access') }}
+					</button>
+				</div>
+
+				<div
+					class="grant-request"
+					*ngIf="
+						!recordingProps.cameraAccessGranted &&
+						(mediaMode === MediaModeOptions.video || mediaMode === MediaModeOptions.screenCaptureAndVideo)
+					">
+					<div class="grant-request-msg">{{ t('You must grant access to your camera to record video.') }}</div>
+					<button
+						mat-raised-button
+						[trackClick]="{ customTextContent: 'record-grant', customEventProperties: { permission: 'camera' } }"
+						(click)="requestCameraAccess()">
+						{{ t('Grant camera access') }}
+					</button>
+				</div>
+
+				<button
+					mat-stroked-button
+					[trackClick]="{ customTextContent: 'record-grant', customEventProperties: { permission: 'cancel' } }"
+					class="cancel-action"
+					(click)="cancelCurrentRecording()">
+					{{ t('Cancel') }}
+				</button>
+			</div>
+		</ng-container>
+	</ng-template>
+
+	<ng-template #previewTpl>
+		<!-- READY TO RECORD -->
+
+		<div class="preview-container">
+			<div
+				class="exit rs-clickable"
+				[trackClick]="{ customTextContent: 'record-action', customEventProperties: { action: 'cancel' } }"
+				(click)="cancelCurrentRecording()">
+				<mat-icon>cancel</mat-icon>
+			</div>
+			<div class="device-choices">
+				<div
+					class="device-menu rs-clickable"
+					*ngIf="!recordingProps.occupied && recordingProps.selectedAudioDevice"
+					[matMenuTriggerFor]="micSelectionMenu"
+					[trackClick]="{ customTextContent: 'record-action', customEventProperties: { action: 'menu-microphone' } }">
+					<span class="rs-vertical-center">
+						<mat-icon>mic</mat-icon>
+						<span>
+							{{
+								recordingProps.selectedAudioDevice.label.split('(')[0] ||
+									recordingProps.selectedAudioDevice.deviceId.substring(0, 5)
+							}}
+						</span>
+						<mat-icon> arrow_drop_down </mat-icon>
+					</span>
+				</div>
+
+				<div
+					class="device-menu rs-clickable"
+					*ngIf="
+						!recordingProps.occupied &&
+						recordingProps.selectedVideoDevice &&
+						(mediaMode === MediaModeOptions.video || mediaMode === MediaModeOptions.screenCaptureAndVideo)
+					"
+					[matMenuTriggerFor]="camSelectionMenu"
+					[trackClick]="{ customTextContent: 'record-action', customEventProperties: { action: 'menu-camera' } }">
+					<span class="rs-vertical-center">
+						<mat-icon>videocam</mat-icon>
+						<span>
+							{{
+								recordingProps.selectedVideoDevice.label.split('(')[0] ||
+									recordingProps.selectedVideoDevice.deviceId.substring(0, 5)
+							}}
+						</span>
+						<mat-icon> arrow_drop_down </mat-icon>
+					</span>
+				</div>
+			</div>
+
+			<div
+				class="record-preview"
+				[style.height]="recordingProps.withVideo ? undefined : '50px'">
+				<video
+					*ngIf="recordingProps.withVideo"
+					#videoPreview
+					class="video-player"></video>
+				<canvas
+					#audioMeter
+					class="audio-meter"></canvas>
+			</div>
+
+			<section class="record-actions">
+				<ng-container *ngIf="!recordingProps.occupied; else occupiedTpl">
+					<!-- record btn -->
+					<button
+						*ngIf="!counting; else countingTpl"
+						[trackClick]="{
+							customTextContent: 'record-action',
+							customEventProperties: {
+								action: 'record',
+								mode: recordingProps.mediaMode === MediaModeOptions.audio ? 'audio' : 'video'
+							}
+						}"
+						mat-raised-button
+						class="record-btn"
+						aria-label="Record button"
+						(click)="toggleRecordCounter()">
+						{{ t('record') }}
+					</button>
+					<!-- while counting -->
+					<ng-template #countingTpl>
+						<button
+							mat-stroked-button
+							[trackClick]="{
+								customTextContent: 'record-action',
+								customEventProperties: {
+									action: 'cancel-countdown'
+								}
+							}"
+							(click)="toggleRecordCounter()">
+							{{ t('Get ready in:') }} {{ timeLeft + 's' }}
+						</button>
+					</ng-template>
+				</ng-container>
+
+				<!-- another recorder is recording -->
+				<ng-template #occupiedTpl>
+					<button
+						*ngIf="recordingProps.recordingTargetName !== recordingTargetName; else goodTargetOccupiedTpl"
+						mat-raised-button
+						class="record-btn"
+						aria-label="Record button"
+						[disabled]="!previewMode">
+						{{ t('record') }}
+					</button>
+				</ng-template>
+
+				<!-- current recorder is recording -->
+				<ng-template #goodTargetOccupiedTpl>
+					<ng-container *ngIf="recordingProps.recordingState !== 'recording'; else recordingStateTpl">
+						<ng-container [ngSwitch]="recordingProps.recordingState">
+							<ng-container *ngSwitchCase="'recording-asked'">
+								<span>{{ t('Get ready to record!') }}</span>
+							</ng-container>
+							<ng-container *ngSwitchCase="'countdown'">
+								<button
+									mat-fab
+									aria-label="Timer info"
+									class="record-btn countdown">
+									<span>{{ timerDuration - counter }}</span>
+								</button>
+							</ng-container>
+							<ng-container *ngSwitchCase="'stopped-asked'">
+								<span>{{ t('Processing your recording...') }}</span>
+							</ng-container>
+							<ng-container *ngSwitchDefault>
+								<span>{{ t('Please wait') }} ({{ recordingProps.recordingState }})</span>
+							</ng-container>
+						</ng-container>
+					</ng-container>
+				</ng-template>
+
+				<ng-template #recordingStateTpl>
+					<button
+						[trackClick]="{ customTextContent: 'record-action', customEventProperties: { action: 'stop' } }"
+						(click)="stopRecording()"
+						mat-raised-button
+						class="rs-clickable">
+						<mat-icon>stop</mat-icon>
+						{{ t('stop') }}
+					</button>
+
+					<button
+						(click)="cancelCurrentRecording()"
+						[trackClick]="{ customTextContent: 'record-action', customEventProperties: { action: 'delete' } }"
+						mat-mini-fab
+						aria-label="Upload button"
+						class="delete-btn">
+						<mat-icon>delete_outline</mat-icon>
+					</button>
+				</ng-template>
+
+				<div class="duration">
+					{{ recordingProps.recordedDuration ?? 0 | duration: 'showUnits' }}
+				</div>
+			</section>
+		</div>
+	</ng-template>
+
+	<!-- ---------------- TPL ---------------- -->
+
+	<!-- mic selection MENU -->
+	<mat-menu #micSelectionMenu="matMenu">
+		<ng-container *ngIf="recordingProps.availableAudioDevices.length > 0; else emptyMicrophoneListTpl">
+			<button
+				mat-menu-item
+				*ngFor="let device of recordingProps.availableAudioDevices; let indexDevice = index"
+				(click)="updateAudioDevice(device)">
+				<mat-icon>{{ device.deviceId === recordingProps.selectedAudioDevice?.deviceId ? 'mic' : 'mic_none' }}</mat-icon>
+				<span class="device-index">{{ indexDevice + 1 }}.</span>
+				<span>{{ device.label.length > 0 ? device.label : t('microphone') }}</span>
+			</button>
+		</ng-container>
+
+		<ng-template #emptyMicrophoneListTpl>
+			<button mat-menu-item>
+				<span>{{ t('No microphone available') }}</span>
+			</button>
+		</ng-template>
+	</mat-menu>
+
+	<!-- cam selection MENU -->
+	<mat-menu #camSelectionMenu="matMenu">
+		<ng-container *ngIf="recordingProps.availableVideoDevices.length > 0; else emptyCameraListTpl">
+			<button
+				mat-menu-item
+				*ngFor="let device of recordingProps.availableVideoDevices; let indexDevice = index"
+				(click)="updateVideoDevice(device)">
+				<mat-icon>{{
+					device.deviceId === recordingProps.selectedVideoDevice?.deviceId ? 'videocam' : 'videocam_off'
+				}}</mat-icon>
+				<span class="device-index">{{ indexDevice + 1 }}.</span>
+				<span>{{ device.label.length > 0 ? device.label : t('camera') }}</span>
+			</button>
+			<button
+				mat-menu-item
+				*ngIf="!recordingProps.cameraAccessGranted"
+				(click)="askForVideoPermissions()">
+				<mat-icon>lock_open</mat-icon>
+				{{ t('Allow camera') }}
+			</button>
+		</ng-container>
+
+		<ng-template #emptyCameraListTpl>
+			<button mat-menu-item>
+				<span>{{ t('No camera available') }}</span>
+			</button>
+		</ng-template>
+	</mat-menu>
+</ng-container>

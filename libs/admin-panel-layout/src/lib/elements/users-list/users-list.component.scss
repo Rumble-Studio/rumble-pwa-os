@@ -1,0 +1,17 @@
+mat-icon {
+	min-width: 30px;
+}
+
+.sub-chip-list {
+	margin: 5px 0;
+	.sub-chip {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		width: 100%;
+	}
+	.add {
+		width: 100%;
+		text-align: center;
+	}
+}

@@ -1,0 +1,22 @@
+<!-- MENU FOR OTHER ITEMS  -->
+<div
+	[matMenuTriggerFor]="otherItemMenu"
+	#otherItemMenuTrigger="matMenuTrigger"></div>
+<mat-menu #otherItemMenu="matMenu">
+	<button
+		mat-menu-item
+		*ngFor="let brand of brands"
+		[value]="brand.id"
+		(click)="selectBrand(brand.id)">
+		<mat-icon
+			class="shared-icon"
+			*ngIf="brand.ownerId !== profile?.id">
+			groups</mat-icon
+		>
+		{{ brand.name }}
+	</button>
+</mat-menu>
+
+<rumble-pwa-brand-item
+	[brandId]="brand$$$.id"
+	[canYouEdit]="canYouEdit"></rumble-pwa-brand-item>

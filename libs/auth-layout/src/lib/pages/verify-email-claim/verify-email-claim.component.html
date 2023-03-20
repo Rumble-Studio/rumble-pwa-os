@@ -1,0 +1,49 @@
+<div class="page">
+	<header>
+		<div class="logo">
+			<img
+				height="40"
+				src="/assets/classic-black.svg"
+				alt="Rumble Studio" />
+		</div>
+	</header>
+	<main>
+		<ng-container *ngIf="success === 'true'; else errorTpl">
+			<p>Thank you, your email is now verified.</p>
+			<button
+				mat-raised-button
+				[routerLink]="'/dashboard'">
+				Go to dashboard
+			</button>
+			<p>
+				<img
+					class="rs-image-radius"
+					src="/assets/gifs/dog-happy.gif"
+					alt="" />
+			</p>
+		</ng-container>
+	</main>
+	<footer></footer>
+</div>
+
+<ng-template #errorTpl>
+	<p>Sorry, something happened...</p>
+	<ng-container [ngSwitch]="error">
+		<ng-container *ngSwitchCase="'userNotFound'">
+			<p>Error: User not found</p>
+		</ng-container>
+		<ng-container *ngSwitchCase="'invalidToken'">
+			<p>Error: Invalid Token, please ask for a new validation email.</p>
+		</ng-container>
+		<ng-container *ngSwitchDefault>
+			<p *ngIf="error">Error: {{ error }}</p>
+		</ng-container>
+	</ng-container>
+	<ng-container *ngIf="currentEmail">
+		<span
+			class="rs-clickable"
+			(click)="askForNewValidationEmail()"
+			>Send a new validation email to: {{ currentEmail }}?</span
+		>
+	</ng-container>
+</ng-template>

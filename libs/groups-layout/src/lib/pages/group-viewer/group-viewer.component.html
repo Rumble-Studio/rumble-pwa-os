@@ -1,0 +1,17 @@
+<!-- MENU FOR OTHER ITEMS  -->
+<ng-container *ngIf="groupTargets">
+	<div
+		[matMenuTriggerFor]="otherItemMenu"
+		#otherItemMenuTrigger="matMenuTrigger"></div>
+	<mat-menu #otherItemMenu="matMenu">
+		<button
+			mat-menu-item
+			*ngFor="let groupTraget of groupTargets"
+			[value]="groupTraget.id"
+			(click)="selectGroup(groupTraget.id)">
+			{{ groupTraget.name }}
+		</button>
+	</mat-menu>
+</ng-container>
+
+<rumble-pwa-group-item [groupId]="groupId"></rumble-pwa-group-item>

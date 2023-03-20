@@ -1,0 +1,53 @@
+.item-list-label {
+	text-transform: capitalize;
+	margin: 10px 0;
+}
+
+.item {
+	display: flex;
+	align-items: center;
+
+	mat-icon {
+		margin-left: 5px;
+	}
+
+	.delete-item {
+		cursor: pointer;
+		margin-left: auto;
+	}
+}
+
+ul {
+	margin-top: 0px;
+}
+
+.handle {
+	cursor: move;
+	list-style-type: none;
+}
+
+.add-item-container {
+	display: flex;
+	align-items: center;
+}
+
+.custom-list-container {
+	list-style: none;
+
+	li:before {
+		content: '\e145'; /* FontAwesome Unicode */
+		font-family: 'Material Icons';
+		display: inline-block;
+		margin-left: -1.3em; /* same as padding-left set on li */
+		width: 1.3em; /* same as padding-left set on li */
+	}
+
+	.custom-list {
+		display: flex;
+		flex-grow: 1;
+		align-items: baseline;
+		button {
+			margin-left: 10px;
+		}
+	}
+}

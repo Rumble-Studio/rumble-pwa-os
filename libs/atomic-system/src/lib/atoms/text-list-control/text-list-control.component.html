@@ -1,0 +1,33 @@
+<mat-form-field class="rs-full-width">
+	<mat-chip-list
+		#chipList
+		aria-label="text item selection">
+		<ng-container *ngFor="let textListItem of textListItems; let textListItemIndex = index">
+			<mat-chip (removed)="removeTextItemByIndex(textListItemIndex)"
+				>{{ textListItem }}
+				<button matChipRemove>
+					<mat-icon>cancel</mat-icon>
+				</button>
+			</mat-chip>
+		</ng-container>
+
+		<input
+			#textListItemInput
+			[placeholder]="placeholder ?? 'New item...'"
+			[formControl]="textListItemCtrl"
+			[matChipInputFor]="chipList"
+			(matChipInputTokenEnd)="addTextItem($event)"
+			[matAutocomplete]="auto"
+			[matChipInputSeparatorKeyCodes]="separatorKeysCodes" />
+	</mat-chip-list>
+
+	<mat-autocomplete
+		#auto="matAutocomplete"
+		(optionSelected)="selectTextItem($event)">
+		<mat-option
+			*ngFor="let filteredTextItem of filteredTextListItems | async"
+			[value]="filteredTextItem">
+			{{ filteredTextItem }}
+		</mat-option>
+	</mat-autocomplete>
+</mat-form-field>

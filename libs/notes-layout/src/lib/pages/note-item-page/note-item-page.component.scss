@@ -1,0 +1,31 @@
+.note-editor-container {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	// padding: 5px;
+	position: relative;
+	justify-content: center;
+	padding: 20px;
+}
+
+.note-property {
+	padding: 0 20px 20px;
+	border: 1px solid lightgrey;
+	border-radius: 10px;
+	background-color: white;
+	margin-bottom: 20px;
+}
+
+.note-title {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.property {
+	min-height: 30px;
+	margin: 5px 0;
+	.property-title {
+		font-weight: bold;
+	}
+}

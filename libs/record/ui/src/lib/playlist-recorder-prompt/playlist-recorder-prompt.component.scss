@@ -1,0 +1,35 @@
+.tts-prompt {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+
+	.main {
+		width: 100%;
+		margin: 20px;
+
+		.form {
+			text-align: center;
+
+			.preview {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+
+				mat-spinner {
+					margin: 20px 0 0 0;
+				}
+			}
+		}
+
+		mat-form-field {
+			width: 100%;
+		}
+	}
+
+	.footer {
+		button {
+			margin: 0 5px 0 5px;
+		}
+	}
+}

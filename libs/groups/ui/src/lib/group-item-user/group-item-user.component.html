@@ -1,0 +1,19 @@
+<ng-container *ngIf="user$$$.$ | async as user; else userNotAvailableTpl">
+	<div class="user-line">
+		<img
+			class="user-avatar"
+			[src]="filesRepository.convertRSurlToUrl$(getUserAvatar(user)) | async" />
+		<span
+			*ngIf="!user.anonymous; else anonymousNameTpl"
+			class="participant">
+			{{ convertUserToDisplayableName(user) }} ({{ user.email }}
+			<span class="material-icons"> {{ user.emailValidated ? 'how_to_reg' : '' }} </span>)</span
+		>
+		<ng-template #anonymousNameTpl>
+			<span class="participant"> Anonymous participant <span class="material-icons">no_accounts</span> </span>
+		</ng-template>
+	</div>
+</ng-container>
+<ng-template #userNotAvailableTpl>
+	<span [matTooltip]="userId || ''">User not available</span>
+</ng-template>

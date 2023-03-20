@@ -1,0 +1,131 @@
+:host {
+	display: block;
+	width: 100%;
+	//   height: 100%;
+	position: relative;
+}
+
+.mat-form-field {
+	height: 100%;
+}
+
+.attribute-container {
+	padding: 3px;
+	position: relative;
+	//   width: calc(100% - 20px);
+	&.with-host-image {
+		display: flex;
+
+		.host-avatar {
+			margin-left: auto;
+			.profile-picture,
+			.profile-picture-text {
+				display: inline-block;
+				width: 40px;
+				height: 40px;
+				border-radius: 50%;
+				object-fit: cover;
+				background-color: var(--rs-shadow-grey);
+				display: flex;
+				align-items: center;
+				justify-content: center;
+			}
+		}
+	}
+
+	&.image {
+		padding: 10px;
+		display: flex;
+		align-items: center;
+		flex-direction: column;
+		justify-content: center;
+	}
+
+	&.slider {
+		display: flex;
+		align-items: center;
+		flex-direction: column-reverse;
+		margin: 10px 0;
+
+		.slider-container {
+			display: flex;
+			width: 100%;
+			align-items: center;
+			&.vertical {
+				flex-direction: column-reverse;
+			}
+		}
+
+		.value-container {
+			width: 100%;
+			text-align: center;
+		}
+		.range {
+			margin: 0 5px;
+		}
+
+		&.vertical {
+			flex-direction: row;
+		}
+	}
+
+	// &.withMask ::after {
+	// 	content: '';
+	// 	position: absolute;
+
+	// 	top: 0px;
+	// 	left: 0px;
+	// 	height: 100%;
+	// 	width: 100%;
+	// 	opacity: 0.7;
+	// 	background-color: tomato;
+	// }
+}
+
+.image-attribute,
+.video-attribute {
+	// max-width: 500px;
+	// max-height: 400px;
+	// width: 100%;
+	// height: 100%;
+	// display: block;
+	// // overflow: hidden;
+	width: 300px;
+	max-width: 80%;
+	height: 250px;
+	padding: 10px;
+}
+
+// ELEMENTS
+
+.span-display-title {
+	font-size: larger;
+	// line-height: 28px;
+}
+
+.required {
+	margin-bottom: 1px;
+	margin-right: 5px;
+	font-size: 0.9rem;
+	margin: 5px;
+	position: absolute;
+	left: 0;
+	top: 0;
+	.asterisk {
+		color: #f7ca1a;
+	}
+}
+
+.disabled {
+	opacity: 0.6;
+}
+
+.email-list-container {
+	padding: 5px;
+	border: 1px solid #ccc;
+	border-radius: 7px;
+	width: 100%;
+}
+.email-list-chip {
+	background-color: var(--rs-yellow-light);
+}

@@ -1,0 +1,38 @@
+<ng-container *ngFor="let u of uploadableFiles | keyvalue">
+	<section
+		class="uploadableFile"
+		*ngIf="!u.value.hidden">
+		<div class="file-column">
+			<div class="file-details">
+				<span
+					[title]="u.value.uploadableFile.entityFile?.publicName ?? u.value.uploadableFile.file.name"
+					class="file-name">
+					{{ u.value.uploadableFile.entityFile?.publicName ?? u.value.uploadableFile.file.name }}
+				</span>
+			</div>
+			<div class="state-details">
+				<span
+					[title]="u.value.uploadableFile.state"
+					class="state-value">
+					{{ u.value.uploadableFile.state }}
+				</span>
+			</div>
+			<div class="progress-details">
+				<mat-progress-bar
+					class="progress-bar"
+					mode="determinate"
+					[value]="u.value.uploadableFile.progress"></mat-progress-bar>
+				<span class="percentage-value">{{ u.value.uploadableFile.progress }}%</span>
+			</div>
+		</div>
+		<div class="actions-column">
+			<mat-icon
+				*ngIf="u.value.uploadableFile.progress >= 100"
+				class="rs-clickable"
+				mat-raised-button
+				(click)="hide(u.value.uploadableFile.identifier)">
+				download_done
+			</mat-icon>
+		</div>
+	</section>
+</ng-container>

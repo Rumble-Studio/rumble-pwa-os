@@ -1,0 +1,38 @@
+<div class="step-container">
+	<section
+		*ngIf="displayHostContent"
+		class="form-provider-section host-content">
+		<rumble-pwa-form-provider
+			[details]="{
+				step: step,
+				providerId: this.providerId,
+				answerAttrs: this.answerAttrs,
+				previewMode: this.previewMode,
+				showHostAvatar: this.showHostAvatar,
+				sectionsToFilter: ['host'],
+
+				formCustomisation: formCustomisation
+			}"
+			(attributeChangeEmitter)="processChange($event.value, $event.stepAttribute)"
+			(forwardEmitter)="forward($event)"></rumble-pwa-form-provider>
+	</section>
+
+	<section
+		*ngIf="displayGuestContent"
+		class="form-provider-section guest-content">
+		<rumble-pwa-form-provider
+			[details]="{
+        step,
+        providerId,
+        answerAttrs,
+        previewMode,
+		showHostAvatar: this.showHostAvatar,
+        sectionsToFilter: ['guest'],
+        isSelected,
+		formCustomisation: formCustomisation
+      }"
+			(attributeChangeEmitter)="processChange($event.value, $event.stepAttribute)"
+			(forwardEmitter)="forward($event)"
+			(validChange)="guestFormIsValid = $event"></rumble-pwa-form-provider>
+	</section>
+</div>

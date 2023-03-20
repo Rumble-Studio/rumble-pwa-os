@@ -1,0 +1,34 @@
+:host {
+	display: block;
+	height: 100%;
+	width: 100%;
+}
+
+.form-opener-container {
+	width: 100%;
+	height: 100%;
+	// padding: 10px 10px 70px 10px;
+	display: flex;
+	align-items: center;
+	overflow: hidden;
+	.form-component {
+		display: block;
+		margin: 0 auto;
+	}
+}
+
+.at-top {
+	position: fixed;
+	right: 0px;
+	bottom: 0px;
+	z-index: 100;
+	width: 100%;
+}
+
+.alternative-content {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-top: 100px;
+	height: 100px;
+}

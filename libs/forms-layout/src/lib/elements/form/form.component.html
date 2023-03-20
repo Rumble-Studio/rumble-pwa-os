@@ -1,0 +1,201 @@
+<div
+	*ngIf="previewMode"
+	class="rs-ribbon">
+	<span>Preview</span>
+</div>
+
+<div
+	class="step-list-sidenav-btn"
+	*ngIf="!drawer.opened && steps.length > 1 && !formCustomisation.hideStepList">
+	<button
+		type="button"
+		mat-button
+		(click)="drawer.toggle()">
+		<mat-icon>format_list_numbered</mat-icon>&nbsp; {{ 'formsLayout.form.Open step list' | transloco }} ({{
+			selectedIndex + 1
+		}}/{{ steps.length }})
+	</button>
+</div>
+
+<mat-drawer-container
+	class="step-list-container"
+	[ngClass]="{ opened: drawer.opened, mobile: isMobile || forceMobile }">
+	<mat-drawer
+		#drawer
+		class="step-list-sidenav"
+		[style.color]="formCustomisation.fontColor"
+		[style.backgroundColor]="formCustomisation.color ?? '#ffffffee'"
+		[style.fontFamily]="getFontStyle(formCustomisation.font || '')"
+		[style.fontSize.px]="formCustomisation.fontSizePx || '16'"
+		mode="side">
+		<div class="rs-full-width close-container">
+			<button
+				type="button"
+				mat-stroked-button
+				(click)="drawer.close()">
+				<mat-icon>close</mat-icon>
+			</button>
+		</div>
+		<ng-container *ngFor="let step of steps; let stepIndex = index">
+			<div
+				class="step-item rs-clickable"
+				[ngClass]="{
+					selected: selectedIndex === stepIndex
+				}"
+				[matTooltip]="getPreviewTextFromStep(step)"
+				[matTooltipShowDelay]="1000"
+				matTooltipPosition="right"
+				(click)="drawer.close(); goToStepIndex(stepIndex)">
+				<span class="step-index">{{ stepIndex + 1 }}.</span>
+				<mat-icon [ngClass]="{ valid: guestFormsValidity[stepIndex] || stepIndex === 0 }">{{
+					getStepIconFromStepKind(step.kind)
+				}}</mat-icon>
+				<div
+					[style.color]="formCustomisation.fontColor"
+					class="step-title">
+					{{ getPreviewTextFromStep(step) }}
+				</div>
+			</div>
+		</ng-container>
+
+		<!-- <ng-container *ngIf="selectedIndex !== lastIndexValidated + 1 && selectedIndex !== 0">
+			<div
+				(click)="goBackToStep(lastIndexValidated + 1)"
+				class="rs-clickable footer">
+				<span class="go-back"><mat-icon>refresh</mat-icon>Go to latest step</span>
+			</div>
+		</ng-container> -->
+	</mat-drawer>
+</mat-drawer-container>
+
+<header
+	*ngIf="!formCustomisation.hideProgressBar"
+	[style.backgroundColor]="formCustomisation.color">
+	<div class="progress-bars-container">
+		<ng-container *ngFor="let step of steps; let index = index">
+			<mat-progress-bar
+				[style.background-color]="formCustomisation.progressBarColor ?? formCustomisation.fontColor ?? '#f5ca1b'"
+				class="rs-progress-bar-form-custom custom-progress-bar"
+				mode="determinate"
+				[value]="selectedIndex >= index ? 100 : 0"
+				(click)="goToStepIndex(index)"></mat-progress-bar>
+			<span
+				class="vertical-divider"
+				*ngIf="index !== steps.length - 1"></span>
+		</ng-container>
+	</div>
+</header>
+
+<section
+	class="main"
+	[ngClass]="{
+		mobile: isMobile || forceMobile,
+		withoutFooter: selectedIndex === 0 || selectedIndex === steps.length - 1,
+		withoutHeader: !!formCustomisation.hideProgressBar
+	}"
+	[style.color]="formCustomisation.fontColor"
+	[style.backgroundColor]="formCustomisation.color"
+	[style.fontFamily]="getFontStyle(formCustomisation.font || '')"
+	[style.fontSize.px]="formCustomisation.fontSizePx || '16'"
+	[style.flexDirection]="orientation + (direction === 'reverse' ? '-reverse' : '')">
+	<div
+		class="decoration-container"
+		*ngIf="
+			(displayDecoration ||
+				formCustomisation.forceDisplayOnSmallScreen ||
+				formCustomisation.layout === 'IMAGE_AS_BACKGROUND') &&
+			image$$$.value
+		"
+		[style.width]="width + '%'"
+		[style.height]="height + '%'"
+		[ngClass]="{
+			'image-as-background': formCustomisation.layout === 'IMAGE_AS_BACKGROUND'
+		}">
+		<img
+			[src]="image$$$.value"
+			[style.objectFit]="objectFit"
+			[style.opacity]="formCustomisation.imageOpacity" />
+	</div>
+	<div
+		class="owner-cog rs-clickable"
+		*ngIf="isOwner && !previewMode"
+		(click)="openFormEditor()"
+		[matTooltip]="'Edit this interview. (Only you can see this button)'">
+		<mat-icon>settings</mat-icon>
+	</div>
+	<rumble-pwa-form-stepper
+		class="stepper"
+		[formSteps]="steps"
+		[previewMode]="previewMode"
+		[(selectedIndex)]="selectedIndex"
+		[guestFormsValidity]="guestFormsValidity"
+		[style.width]="orientation === 'row' && displayDecoration ? 100 - width + '%' : '100%'"
+		[style.height]="orientation === 'column' && displayDecoration ? 100 - height + '%' : '100%'"
+		[recordingSessionId]="recordingSession$$$.value?.id"
+		[formCustomisationDetails]="formCustomisation"
+		(endReached)="processEndReachedEvent()"
+		#stepper>
+		<cdk-step *ngFor="let step of steps; let index = index">
+			<ng-container *ngIf="abs(selectedIndex - index) <= 10">
+				<rumble-pwa-step
+					[previewMode]="previewMode"
+					[recordingSessionId]="recordingSession$$$.value?.id"
+					[stepDetails]="{
+						stepper,
+						step,
+						index,
+						providerId,
+						selectedIndex,
+						formCustomisation
+					}"
+					(guestFormIsValidChange)="guestFormsValidity[index] = $event !== 'INVALID'"
+					(forwardEmitter)="processForward($event)"
+					[showHostAvatar]="!!formCustomisation.showHostAvatar"
+					[user]="profile$$.value ?? undefined">
+				</rumble-pwa-step>
+			</ng-container>
+		</cdk-step>
+	</rumble-pwa-form-stepper>
+</section>
+
+<footer
+	[ngClass]="{
+		'footer-left': direction === 'reverse',
+		withoutFooter:
+			(selectedIndex === 0 && !removeWelcomeStep) || (selectedIndex === steps.length - 1 && !removeTerminationStep)
+	}">
+	<!-- mobile: isMobile || forceMobile, -->
+
+	<section
+		class="navigation-actions"
+		*ngIf="!recordingProps.occupied">
+		<div
+			[style.background]="formCustomisation.actionBtnBackgroundColor ?? formCustomisation.fontColor"
+			[style.color]="
+				formCustomisation.actionBtnFontColor ??
+				(formCustomisation.color !== '#ffffff' ? formCustomisation.color : '#3f4147')
+			"
+			[style.borderRadius]="formCustomisation.borderRadius + 'px'"
+			(click)="goPrev()"
+			class="rs-navigation-action rs-clickable rs-no-select">
+			<span class="material-icons"> expand_less </span>
+		</div>
+		<div
+			[style.background]="formCustomisation.actionBtnBackgroundColor ?? formCustomisation.fontColor"
+			[style.color]="
+				formCustomisation.actionBtnFontColor ??
+				(formCustomisation.color !== '#ffffff' ? formCustomisation.color : '#3f4147')
+			"
+			[style.borderRadius]="formCustomisation.borderRadius + 'px'"
+			(click)="goNext()"
+			class="rs-navigation-action rs-clickable rs-no-select">
+			<span class="material-icons"> expand_more </span>
+		</div>
+	</section>
+
+	<!-- *ngIf="isMobile || forceMobile" -->
+	<!-- This section may be useful if we decide to display recording actions in the footer -->
+	<!-- <section class="record-actions">
+		<rumble-pwa-record-actions [previewMode]="previewMode"> </rumble-pwa-record-actions>
+	</section> -->
+</footer>

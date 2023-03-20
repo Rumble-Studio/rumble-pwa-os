@@ -1,0 +1,64 @@
+<h3>Help</h3>
+
+<section class="help-section">
+	<h4>Help center</h4>
+	<p>
+		Please visit our dedicated page for help articles:
+		<a
+			target="_blank"
+			href="https://help.rumble.studio"
+			>https://help.rumble.studio</a
+		>.
+	</p>
+</section>
+
+<section class="welcome-video">
+	<iframe
+		width="560"
+		height="315"
+		src="https://www.youtube-nocookie.com/embed/GlOzMExZp7k"
+		title="YouTube video player"
+		frameborder="0"
+		allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+		allowfullscreen></iframe>
+</section>
+
+<section class="help-section">
+	<h4>Demo interview</h4>
+	<p>
+		<button
+			mat-raised-button
+			(click)="openDemoInterview()">
+			<mat-icon>wysiwyg</mat-icon>
+			Open demo interview
+		</button>
+	</p>
+</section>
+
+<section class="help-section">
+	<h4>Community server</h4>
+	<p>
+		We are on Discord! Join us for a chat about the project and join our community:
+		<a
+			target="_blank"
+			href="https://www.rumble.studio/community"
+			>Rumble Studio Discord</a
+		>.
+	</p>
+</section>
+
+<section class="help-section">
+	<h4>Contact us</h4>
+	<p>To contact us right away (want to say Hi or found a bug?): please use the <b class="rs-yellow-text">chat widget</b>.</p>
+
+	<p>
+		Chat widget not working? Email us at
+		<a href="mailto:support@rumble.studio">support@rumble.studio</a>
+		<span
+			class="rs-link rs-clickable"
+			[cdkCopyToClipboard]="'support@rumble.studio'"
+			(cdkCopyToClipboardCopied)="processCopyToClipboardEvent($event)">
+			<mat-icon> content_copy </mat-icon> </span
+		>.
+	</p>
+</section>

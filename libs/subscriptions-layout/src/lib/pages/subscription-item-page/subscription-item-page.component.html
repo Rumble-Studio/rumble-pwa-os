@@ -1,0 +1,134 @@
+<!-- MENU FOR OTHER ITEMS  -->
+<div
+	[matMenuTriggerFor]="otherItemMenu"
+	#otherItemMenuTrigger="matMenuTrigger"></div>
+<mat-menu #otherItemMenu="matMenu">
+	<button
+		mat-menu-item
+		*ngFor="let subscription of subscriptions"
+		[value]="subscription.id"
+		(click)="selectSubscription(subscription.id)">
+		{{ subscription.name }}
+	</button>
+</mat-menu>
+
+<ng-container *ngIf="subscription$$$.$ | async as subscription; else noSubscription">
+	<header class="rs-header">
+		<button
+			*ngIf="layoutSize < 1"
+			class="rs-goback"
+			mat-stroked-button
+			[routerLink]="'/subscriptions'">
+			<mat-icon>arrow_back</mat-icon>
+		</button>
+		<section class="title">
+			<h2>
+				<span class="object-category">Subscription:</span>&nbsp;<em>{{ subscription.name }}</em>
+			</h2>
+		</section>
+
+		<!-- <button
+			mat-raised-button
+			(click)="editSubscription()"
+			class="rs-btn-new btn-edit-subscription">
+			<mat-icon>edit</mat-icon>
+		</button> -->
+	</header>
+	<div class="subscription-editor-container">
+		<section class="subscription-property">
+			<div class="subscription-title">
+				<h3>{{ subscription.name }}</h3>
+			</div>
+
+			<div class="property">
+				<span class="property-title">Description:</span>
+				<span *ngIf="(subscription.description ?? '').length > 0; else noDescriptionTpl">
+					{{ subscription.description }}
+				</span>
+				<ng-template #noDescriptionTpl>
+					<span>
+						No description.
+						<!-- <button
+							mat-stroked-button
+							(click)="editSubscription()">
+							Edit
+						</button> -->
+					</span>
+				</ng-template>
+			</div>
+			<div class="property">
+				<span class="property-title">Beneficiary:</span> <br /><br />
+				<ng-container *ngIf="beneficiary$$$.$ | async as beneficiary; else noBeneficiary">
+					<rumble-pwa-group-item-generic [groupId]="beneficiary.id"></rumble-pwa-group-item-generic>
+					<ng-container *ngIf="beneficiary.kind === 'team'">
+						<br />
+						<br />
+						<button
+							mat-stroked-button
+							[routerLink]="['/groups', beneficiary.id]">
+							<mat-icon>group</mat-icon>
+							Manage team</button
+						><br />
+					</ng-container>
+				</ng-container>
+
+				<ng-template #noBeneficiary></ng-template>
+				<br />
+				<!-- MENU candidates -->
+				<mat-menu #changeBeneficiaryMenu>
+					<!-- <button
+							*ngIf="subscription.kind === 'team' || subscription.kind === 'default'"
+							mat-menu-item
+							(click)="inviteUserPerEmailForGroup(subscription)">
+							<mat-icon>send</mat-icon>
+							Invite a member by mail
+						</button> -->
+					<button
+						mat-menu-item
+						(click)="createTeamAndUpdateBeneficiary()">
+						<mat-icon>group</mat-icon>
+						Create a new team
+					</button>
+					<ng-container *ngFor="let potentialBeneficiary of getPotentialBeneficiaries()">
+						<button
+							mat-menu-item
+							(click)="updateBeneficiary(potentialBeneficiary)">
+							<rumble-pwa-group-item-generic [groupId]="potentialBeneficiary.id"></rumble-pwa-group-item-generic>
+						</button>
+					</ng-container>
+				</mat-menu>
+				<button
+					*ngIf="subscription.source !== 'trial' && subscription.ownerId === profile?.id"
+					mat-stroked-button
+					class="cta"
+					[matMenuTriggerFor]="changeBeneficiaryMenu">
+					<mat-icon>manage_accounts</mat-icon>
+					Change beneficiary
+				</button>
+			</div>
+		</section>
+		<section class="subscription-property">
+			<div class="subscription-title">
+				<h3>Plan details</h3>
+			</div>
+			<ng-container *ngIf="subscription.ownerId === profile?.id; else notOwnerForThisGroupTpl">
+				<rumble-pwa-plan-item [grantMapping]="subscription.grantMapping"></rumble-pwa-plan-item>
+			</ng-container>
+			<ng-template #notOwnerForThisGroupTpl>
+				<h3>Subscription from :</h3>
+				<rumble-pwa-group-item-generic [groupId]="subscription.ownerId"></rumble-pwa-group-item-generic
+			></ng-template>
+		</section>
+	</div>
+</ng-container>
+
+<ng-template #noSubscription>
+	<button
+		mat-raised-button
+		[routerLink]="'/subscriptions'">
+		<mat-icon>arrow_back</mat-icon>
+		Go back to all subscriptions
+	</button>
+
+	<div class="subscription-editor-container">Subscription not loaded yet.</div>
+</ng-template>

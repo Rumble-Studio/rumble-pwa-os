@@ -1,0 +1,44 @@
+.user-line {
+	display: flex;
+	align-items: center;
+	width: 100%;
+	padding: 0 10px;
+
+	.participant {
+		display: flex;
+		align-items: center;
+		justify-content: left;
+		text-overflow: ellipsis;
+		overflow: hidden;
+		width: calc(100% - 15px);
+		white-space: nowrap;
+	}
+}
+
+.user-avatar {
+	max-height: 100px;
+	max-width: 100px;
+	overflow: hidden;
+	display: inline-block;
+	padding-right: 5px;
+}
+
+.download-button {
+	margin: 5px;
+	white-space: normal;
+	&.mobile {
+		margin-bottom: 15px;
+	}
+}
+
+.duration-container {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+}
+
+.toogle-container {
+	display: flex;
+	gap: 1rem;
+}

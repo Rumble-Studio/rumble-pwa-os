@@ -1,0 +1,63 @@
+<div class="group-prompt-container">
+	<h2>{{ data.group.name }}</h2>
+	<h3 style="font-style: italic">
+		{{ data.isParent ? '(Parent)' : '(Child)' }}
+	</h3>
+	<div class="group-data">
+		<div class="section"><span class="label">ID: </span>{{ data.group.id }}</div>
+		<div class="section">
+			<span class="label">Description: </span>
+			{{ data.group.description || 'No description' }}
+		</div>
+		<div class="section"><span class="label">Kind: </span>{{ data.group.kind }}</div>
+		<div class="section">
+			<span class="label">Children: </span>
+			<div *ngIf="(data.group.children?.length || 0) > 0; else noChildrenTpl">
+				<div
+					*ngFor="let group of data.group.children"
+					class="list">
+					<rumble-pwa-group-item-generic [groupId]="group.id"></rumble-pwa-group-item-generic>
+				</div>
+			</div>
+			<ng-template #noChildrenTpl> None </ng-template>
+		</div>
+		<div class="section">
+			<span class="label">Parents: </span>
+			<div *ngIf="(data.group.parentIds?.length || 0) > 0; else noParentTpl">
+				<div
+					*ngFor="let parentId of data.group.parentIds"
+					class="list">
+					{{ parentId }}
+				</div>
+			</div>
+			<ng-template #noParentTpl> None </ng-template>
+		</div>
+		<div class="section">
+			<span class="label">Grants: </span>
+			<div *ngIf="(data.group.grants?.length || 0) > 0; else noGrantTpl">
+				<div
+					*ngFor="let grant of data.group.grants"
+					class="list">
+					{{ permission[grant.id]?.name }}
+				</div>
+			</div>
+			<ng-template #noGrantTpl> None </ng-template>
+		</div>
+
+		<div class="footer">
+			<button
+				mat-stroked-button
+				(click)="onRemove()">
+				<mat-icon>remove</mat-icon>
+				Remove
+			</button>
+
+			<button
+				mat-raised-button
+				(click)="onClose()">
+				<mat-icon>close</mat-icon>
+				Close
+			</button>
+		</div>
+	</div>
+</div>

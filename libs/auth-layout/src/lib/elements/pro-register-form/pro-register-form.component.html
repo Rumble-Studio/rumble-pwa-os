@@ -1,0 +1,238 @@
+<div class="pro-login-form-container">
+	<!-- <ng-template #alreadyConnectedTpl>
+		You are connected. &nbsp;&nbsp;<button
+			mat-raised-button
+			[routerLink]="'/dashboard'">
+			Go to dashboard
+		</button>
+		&nbsp;&nbsp;
+		<button
+			mat-stroked-button
+			[routerLink]="'../logout'">
+			Log out
+		</button>
+	</ng-template> -->
+	<!-- *ngIf="!connected; else alreadyConnectedTpl" -->
+
+	<form
+		class="form"
+		[formGroup]="registerFormGroup"
+		(ngSubmit)="$event.preventDefault(); onSubmit()">
+		<!-- first name & last name -->
+		<!-- <div class="multiple-inputs">
+      <div class="input-container">
+        <span class="label">First name</span>
+        <input
+          class="rs-textInput"
+          formControlName="firstName"
+          placeholder="Simone"
+          type="text"
+          name="firstName"
+          #inputFirstName
+        />
+        <div
+          class="formError"
+          *ngIf="registerFormGroup.controls.firstName.errors"
+        >
+          <ng-template
+            [ngIf]="registerFormGroup.controls.firstName.errors.required"
+          >
+            First name is required
+          </ng-template>
+        </div>
+      </div>
+      <div class="input-container">
+        <span class="label">Last name</span>
+        <input
+          class="rs-textInput"
+          formControlName="lastName"
+          placeholder="Dupont"
+          type="text"
+          name="lastName"
+        />
+        <div
+          class="formError"
+          *ngIf="registerFormGroup.controls.lastName.errors"
+        >
+          <ng-template
+            [ngIf]="registerFormGroup.controls.lastName.errors.required"
+          >
+            Last name is required
+          </ng-template>
+        </div>
+      </div>
+    </div> -->
+		<div class="input-container">
+			<span class="label">Email</span>
+			<input
+				class="rs-textInput"
+				formControlName="email"
+				placeholder="simone@example.com"
+				type="email"
+				name="email"
+				#inputEmail
+				(keyup)="inputEmail.value = inputEmail.value.toLowerCase()" />
+			<div
+				class="formError"
+				*ngIf="registerFormGroup.controls.email.errors">
+				<ng-template [ngIf]="registerFormGroup.controls.email.errors.required"> Email is required </ng-template>
+				<ng-template [ngIf]="registerFormGroup.controls.email.errors.email">
+					Check the format of your email
+				</ng-template>
+			</div>
+		</div>
+		<div class="input-container">
+			<span class="label">Password</span>
+			<input
+				class="rs-textInput"
+				formControlName="password"
+				placeholder="password"
+				type="password"
+				name="password"
+				autocomplete="on" />
+			<div
+				class="formError"
+				*ngIf="registerFormGroup.controls.password.invalid">
+				<ng-template [ngIf]="registerFormGroup.controls.password.errors?.required"> Password is required </ng-template>
+				<ng-template [ngIf]="registerFormGroup.controls.password.errors?.minlength">
+					Your password is too short
+				</ng-template>
+				<ng-template [ngIf]="registerFormGroup.controls.password.errors?.maxlength">
+					Your password is too long
+				</ng-template>
+			</div>
+		</div>
+
+		<!-- company size & project -->
+		<!-- <div class="multiple-inputs">
+      <div class="input-container">
+        <span class="label">Company size</span>
+        <mat-select
+          formControlName="companySize"
+          name="companySize"
+          class="rs-selectInput"
+          placeholder="Select a size"
+        >
+          <mat-option
+            *ngFor="let size of companySizeSelect"
+            [value]="size.value"
+          >
+            {{ size.viewValue }}
+          </mat-option>
+        </mat-select>
+        <div
+          class="formError"
+          *ngIf="registerFormGroup.controls.companySize.errors"
+        >
+          <ng-template
+            [ngIf]="registerFormGroup.controls.companySize.errors.required"
+          >
+            Company size is required
+          </ng-template>
+        </div>
+      </div>
+      <div class="input-container">
+        <span class="label">Your project</span>
+        <mat-select
+          formControlName="usage"
+          name="usage"
+          class="rs-selectInput"
+          placeholder="Select an usage"
+        >
+          <mat-option *ngFor="let usage of usageSelect" [value]="usage.value">
+            {{ usage.viewValue }}
+          </mat-option>
+        </mat-select>
+        <div class="formError" *ngIf="registerFormGroup.controls.usage.errors">
+          <ng-template
+            [ngIf]="registerFormGroup.controls.usage.errors.required"
+          >
+            Usage is required
+          </ng-template>
+        </div>
+      </div>
+    </div> -->
+
+		<!-- phone number -->
+		<!-- <div class="input-container">
+      <span class="label">Phone number</span>
+      <input
+        class="rs-textInput"
+        formControlName="phoneNumber"
+        placeholder="+33 6 01 23 45 67"
+        type="phone"
+        name="phoneNumber"
+      />
+      <div
+        class="formError"
+        *ngIf="registerFormGroup.controls.phoneNumber.invalid"
+      >
+        <ng-template
+          [ngIf]="registerFormGroup.controls.phoneNumber.errors?.required"
+        >
+          Phone number is required
+        </ng-template>
+      </div>
+    </div> -->
+		<div class="input-container-checkbox">
+			<input
+				class="checkbox rs-clickable"
+				formControlName="touAccepted"
+				type="checkbox"
+				name="touAccepted" />
+			<span
+				>I agree to the
+				<a
+					href="https://www.rumble.studio/terms"
+					target="_blank"
+					class="rs-link rs-clickable"
+					>Terms</a
+				>&nbsp;and&nbsp;<a
+					href="https://www.rumble.studio/privacy-policy"
+					target="_blank"
+					class="rs-link rs-clickable"
+					>Privacy Policy</a
+				>.</span
+			>
+			<div
+				class="formError"
+				*ngIf="registerFormGroup.controls.touAccepted.invalid">
+				<ng-template [ngIf]="registerFormGroup.controls.touAccepted.errors?.required">
+					You must accept our Terms of Use.
+				</ng-template>
+			</div>
+		</div>
+		<!-- newsletter -->
+		<div class="input-container-checkbox">
+			<input
+				class="checkbox"
+				formControlName="newsletterSubscribed"
+				type="checkbox"
+				name="newsletterSubscribed" />
+			<span>I want to receive the latest news and updates from Rumble Studio.</span>
+		</div>
+		<div class="proFormActions">
+			<input
+				name="registerBtn"
+				class="submitBtn"
+				type="submit"
+				[disabled]="
+					loading ||
+					!(
+						registerFormGroup.valid ||
+						registerFormGroup.controls.password.pristine ||
+						registerFormGroup.controls.email.pristine ||
+						registerFormGroup.controls.firstName.pristine ||
+						registerFormGroup.controls.lastName.pristine ||
+						registerFormGroup.controls.companySize.pristine ||
+						registerFormGroup.controls.usage.pristine ||
+						registerFormGroup.controls.phoneNumber.pristine ||
+						registerFormGroup.controls.touAccepted.pristine ||
+						registerFormGroup.controls.newsletterSubscribed.pristine
+					) ||
+					registerFormDisabled
+				"
+				value="Register" />
+		</div>
+	</form>
+</div>

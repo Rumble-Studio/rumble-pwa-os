@@ -1,0 +1,108 @@
+<div class="step-container">
+	<section
+		*ngIf="displayHostContent"
+		class="form-provider-section host-content">
+		<rumble-pwa-form-provider
+			[details]="{
+				step: step,
+				providerId: this.providerId,
+				answerAttrs: this.answerAttrs,
+				previewMode: this.previewMode,
+				showHostAvatar: this.showHostAvatar,
+				sectionsToFilter: ['host'],
+				formCustomisation: formCustomisation
+			}"
+			(attributeChangeEmitter)="processChange($event.value, $event.stepAttribute)"
+			(forwardEmitter)="forward($event)"></rumble-pwa-form-provider>
+	</section>
+
+	<section class="form-provider-section">
+		<ng-container *ngIf="connexionEmailSent; else noEmailSentTpl">
+			<p>
+				We sent an email to <span style="font-size: larger">{{ connexionEmailSent }}</span
+				>.<br />
+				Please use the attached link to participate in this interview. <br />
+				<span style="font-size: smaller">
+					🔓 This measure secures access to your data so that you and only you can edit your responses.
+				</span>
+			</p>
+			<span
+				(click)="clearConnexionEmailSent()"
+				class="rs-navigation-action rs-clickable rs-no-select"
+				[style.background]="formCustomisation?.actionBtnBackgroundColor ?? formCustomisation?.fontColor"
+				[style.color]="formCustomisation?.actionBtnFontColor ?? formCustomisation?.color"
+				[style.borderRadius]="formCustomisation?.borderRadius + 'px'">
+				Go back
+			</span>
+		</ng-container>
+		<ng-template #noEmailSentTpl>
+			<ng-container *ngIf="!checkingAccount; else spinningTpl">
+				<rumble-pwa-form-provider
+					*ngIf="!connected && !user?.id; else connectedTpl"
+					[details]="{
+						step: step,
+						providerId: this.providerId,
+						answerAttrs: this.answerAttrs,
+						previewMode: this.previewMode,
+						sectionsToFilter: ['identification'],
+						formCustomisation: formCustomisation
+					}"
+					(attributeChangeEmitter)="processChange($event.value, $event.stepAttribute)"
+					(forwardEmitter)="forward($event)"></rumble-pwa-form-provider>
+
+				<ng-template #connectedTpl>
+					<ng-container *transloco="let t; read: 'formsLayout.guestWelcomeStep'">
+						<ng-container *ngIf="answerId && user; else formLoadingTpl">
+							<div
+								[style.background]="formCustomisation?.actionBtnBackgroundColor ?? formCustomisation?.fontColor"
+								[style.borderRadius]="formCustomisation?.borderRadius + 'px'"
+								[style.color]="
+									formCustomisation?.actionBtnFontColor ??
+									(formCustomisation?.color !== '#ffffff' ? formCustomisation?.color : '#3f4147')
+								"
+								(click)="goNext()"
+								class="rs-navigation-action rs-clickable rs-no-select">
+								<span *ngIf="this.attrs?.onlyAnonymousFlow; else classicContinueTpl">Continue &nbsp;</span>
+								<ng-template #classicContinueTpl>
+									{{
+										t('Continue as') +
+											' ' +
+											(user.anonymous ? t('an anonymous user') : user.fullName || user.email)
+									}}
+
+									&nbsp;
+								</ng-template>
+								<span class="material-icons"> start </span>
+							</div>
+
+							<span
+								[style.color]="
+									formCustomisation?.fontColor ??
+									(formCustomisation?.color !== '#ffffff' ? formCustomisation?.color : '#3f4147')
+								"
+								(click)="logout()"
+								class="not-me">
+								<span *ngIf="this.attrs?.onlyAnonymousFlow; else classicCloseTpl">Close this session</span>
+								<ng-template #classicCloseTpl>{{
+									user.anonymous ? t('Close this anonymous session') : t('Connect as a different user')
+								}}</ng-template>
+							</span>
+						</ng-container>
+						<ng-template #formLoadingTpl>
+							{{ t('Loading your details...') }}
+							<mat-spinner
+								diameter="50"
+								class="spinner"></mat-spinner>
+						</ng-template>
+					</ng-container>
+				</ng-template>
+			</ng-container>
+
+			<ng-template #spinningTpl>
+				<mat-spinner
+					diameter="100"
+					class="spinner"></mat-spinner>
+			</ng-template>
+		</ng-template>
+	</section>
+</div>

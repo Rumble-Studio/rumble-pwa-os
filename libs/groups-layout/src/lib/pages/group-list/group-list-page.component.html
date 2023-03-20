@@ -1,0 +1,20 @@
+<header class="rs-header">
+	<button
+		class="rs-goback"
+		*ngIf="layoutSize < 1"
+		mat-stroked-button
+		[routerLink]="'/dashboard'">
+		<mat-icon>arrow_back</mat-icon>
+	</button>
+	<section class="title">
+		<span class="object-category">Organization</span>
+		<!-- <button (click)="openDialog()" mat-raised-button class="rs-btn-new">
+      <mat-icon>add</mat-icon>
+      New
+    </button> -->
+	</section>
+</header>
+
+<!-- <rumble-pwa-group-table [kind]="'folder'"></rumble-pwa-group-table> -->
+<rumble-pwa-group-table [kind]="'team'"></rumble-pwa-group-table>
+<rumble-pwa-group-table [kind]="'user'"></rumble-pwa-group-table>

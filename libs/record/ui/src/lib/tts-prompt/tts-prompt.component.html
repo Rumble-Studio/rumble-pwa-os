@@ -1,0 +1,92 @@
+<div class="tts-prompt">
+	<header>
+		<h2>Text-To-Speech</h2>
+	</header>
+	<main class="main">
+		<p>This feature is not ready yet! The rumblers are working night and day to get it ready.</p>
+		<form class="form">
+			<mat-form-field
+				class="text-input"
+				appearance="outline">
+				<mat-label>Type your text here</mat-label>
+				<textarea
+					matInput
+					name="textToSpeechify"
+					[(ngModel)]="textToSpeechify"
+					disabled>
+				</textarea>
+			</mat-form-field>
+			<div>
+				<mat-form-field appearance="outline">
+					<mat-label>Select a voice</mat-label>
+					<mat-select
+						[(ngModel)]="selectedVoice"
+						name="selectedVoice"
+						disabled>
+						<mat-option
+							*ngFor="let voice of voices"
+							[value]="voice.value">
+							{{ voice.viewValue }}
+						</mat-option>
+					</mat-select>
+				</mat-form-field>
+				<!-- <button
+          [disabled]="
+            this.waitingForResponse ||
+            this.textToSpeechify.length === 0 ||
+            (this._textToSpeechify === this.textToSpeechify &&
+              this._selectedVoice === this.selectedVoice) ||
+            this.selectedVoice.length === 0
+          "
+          mat-raised-button
+          (click)="speechify()"
+        >
+          <mat-icon>record_voice_over</mat-icon>
+          Speechify!
+        </button> -->
+				<button
+					disabled
+					mat-raised-button>
+					<mat-icon>record_voice_over</mat-icon>
+					Generate speech
+				</button>
+			</div>
+			<!-- <div class="preview" *ngIf="waitingForResponse || speechifiedTextUrl">
+        <mat-spinner
+          *ngIf="!speechifiedTextUrl; else speechifiedTextUrlTpl"
+          diameter="40"
+          class="spinner"
+        ></mat-spinner>
+        <ng-template #speechifiedTextUrlTpl>
+          <p>Listen to your text:</p>
+          <audio controls [src]="speechifiedTextUrl">
+            Your browser does not support the <code>audio</code> element.
+          </audio>
+        </ng-template>
+      </div> -->
+		</form>
+	</main>
+	<footer class="footer">
+		<button
+			mat-stroked-button
+			(click)="onCancel()">
+			<mat-icon>close</mat-icon>
+			Cancel
+		</button>
+
+		<!-- <button
+      [disabled]="!speechifiedTextUrl"
+      mat-raised-button
+      (click)="onSubmit()"
+    >
+      <mat-icon>check</mat-icon>
+      Confirm
+    </button> -->
+		<button
+			disabled
+			mat-raised-button>
+			<mat-icon>check</mat-icon>
+			Confirm
+		</button>
+	</footer>
+</div>

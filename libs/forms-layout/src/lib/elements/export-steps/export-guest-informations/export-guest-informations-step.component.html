@@ -1,0 +1,97 @@
+<div class="export-guest-informations-step-container">
+	<span class="step-kind">Guest info</span>
+	<span class="step-title">{{ steptitle }}</span>
+	<span
+		*ngIf="stepdescription"
+		class="step-hint"
+		>{{ stepdescription }}</span
+	>
+
+	<div *ngIf="answerAttrs; else noAnswer">
+		<form class="export-form-guest-informations">
+			<mat-form-field
+				class="text-input"
+				appearance="outline">
+				<mat-label>Firstname</mat-label>
+				<input
+					[ngModel]="firstname"
+					disabled="true"
+					matInput
+					name="firstname"
+					type="text" />
+			</mat-form-field>
+			<mat-form-field
+				class="text-input"
+				appearance="outline">
+				<mat-label>Lastname</mat-label>
+				<input
+					[ngModel]="lastname"
+					matInput
+					name="lastname"
+					type="text"
+					disabled="true" />
+			</mat-form-field>
+			<p class="section-text">Profile picture:</p>
+			<div class="image-container">
+				<img
+					*ngIf="imagePath; else noImage"
+					[src]="imagePath" />
+				<ng-template #noImage><span class="no-image">No profile picture uploaded</span></ng-template>
+			</div>
+			<button
+				class="download-btn"
+				*ngIf="imagePath"
+				(click)="downloadImage()"
+				[matTooltip]="'Download this image'"
+				mat-raised-button>
+				<mat-icon>download</mat-icon>
+			</button>
+			<mat-form-field
+				class="full-width"
+				appearance="outline">
+				<mat-label>Short bio</mat-label>
+				<textarea
+					rows="5"
+					matInput
+					name="autoBiography"
+					disabled="true"
+					[ngModel]="autoBiography"></textarea>
+			</mat-form-field>
+			<mat-form-field
+				class="text-input"
+				appearance="outline">
+				<mat-label>LinkedIn profile url</mat-label>
+				<input
+					disabled="true"
+					[ngModel]="linkedInLink"
+					matInput
+					name="linkedInLink"
+					type="text" />
+			</mat-form-field>
+			<mat-form-field
+				class="text-input"
+				appearance="outline">
+				<mat-label>Twitter profile url</mat-label>
+				<input
+					[ngModel]="twitterLink"
+					disabled="true"
+					matInput
+					name="twitterLink"
+					type="text" />
+			</mat-form-field>
+			<mat-form-field
+				class="text-input"
+				appearance="outline">
+				<mat-label>Your website</mat-label>
+				<input
+					disabled="true"
+					[ngModel]="companyLink"
+					matInput
+					name="companyLink"
+					type="text" />
+			</mat-form-field>
+		</form>
+	</div>
+
+	<ng-template #noAnswer><span class="no-answer"> No answer available </span></ng-template>
+</div>

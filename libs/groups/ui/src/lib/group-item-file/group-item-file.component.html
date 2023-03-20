@@ -1,0 +1,6 @@
+<ng-container *ngIf="file$$$.$ | async as file; else fileNotAvailableTpl">
+	{{ file.publicName ?? file.fileName }}
+</ng-container>
+<ng-template #fileNotAvailableTpl>
+	<span [matTooltip]="fileId || ''">File not available</span>
+</ng-template>

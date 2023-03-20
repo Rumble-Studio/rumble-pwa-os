@@ -1,0 +1,16 @@
+<div class="decoration-container">
+	<ng-container>
+		<img
+			*ngIf="image$$$.$ | async; else noImagetpl"
+			[src]="image$$$.$ | async"
+	/></ng-container>
+	<ng-template #noImagetpl><img [src]="'/assets/classic.svg'" /></ng-template>
+	<button
+		*ngIf="recordingSessionListItem"
+		class="play-button"
+		[matTooltip]="'Listen'"
+		mat-flat-button
+		(click)="listenTo(recordingSessionListItem.recordingSession.id)">
+		<mat-icon class="clickable blue-btn">play_arrow</mat-icon>
+	</button>
+</div>

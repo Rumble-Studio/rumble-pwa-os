@@ -1,0 +1,531 @@
+<ng-container *ngIf="group$$$.$ | async as group; else noGroup">
+	<header class="rs-header">
+		<button
+			*ngIf="layoutSize < 1"
+			class="rs-goback"
+			mat-stroked-button
+			[routerLink]="'/groups'">
+			<mat-icon>arrow_back</mat-icon>
+		</button>
+		<section class="title">
+			<h2>
+				<!-- switch -->
+				<ng-container [ngSwitch]="group.kind">
+					<ng-container *ngSwitchCase="'team'">
+						<span class="object-category">Team:</span>&nbsp;<em>{{ group.name }}</em>
+					</ng-container>
+					<ng-container *ngSwitchCase="'user'">
+						<span class="object-category">User:</span>&nbsp;<em>{{ group.name }}</em>
+					</ng-container>
+					<ng-container *ngSwitchCase="'folder'">
+						<span class="object-category">Folder:</span>&nbsp;<em>{{ group.name }}</em>
+					</ng-container>
+					<ng-container *ngSwitchDefault>
+						<span class="object-category">Group:</span>&nbsp;<em>{{ group.name }}</em>
+					</ng-container>
+				</ng-container>
+			</h2>
+		</section>
+
+		<button
+			mat-raised-button
+			(click)="editGroup(group)"
+			class="rs-btn-new btn-edit-brand">
+			<mat-icon>edit</mat-icon>
+		</button>
+	</header>
+
+	<div class="group-editor-container">
+		<mat-card class="group-card">
+			<mat-card-content>
+				<!-- template for group in cdk tree -->
+				<ng-template
+					#groupNodeTpl
+					let-node="node"
+					let-parent="parent">
+					<div class="truc">
+						<rumble-pwa-group-item-generic [groupId]="node.id"></rumble-pwa-group-item-generic>
+
+						<!-- MENU candidates -->
+						<mat-menu #groupCandidatesMenu>
+							<button
+								*ngIf="node.kind === 'team' || node.kind === 'default'"
+								mat-menu-item
+								(click)="inviteUserPerEmailForGroup(node)">
+								<mat-icon>send</mat-icon>
+								Invite a member by mail
+							</button>
+							<ng-container *ngFor="let groupCandidate of getCandidates(node)">
+								<button
+									mat-menu-item
+									(click)="addChildToParent(groupCandidate, node)">
+									<span class="button-add-candidate">
+										<!-- <mat-icon>person</mat-icon> -->
+										<rumble-pwa-group-item-user [userId]="groupCandidate.id"></rumble-pwa-group-item-user
+									></span>
+								</button>
+							</ng-container>
+						</mat-menu>
+
+						<!-- MENU folder -->
+						<mat-menu #folderCandidatesMenu>
+							<button
+								mat-menu-item
+								(click)="createNewFolder(node)">
+								<mat-icon>add</mat-icon>
+								Create a new folder
+							</button>
+							<ng-container *ngFor="let groupCandidate of getFolderCandidates(node)">
+								<button
+									mat-menu-item
+									(click)="addChildToParent(groupCandidate, node)">
+									<mat-icon>folder</mat-icon>
+									{{ groupCandidate.name }}
+								</button>
+							</ng-container>
+						</mat-menu>
+
+						<!-- MENU file -->
+						<mat-menu #fileCandidatesMenu>
+							<ng-container *ngFor="let groupCandidate of getFileCandidates(node)">
+								<button
+									mat-menu-item
+									(click)="addChildToParent(groupCandidate, node)">
+									<mat-icon>attachment</mat-icon>
+									<rumble-pwa-group-item-file [fileId]="groupCandidate.id"></rumble-pwa-group-item-file>
+								</button>
+							</ng-container>
+						</mat-menu>
+
+						<!-- MENU team -->
+						<mat-menu #teamCandidatesMenu>
+							<button
+								mat-menu-item
+								(click)="createNewTeam(node)">
+								<mat-icon>add</mat-icon>
+								Create a new team
+							</button>
+							<ng-container *ngFor="let groupCandidate of getTeamCandidates(node)">
+								<button
+									mat-menu-item
+									(click)="addChildToParent(groupCandidate, node)">
+									<rumble-pwa-group-item-generic
+										[groupId]="groupCandidate.id"></rumble-pwa-group-item-generic>
+								</button>
+							</ng-container>
+						</mat-menu>
+
+						<!-- MENU interview -->
+						<mat-menu #interviewCandidatesMenu>
+							<ng-container *ngFor="let form of sharedForms">
+								<button
+									(click)="shareFormFromGroup(form, node)"
+									mat-menu-item>
+									{{ form.title }}
+								</button>
+							</ng-container>
+						</mat-menu>
+
+						<!-- MENU brand -->
+						<mat-menu #brandCandidatesMenu>
+							<ng-container *ngFor="let brand of sharedBrands">
+								<button
+									(click)="shareBrandFromGroup(brand, node)"
+									mat-menu-item>
+									{{ brand.name }}
+								</button>
+							</ng-container>
+						</mat-menu>
+
+						<!-- MENU targets -->
+						<mat-menu #groupTargetsMenu>
+							<ng-container *ngIf="groupTargets$ | async as groupTargets; else noGroupTargetsTpl">
+								<ng-container *ngFor="let groupTarget of groupTargets">
+									<button
+										mat-menu-item
+										(click)="moveGroupToTarget(node, groupTarget)">
+										<mat-icon>people</mat-icon>
+										{{ groupTarget.name }}
+									</button>
+								</ng-container>
+							</ng-container>
+							<ng-template #noGroupTargetsTpl></ng-template>
+						</mat-menu>
+
+						<!-- MENU options -->
+						<mat-menu #groupMenu>
+							<!-- remove from parent -->
+							<button
+								*ngIf="node.originGroup"
+								mat-menu-item
+								(click)="removeGroupFromParent(node, node.originGroup)">
+								<mat-icon>delete</mat-icon>
+								Remove from {{ node.originGroup.name }}
+							</button>
+
+							<!-- delete this group -->
+							<!-- <button *ngIf="node.kind === 'team'" mat-menu-item (click)="deleteGroup(node)">
+								<mat-icon>delete</mat-icon>
+								Delete
+							</button> -->
+
+							<!-- edit group -->
+							<button
+								*ngIf="node.kind === 'team' || node.kind === 'default'"
+								mat-menu-item
+								(click)="editGroup(node)">
+								<mat-icon>edit</mat-icon>
+								Edit details
+							</button>
+
+							<!-- delete group -->
+							<button
+								*ngIf="node.kind === 'team'"
+								mat-menu-item
+								(click)="deleteGroup(node)">
+								<mat-icon>delete</mat-icon>
+								Delete
+							</button>
+
+							<!-- move to -->
+							<!-- <button mat-menu-item [matMenuTriggerFor]="groupTargetsMenu">
+								<mat-icon>move_down</mat-icon>
+								Move to
+								</button> 
+							-->
+
+							<!-- add member -->
+							<button
+								mat-menu-item
+								*ngIf="node.kind === 'team' || node.kind === 'default'"
+								[matMenuTriggerFor]="groupCandidatesMenu">
+								<mat-icon>person_add</mat-icon>
+								Add member
+							</button>
+
+							<!-- add team -->
+							<button
+								mat-menu-item
+								*ngIf="node.kind === 'team' || node.kind === 'default'"
+								[matMenuTriggerFor]="teamCandidatesMenu">
+								<mat-icon>group_add</mat-icon>
+								Add team
+							</button>
+
+							<!-- add folder -->
+							<button
+								mat-menu-item
+								*ngIf="node.kind === 'team' || node.kind === 'default' || node.kind === 'folder'"
+								[matMenuTriggerFor]="folderCandidatesMenu">
+								<mat-icon>create_new_folder</mat-icon>
+								Add folder
+							</button>
+
+							<!-- add file -->
+							<button
+								mat-menu-item
+								*ngIf="node.kind === 'folder'"
+								[matMenuTriggerFor]="fileCandidatesMenu">
+								<mat-icon>attach_file</mat-icon>
+								Add file
+							</button>
+
+							<!-- add interview -->
+							<button
+								mat-menu-item
+								*ngIf="
+									(sharedForms?.length || 0) > 0 &&
+									(node.kind === 'team' || node.kind === 'default' || node.kind === 'folder')
+								"
+								[matMenuTriggerFor]="interviewCandidatesMenu">
+								<span class="icon-over-icon">
+									<mat-icon class="plus-icon">add</mat-icon>
+									<mat-icon class="generic-icon">wysiwyg</mat-icon>
+								</span>
+								Add interview
+							</button>
+
+							<!-- add brand -->
+							<button
+								mat-menu-item
+								*ngIf="(sharedBrands?.length || 0) > 0 && (node.kind === 'team' || node.kind === 'default')"
+								[matMenuTriggerFor]="brandCandidatesMenu">
+								<span class="icon-over-icon">
+									<mat-icon class="plus-icon">add</mat-icon>
+									<mat-icon class="generic-icon">format_paint</mat-icon>
+								</span>
+								Add brand
+							</button>
+						</mat-menu>
+
+						<!-- more btn -->
+						<button
+							mat-icon-button
+							[matMenuTriggerFor]="groupMenu">
+							<mat-icon>more_vert</mat-icon>
+						</button>
+					</div>
+				</ng-template>
+
+				<!-- Template for grants to appear like groups -->
+				<ng-template
+					#grantTpl
+					let-grant="grant"
+					let-node="node">
+					<div class="truc">
+						<rumble-pwa-grant-item-generic [grantId]="grant.id"></rumble-pwa-grant-item-generic>
+
+						<mat-menu #grantMenu>
+							<!-- MENU Scripts -->
+							<a
+								*ngIf="grant.permissionId === 'script-read'"
+								[routerLink]="['/forms', 'editor', getGrantParameter(grant, 'scriptId')]"
+								[style.text-decoration]="'none'">
+								<button mat-menu-item>
+									<mat-icon>launch</mat-icon>
+									<span>Go to</span>
+								</button>
+							</a>
+
+							<!-- MENU Brands -->
+
+							<a
+								*ngIf="grant.permissionId === 'brand-read'"
+								[routerLink]="['/brands', getGrantParameter(grant, 'brandId')]"
+								[style.text-decoration]="'none'">
+								<button mat-menu-item>
+									<mat-icon>launch</mat-icon>
+									<span>Go to</span>
+								</button></a
+							>
+
+							<a [style.text-decoration]="'none'">
+								<button
+									mat-menu-item
+									(click)="removeFromGroup(grant)">
+									<mat-icon>delete</mat-icon>
+									Remove from {{ node.name }}
+								</button>
+							</a>
+						</mat-menu>
+
+						<button
+							mat-icon-button
+							[matMenuTriggerFor]="grantMenu">
+							<mat-icon>more_vert</mat-icon>
+						</button>
+					</div>
+				</ng-template>
+
+				<cdk-tree
+					[dataSource]="dataSource"
+					[treeControl]="treeControl">
+					<!-- no child -->
+					<cdk-nested-tree-node
+						*cdkTreeNodeDef="let node"
+						class="group-tree-node">
+						<!-- no child -->
+						<button
+							mat-icon-button
+							disabled></button>
+						<ng-container *ngTemplateOutlet="groupNodeTpl; context: { node: this.node }"></ng-container>
+					</cdk-nested-tree-node>
+					<!-- with children -->
+					<cdk-nested-tree-node
+						*cdkTreeNodeDef="let node; when: hasChildren"
+						class="group-tree-node">
+						<button
+							mat-icon-button
+							[attr.aria-label]="'Toggle ' + node.name"
+							cdkTreeNodeToggle>
+							<mat-icon class="mat-icon-rtl-mirror">
+								{{ treeControl.isExpanded(node) ? 'expand_more' : 'chevron_right' }}
+							</mat-icon>
+						</button>
+
+						<ng-container *ngTemplateOutlet="groupNodeTpl; context: { node: this.node }"></ng-container>
+
+						<div [class.group-tree-invisible]="!treeControl.isExpanded(node)">
+							<!-- portal for children hierarchy -->
+							<ng-container cdkTreeNodeOutlet></ng-container>
+
+							<!-- display grants as nodes too -->
+							<ng-container *ngFor="let grant of node.grants">
+								<div
+									*ngIf="
+										grant.state === 'default' &&
+										(getTargetStateFromGrant$(grant) | async) === ('default' || undefined)
+									"
+									class="group-tree-node cdk-nested-tree-node cdk-tree-node">
+									<!-- this button is to align node -->
+									<button
+										mat-icon-button
+										disabled></button>
+									<ng-container *ngTemplateOutlet="grantTpl; context: { grant: this.grant, node: this.node }">
+									</ng-container>
+								</div>
+							</ng-container>
+
+							<!-- extra 'node like' to embed actions -->
+							<div class="cdk-nested-tree-node cdk-tree-node group-tree-node custom-node">
+								<button
+									mat-icon-button
+									disabled></button>
+								<div class="add-actions">
+									<!-- menus here -->
+									<mat-menu #groupCandidatesMenu>
+										<button
+											*ngIf="node.kind === 'team' || node.kind === 'default'"
+											mat-menu-item
+											(click)="inviteUserPerEmailForGroup(node)">
+											<mat-icon>send</mat-icon>
+											Invite a member by mail
+										</button>
+										<ng-container *ngFor="let groupCandidate of getCandidates(node)">
+											<button
+												mat-menu-item
+												(click)="addChildToParent(groupCandidate, node)">
+												<span class="button-add-candidate">
+													<!-- <mat-icon>person</mat-icon> -->
+													<rumble-pwa-group-item-user
+														[userId]="groupCandidate.id"></rumble-pwa-group-item-user
+												></span>
+											</button>
+										</ng-container>
+									</mat-menu>
+
+									<mat-menu #folderCandidatesMenu>
+										<button
+											mat-menu-item
+											(click)="createNewFolder(node)">
+											<mat-icon>add</mat-icon>
+											Create a new folder
+										</button>
+										<ng-container *ngFor="let groupCandidate of getFolderCandidates(node)">
+											<button
+												mat-menu-item
+												(click)="addChildToParent(groupCandidate, node)">
+												<mat-icon>folder</mat-icon>
+												{{ groupCandidate.name }}
+											</button>
+										</ng-container>
+									</mat-menu>
+
+									<mat-menu #interviewCandidatesMenu>
+										<ng-container *ngFor="let form of sharedForms">
+											<button
+												(click)="shareFormFromGroup(form, node)"
+												mat-menu-item>
+												{{ form.title }}
+											</button>
+										</ng-container>
+									</mat-menu>
+
+									<mat-menu #brandCandidatesMenu>
+										<ng-container *ngFor="let brand of sharedBrands">
+											<button
+												(click)="shareBrandFromGroup(brand, node)"
+												mat-menu-item>
+												{{ brand.name }}
+											</button>
+										</ng-container>
+									</mat-menu>
+
+									<!-- fake node here -->
+
+									<!-- add a member -->
+									<div>
+										<span class="action truc">
+											<button
+												mat-menu-item
+												*ngIf="node.kind === 'team' || node.kind === 'default'"
+												[matMenuTriggerFor]="groupCandidatesMenu">
+												<mat-icon>person_add</mat-icon>
+												Add member
+											</button>
+										</span>
+									</div>
+
+									<!-- add a folder -->
+									<div>
+										<span class="action truc">
+											<button
+												mat-menu-item
+												*ngIf="
+													node.kind === 'team' || node.kind === 'default' || node.kind === 'folder'
+												"
+												[matMenuTriggerFor]="folderCandidatesMenu">
+												<mat-icon>create_new_folder</mat-icon>
+												Add folder
+											</button>
+										</span>
+									</div>
+
+									<!-- add a form -->
+									<div
+										*ngIf="
+											(sharedForms?.length || 0) > 0 &&
+											(node.kind === 'team' || node.kind === 'default' || node.kind === 'folder')
+										">
+										<span class="action truc">
+											<button
+												mat-menu-item
+												[matMenuTriggerFor]="interviewCandidatesMenu">
+												<span class="icon-over-icon">
+													<mat-icon class="plus-icon">add</mat-icon>
+													<mat-icon class="generic-icon">wysiwyg</mat-icon>
+												</span>
+												Add interview
+											</button>
+										</span>
+									</div>
+
+									<!-- add a brand -->
+									<div
+										*ngIf="
+											(sharedBrands?.length || 0) > 0 &&
+											(node.kind === 'team' || node.kind === 'default' || node.kind === 'folder')
+										">
+										<span class="action truc">
+											<button
+												mat-menu-item
+												[matMenuTriggerFor]="brandCandidatesMenu">
+												<span class="icon-over-icon">
+													<mat-icon class="plus-icon">add</mat-icon>
+													<mat-icon class="generic-icon">format_paint</mat-icon>
+												</span>
+												Add brand
+											</button>
+										</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</cdk-nested-tree-node>
+				</cdk-tree>
+			</mat-card-content>
+
+			<!-- <mat-card-actions>
+        <button mat-raised-button (click)="editGroup(group)">
+          <mat-icon>edit</mat-icon>
+          Edit
+        </button>
+
+        <button mat-raised-button (click)="deleteGroup(group)">
+          <mat-icon>delete</mat-icon>
+          Delete
+        </button>
+      </mat-card-actions> -->
+		</mat-card>
+	</div>
+</ng-container>
+<ng-template #noGroup>
+	<button
+		mat-raised-button
+		[routerLink]="'/groups'">
+		<mat-icon>arrow_back</mat-icon>
+		Go back to all groups
+	</button>
+
+	<div class="group-editor-container">Group not loaded yet.</div>
+</ng-template>

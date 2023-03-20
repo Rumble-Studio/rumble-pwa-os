@@ -1,0 +1,50 @@
+<header class="rs-header">
+	<button
+		class="rs-goback"
+		*ngIf="layoutSize < 1"
+		mat-stroked-button
+		[routerLink]="'/dashboard'">
+		<mat-icon>arrow_back</mat-icon>
+	</button>
+	<section class="title">
+		<span class="object-category">File library</span>
+	</section>
+</header>
+<!-- import new file(s) -->
+<section class="add-more-section">
+	<div
+		class="rs-file-drop-area rs-clickable"
+		(click)="browseFileBtn.click()">
+		<input
+			hidden
+			#browseFileBtn
+			multiple
+			type="file"
+			[accept]="acceptedFileExtensionsString"
+			name="publicname" />
+		<span class="fake-btn">Choose file</span>
+	</div>
+	<div class="rs-file-drop-area">
+		<div>
+			Record directly a new file here
+			<explanation [msg]="'This file will be available in the file table below.'"></explanation>
+			<br />
+			<br />
+			<br />
+			<rumble-pwa-record-actions
+				(entityFileEvent)="processEntityFileEvent($event)"
+				[displayUploadBtn]="false"
+				[displayScreenCaptureWithVideoBtn]="true"
+				[recordingTargetName]="'file-list-page'">
+			</rumble-pwa-record-actions>
+		</div>
+	</div>
+</section>
+<br />
+
+<rumble-pwa-file-table
+	[allowSelection]="false"
+	[files]="files"
+	[hideColumns]="['owner']"
+	[displayDetails]="false"
+	[searchValue]="searchValue"></rumble-pwa-file-table>

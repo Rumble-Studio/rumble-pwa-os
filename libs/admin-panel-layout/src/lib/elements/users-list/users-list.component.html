@@ -1,0 +1,170 @@
+<mat-form-field
+	class="rs-full-width"
+	appearance="outline">
+	<mat-label>Search users</mat-label>
+	<input
+		placeholder="email, fullname..."
+		matInput
+		[(ngModel)]="searchValue"
+		type="text" />
+</mat-form-field>
+
+<object-list
+	[noDataSourceTpl]="noDataSourceTpl"
+	[objects]="users"
+	*ngIf="searchValue; else noSearchValueTpl">
+	<!-- connect as -->
+	<object-column
+		[columnId]="'connectAs'"
+		[header]="'Connect as'"
+		[sortable]="false"
+		[template]="connectAsTpl">
+	</object-column>
+	<ng-template
+		#connectAsTpl
+		let-object="object">
+		<mat-icon
+			class="rs-clickable"
+			mat-raised-button
+			[cdkCopyToClipboard]="object.connectAsLink"
+			(cdkCopyToClipboardCopied)="processCopyToClipboardEvent($event, 'Connect as link copied to clipboard!')"
+			[matTooltip]="'Copy connect as (' + object.fullName + ') link to clipboard'">
+			content_copy
+		</mat-icon>
+		<mat-icon
+			class="rs-clickable"
+			[matTooltip]="'Connect as ' + object.fullName"
+			(click)="connectAs(object)">
+			<i class="material-icons-outlined">login</i>
+		</mat-icon>
+	</ng-template>
+
+	<!-- email -->
+	<object-column
+		[columnId]="'email'"
+		[header]="'E-mail'"
+		[template]="emailTpl"
+		[flex]="2">
+	</object-column>
+	<ng-template
+		#emailTpl
+		let-object="object">
+		{{ object.email }}
+		<mat-icon
+			class="rs-clickable"
+			mat-raised-button
+			[cdkCopyToClipboard]="object.email"
+			(cdkCopyToClipboardCopied)="processCopyToClipboardEvent($event, 'Email copied to clipboard!')"
+			[matTooltip]="'Copy email (' + object.email + ') to clipboard'">
+			content_copy
+		</mat-icon>
+	</ng-template>
+	<object-column
+		[columnId]="'fullName'"
+		[header]="'Full name'">
+	</object-column>
+
+	<!-- email validated -->
+	<object-column
+		[columnId]="'emailValidated'"
+		[header]="'E-mail validated'"
+		[template]="emailValidatedTpl">
+	</object-column>
+	<ng-template
+		#emailValidatedTpl
+		let-object="object">
+		<mat-icon>{{ object.emailValidated ? 'done' : 'remove' }}</mat-icon>
+	</ng-template>
+
+	<!-- timeCreation -->
+	<object-column
+		[columnId]="'timeCreation'"
+		[header]="'Creation time'"
+		[template]="timeCreationColumnTpl">
+	</object-column>
+	<ng-template
+		#timeCreationColumnTpl
+		let-object="object">
+		{{ object.timeCreation * 1000 | date: 'yy/MM/dd, HH:mm' }}
+	</ng-template>
+
+	<!-- lastlogin -->
+	<object-column
+		[columnId]="'lastLogin'"
+		[header]="'Last log in'"
+		[template]="lastLogInColumnTpl">
+	</object-column>
+	<ng-template
+		#lastLogInColumnTpl
+		let-object="object">
+		{{ (object.lastLogin ?? object.timeCreation ?? 0) * 1000 | date: 'yy/MM/dd, HH:mm' }}
+	</ng-template>
+
+	<!-- subscriptions -->
+	<object-column
+		[columnId]="'numberOfSubscriptions'"
+		[header]="'Subscriptions'"
+		[template]="subscriptionsColumnTpl">
+	</object-column>
+	<ng-template
+		#subscriptionsColumnTpl
+		let-object="object">
+		<mat-chip-list class="sub-chip-list">
+			<mat-chip
+				*ngFor="let sub of object.subscriptions"
+				[ngClass]="{
+					'rs-low-opacity': sub.state !== 'default'
+				}"
+				class="rs-full-width">
+				<span class="sub-chip">
+					<mat-icon *ngIf="groupAsBeneficiary(sub)">groups</mat-icon>
+					<span class="grant-mapping"> {{ sub.grantMapping }} ({{ sub.source }}) </span>
+
+					<button
+						mat-icon-button
+						*ngIf="sub.source === 'custom' || sub.source === 'appsumo'"
+						[matMenuTriggerFor]="subMenu"
+						(click)="$event.stopPropagation()">
+						<mat-icon>more_vert</mat-icon>
+					</button>
+
+					<mat-menu #subMenu>
+						<button
+							(click)="openChangePlanPrompt(object, sub)"
+							mat-menu-item>
+							<span class="menu-btn-aligned">
+								<mat-icon>swap_horiz</mat-icon>
+								Change
+							</span>
+						</button>
+						<button
+							[disabled]="sub.source !== 'custom'"
+							(click)="deleteSubscription(sub, object)"
+							mat-menu-item>
+							<span class="menu-btn-aligned">
+								<mat-icon>delete_outline</mat-icon>
+								Delete
+							</span>
+						</button>
+					</mat-menu>
+				</span>
+			</mat-chip>
+
+			<mat-chip class="rs-full-width">
+				<span
+					(click)="openChangePlanPrompt(object)"
+					class="rs-clickable sub-chip rs-full-width"
+					><mat-icon class="add">add</mat-icon></span
+				>
+			</mat-chip>
+		</mat-chip-list>
+	</ng-template>
+</object-list>
+
+<ng-template #noSearchValueTpl>
+	<span>Please type some keywords in the search bar...</span>
+</ng-template>
+
+<ng-template #noDataSourceTpl>
+	<span>No user matches '{{ searchValue }}'...</span>
+</ng-template>

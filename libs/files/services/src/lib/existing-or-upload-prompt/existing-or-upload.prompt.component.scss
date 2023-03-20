@@ -1,0 +1,42 @@
+:host {
+	position: relative;
+}
+
+.top-section {
+	height: 40px;
+}
+
+.close-line {
+	position: absolute;
+	top: 0;
+	width: 100%;
+	.close-icon-container {
+		&:hover:first-child {
+			color: var(--rs-red);
+		}
+	}
+}
+
+.choice-container {
+	display: flex;
+	width: 100%;
+	justify-content: center;
+	align-items: center;
+	flex-wrap: wrap;
+}
+
+.btn {
+	height: 150px;
+	width: 150px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-wrap: wrap;
+	margin: 5px;
+	text-align: center;
+	flex-direction: column;
+
+	&:hover {
+		background-color: var(--rs-yellow-super-light);
+	}
+}

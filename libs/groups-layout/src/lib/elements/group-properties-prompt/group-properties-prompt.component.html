@@ -1,0 +1,84 @@
+<div class="dismiss-container">
+	<button
+		type="button"
+		mat-flat-button
+		class="mat-elevation-z1"
+		(click)="dismiss()">
+		<mat-icon>close</mat-icon>
+	</button>
+</div>
+
+<form
+	class="group-form"
+	[formGroup]="groupForm"
+	(ngSubmit)="save()">
+	<h2>{{ groupDetails.group?.id ? 'Edit your ' : 'Create a new ' }}{{ groupDetails.kind ?? 'group' }}</h2>
+	<p *ngIf="groupDetails.parent && groupDetails.kind === 'folder'">
+		This new folder will be place in {{ groupDetails.parent.name }}.
+		<span *ngIf="groupDetails.parent.kind === 'team'">
+			All members of {{ groupDetails.parent.name }} and all team linked to it (even indirectly) will be able to see this
+			folder too.</span
+		>
+	</p>
+
+	<mat-form-field
+		class="full-width"
+		appearance="outline">
+		<mat-label>Name</mat-label>
+		<input
+			matInput
+			placeholder="{{ groupDetails.kind === 'team' ? 'Ex. Marketing team' : 'Support materials project XYZ' }}"
+			formControlName="name"
+			name="name"
+			required />
+		<div
+			class="formError"
+			*ngIf="groupForm.dirty && groupForm.controls.name.errors">
+			<ng-template [ngIf]="groupForm.controls.name.errors.required"> A name is required </ng-template>
+			<ng-template [ngIf]="groupForm.controls.name.errors.maxlength"> This name is too long </ng-template>
+		</div>
+	</mat-form-field>
+
+	<mat-form-field
+		class="full-width"
+		appearance="outline">
+		<mat-label>Description</mat-label>
+		<textarea
+			rows="5"
+			matInput
+			formControlName="description"
+			name="description"
+			placeholder="{{
+				groupDetails.kind === 'team'
+					? 'Ex. This team will hold all members on project Icarus.'
+					: 'Ex. This folder will be used to share contents for the whole company.'
+			}}"></textarea>
+	</mat-form-field>
+
+	<div class="full-width horizontal">
+		<button
+			type="button"
+			mat-stroked-button
+			(click)="dismiss()">
+			<mat-icon>close</mat-icon>
+			Cancel
+		</button>
+
+		<button
+			*ngIf="groupDetails.group?.id"
+			type="button"
+			mat-stroked-button
+			(click)="delete()">
+			<mat-icon>delete</mat-icon>
+			Delete
+		</button>
+
+		<button
+			type="submit"
+			mat-raised-button
+			[disabled]="!groupForm.valid && groupForm.dirty">
+			<mat-icon>{{ groupDetails.group?.id ? 'save' : 'check' }}</mat-icon>
+			{{ groupDetails.group?.id ? 'Update' : 'Create' }}
+		</button>
+	</div>
+</form>

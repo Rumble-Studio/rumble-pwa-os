@@ -1,0 +1,28 @@
+<div class="export-audio-step-container">
+	<span class="step-kind">Audio request</span>
+	<span class="step-title">{{ steptitle }}</span>
+	<span
+		*ngIf="stepdescription"
+		class="step-hint"
+		>{{ stepdescription }}</span
+	>
+
+	<div *ngIf="(tracks$$$.value || []).length > 0; else noAnswer">
+		<div
+			*ngIf="answerplaylistid"
+			class="host-player-container">
+			<rumble-pwa-playlist-player
+				*ngIf="playlistid"
+				class="playlist"
+				[playlistId]="playlistid"
+				[listeningMessage]="'Your audio:'">
+			</rumble-pwa-playlist-player>
+			<rumble-pwa-playlist-player
+				class="playlist"
+				[playlistId]="answerplaylistid"
+				[listeningMessage]="'Guest answer:'">
+			</rumble-pwa-playlist-player>
+		</div>
+	</div>
+	<ng-template #noAnswer><span class="no-answer"> No answer available </span></ng-template>
+</div>

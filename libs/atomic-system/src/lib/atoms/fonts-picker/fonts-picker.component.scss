@@ -1,0 +1,51 @@
+:host {
+	width: 100%;
+}
+.fonts-picker-container {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+
+.font-list {
+	display: flex;
+	flex-wrap: wrap;
+}
+.font {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	margin: 5px 10px;
+	width: 250px;
+	height: 80px;
+	border-radius: 10px;
+	border: 1px solid #d3d3d3;
+	overflow: hidden;
+	position: relative;
+	.font-preview {
+		margin: 5px;
+		font-size: 25px;
+		display: block;
+		position: absolute;
+	}
+	.font-delete {
+		top: 50%;
+		left: 50%;
+		transform: translate(-50, -50);
+		display: none;
+		color: rgb(179, 55, 55);
+		z-index: 1;
+	}
+	&:hover {
+		border: 1px solid rgba(0, 0, 0, 1);
+		background-color: var(--rs-yellow-super-light);
+
+		.font-delete {
+			display: block;
+		}
+		.font-preview {
+			opacity: 0.15;
+		}
+	}
+}

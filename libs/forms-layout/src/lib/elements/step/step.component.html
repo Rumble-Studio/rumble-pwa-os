@@ -1,0 +1,39 @@
+<ng-container [ngSwitch]="step?.kind ?? ''">
+	<rumble-pwa-guest-welcome-step
+		*ngSwitchCase="'welcome-step'"
+		[details]="{
+			step,
+			attrs,
+			isSelected,
+			providerId,
+			previewMode,
+			answerId,
+			answerAttrs,
+			user,
+			showHostAvatar,
+			formCustomisation
+		}"
+		(answerEvent)="processAnswerEvent($event)"
+		(guestFormIsValidChange)="guestFormIsValid = $event"
+		(forwardEmitter)="forward($event)">
+	</rumble-pwa-guest-welcome-step>
+
+	<rumble-pwa-guest-generic
+		*ngSwitchDefault
+		[details]="{
+			step,
+			attrs,
+			isSelected,
+			providerId,
+			previewMode,
+			answerId,
+			answerAttrs,
+			user,
+			showHostAvatar,
+			formCustomisation
+		}"
+		(answerEvent)="processAnswerEvent($event)"
+		(guestFormIsValidChange)="guestFormIsValid = $event"
+		(forwardEmitter)="forward($event)">
+	</rumble-pwa-guest-generic>
+</ng-container>

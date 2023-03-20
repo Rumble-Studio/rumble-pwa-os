@@ -1,0 +1,114 @@
+:host {
+	padding-bottom: 105px; // avoid hubspot widget
+}
+.profile-card {
+	margin: 7px;
+}
+.profile-picture {
+	width: 100%;
+	height: 100%;
+	max-width: 280px;
+	max-height: 280px;
+	border-radius: 13px;
+	background-color: hsla(218, 19%, 38%, 0.1);
+	margin-bottom: 16px;
+	object-fit: cover;
+}
+
+.profile-picture-actions {
+	width: 280px;
+	display: flex;
+	justify-content: space-around;
+}
+
+// .profile {
+//   display: flex;
+//   flex-direction: column;
+//   align-items: center;
+//   padding-top: 50px;
+
+//   h2 {
+//     margin-bottom: 60px;
+//   }
+
+//   .name-content {
+//     height: 80px;
+//   }
+
+//   .name-content,
+//   .email-content {
+//     width: 300px;
+//   }
+
+//   .image-content {
+//     width: 300px;
+
+//     .image-profile {
+//       width: 230px;
+//       height: 230px;
+//       margin-bottom: 10px;
+
+//       img {
+//         width: 230px;
+//         height: 230px;
+//         cursor: pointer;
+//       }
+//     }
+//     .image-preview-empty {
+//       margin-bottom: 10px;
+//       text-align: center;
+//       line-height: 230px;
+//       width: 230px;
+//       height: 230px;
+//       background-color: lightgrey;
+//       color: grey;
+//     }
+//   }
+
+//   .email-content {
+//     margin-bottom: 30px;
+//   }
+
+//   mat-icon {
+//     opacity: 0.8;
+//   }
+
+//   .name-update,
+//   .email-update {
+//     p {
+//       display: flex;
+//       align-items: center;
+
+//       mat-icon {
+//         margin-left: 8px;
+//       }
+//     }
+//   }
+
+//   .display-email,
+//   .display-image,
+//   .display-name {
+//     opacity: 0.5;
+//   }
+
+//   .name-update,
+//   .email-update {
+//     display: inline-block;
+//     margin-top: -20px;
+//   }
+
+//   .validate-email {
+//     margin-bottom: 40px;
+//   }
+
+//   .reset-button-content {
+//     margin-bottom: 40px;
+//   }
+
+//   .upload-image-button {
+//     margin-bottom: 40px;
+//   }
+// }
+// .no-password {
+//   color: firebrick;
+// }

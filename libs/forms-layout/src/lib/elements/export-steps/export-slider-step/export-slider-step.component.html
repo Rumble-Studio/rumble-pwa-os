@@ -1,0 +1,41 @@
+<div class="export-slider-step-container">
+	<span class="step-kind">Slider request</span>
+	<span class="step-title">{{ steptitle }}</span>
+	<span
+		*ngIf="stepdescription"
+		class="step-hint"
+		>{{ stepdescription }}</span
+	>
+
+	<div *ngIf="answerAttrs; else noAnswer">
+		<form class="export-slider-form">
+			<div
+				class="attribute-container attribute-container-slider"
+				[ngClass]="{ vertical: verticalSlider }">
+				<div
+					class="slider-container"
+					[ngClass]="{ vertical: verticalSlider }">
+					<span class="range">{{ minValue }}</span>
+					<mat-slider
+						#slider
+						class="rs-full-width"
+						[max]="maxValue"
+						[min]="minValue"
+						[step]="stepSize"
+						[thumbLabel]="false"
+						[value]="slidervalue"
+						[tickInterval]="'auto'"
+						[vertical]="verticalSlider"
+						[disabled]="true">
+					</mat-slider>
+					<span class="range">{{ maxValue }}</span>
+				</div>
+				<div class="value-container">
+					<span>Guest answer: {{ slidervalue }}</span>
+				</div>
+			</div>
+		</form>
+	</div>
+
+	<ng-template #noAnswer><span class="no-answer"> No answer available </span></ng-template>
+</div>

@@ -1,0 +1,119 @@
+:host {
+	height: 100%;
+	display: block;
+
+	--drawers-width: 100px;
+	--selector-sources: 150px;
+
+	--drawer-header-height: 60px;
+	--bucket-top-menu: 100px;
+
+	--playbar-height: 100px;
+	.main-content {
+		display: block;
+		// background-color: aquamarine;
+		height: calc(100% - var(--bucket-top-menu));
+
+		rumble-pwa-virtual-playbar {
+			height: var(--playbar-height);
+		}
+		rumble-pwa-virtual-playlist {
+			height: calc(100% - var(--playbar-height));
+		}
+	}
+}
+
+.title {
+	display: flex;
+	align-items: center;
+	max-width: 280px;
+	flex: 1;
+}
+
+.host-container {
+	display: flex;
+	height: 100%;
+	// width: 100%;
+	nav {
+		background-color: white;
+		color: var(--rs-text-grey);
+		padding: 16px;
+		padding-top: 30px;
+		// box-shadow: inset -1px 0 0 var(--rs-shadow-grey);
+		border-right: 1px solid var(--rs-shadow-grey);
+		transition: all 0.3s ease-in-out;
+		flex-shrink: 0;
+
+		&.drawer {
+			// width: 400px;
+			position: relative;
+			overflow-x: hidden;
+			.drawer-close {
+				position: absolute;
+				top: 0;
+				right: 0;
+				padding: 8px;
+				cursor: pointer;
+			}
+		}
+		&.small-drawer {
+			width: 100px;
+		}
+		&.medium-drawer {
+			width: 270px;
+		}
+		&.large-drawer {
+			width: 50%;
+			max-width: 500px;
+			min-width: 270px;
+		}
+		&.drawer {
+			&.mobile {
+				position: absolute;
+				// width: 250px;
+
+				height: calc(100% - 63px - 70px); // 63 for header and 70 for footer
+				z-index: 2;
+			}
+			&.not-shown {
+				// background-color: red;
+				width: 0px;
+				overflow: hidden;
+				padding: 0px;
+				border: none;
+				min-width: unset;
+			}
+		}
+	}
+	.body {
+		// width: calc(100% - 400px);
+		flex-grow: 1;
+		transition: all 0.3s ease-in-out;
+
+		height: 100%;
+		// background-color: hotpink;
+		overflow-y: hidden;
+	}
+}
+
+.drawer-header {
+	height: var(--drawer-header-height);
+}
+
+.source-component {
+	height: calc(100% - var(--drawer-header-height));
+	display: block;
+	position: relative;
+}
+
+.export-button {
+	margin-left: 10px;
+}
+
+.main-content-playlist {
+	background-color: white;
+	width: calc(100% - 20px);
+	margin: 10px;
+	height: 100%;
+	border-radius: 5px;
+}

@@ -1,0 +1,30 @@
+.group-prompt-container {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	.group-data {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		.section {
+			border-style: groove;
+			border-width: 0 0 2px 0;
+			padding: 5px;
+
+			.label {
+				font-weight: bold;
+			}
+		}
+
+		.list {
+			text-align: center;
+		}
+	}
+	.footer {
+		margin: 20px 5px 0px 5px;
+
+		button {
+			margin: 0px 5px 0px 5px;
+		}
+	}
+}

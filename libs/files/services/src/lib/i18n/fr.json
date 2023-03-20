@@ -1,0 +1,9 @@
+{
+	"existingOrUpload": {
+		"Upload a new file": "Téléverser un nouveau fichier",
+		"Choose from your file library": "Utiliser un fichier déjà téléversé"
+	},
+	"fileUpload": {
+		"Upload a file": "Téléverser un fichier"
+	}
+}

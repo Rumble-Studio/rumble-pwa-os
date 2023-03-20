@@ -1,0 +1,33 @@
+{
+	"form": { "Open step list": "Liste des questions" },
+	"formOpenerPrompt": {
+		"Loading, please wait...": "Chargement..."
+	},
+	"formProvider": {
+		"OK": "Suivant",
+		"Celebrate again": "Célébrer à nouveau",
+		"Try Rumble Studio": "Essayez Rumble Studio",
+		"Your email": "Votre email",
+		"Let's go": "C'est parti",
+		"Go back": "Précédent",
+		"Continue as": "Continuer en tant que",
+		"Upload an image": "Téléverser une image",
+		"Upload a video": "Téléverser une vidéo",
+		"Upload a document": "Téléverser un document",
+		"Your answer:": "Votre réponse :",
+		"Upload a file": "Téléverser un fichier"
+	},
+	"guestWelcomeStep": {
+		"Continue as": "Continuer en tant que",
+		"an anonymous user": "participant(e) anonyme",
+		"Loading your details...": "Chargement de vos informations...",
+		"Close this anonymous session": "Fermer cette session anonyme",
+		"Connect as a different user": "Utiliser un autre compte"
+	},
+	"formStepper": {
+		"No recording": "Aucun enregistrement",
+		"You have not recorded any answer yet.": "Vous n'avez rien enregistré pour l'instant.",
+		"Stay here": "Rester à cette étape",
+		"Go to next step": "Allez à l'étape suivante"
+	}
+}

@@ -1,0 +1,17 @@
+<div
+	*ngIf="notification"
+	class="notification-container"
+	[ngClass]="{ unseen: !notification.hasSeenByIds[profileId ?? ''], recent: isRecent }">
+	<div>
+		<mat-icon>{{ notificationIcon }}</mat-icon>
+	</div>
+	<div class="notification-details">
+		<div class="notification-header">
+			<span class="notification-title">{{ notification.title }}</span>
+			<span class="notification-time">{{ (notification.timeCreation ?? 0) * 1000 | dateAsAgo }}</span>
+		</div>
+		<div class="notification-description">
+			<span>{{ notification.description }}</span>
+		</div>
+	</div>
+</div>

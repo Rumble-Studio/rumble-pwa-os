@@ -1,0 +1,14 @@
+:host {
+	border-radius: 10px;
+	// line-height: 1.2;
+	// padding: 0.5rem 1rem;
+	border: 2px solid var(--rs-yellow);
+	background-color: var(--rs-yellow-lighter);
+	color: black;
+
+	&:hover {
+		background-color: var(--rs-yellow-light);
+	}
+	margin: 2px;
+	padding: 0px 2px;
+}

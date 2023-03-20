@@ -1,0 +1,366 @@
+<section
+	mat-dialog-title
+	class="top-section">
+	<div class="close-line rs-full-width rs-flex-end">
+		<div
+			[trackClick]
+			class="rs-clickable close-icon-container"
+			(click)="dismiss()">
+			<mat-icon>close</mat-icon>
+		</div>
+	</div>
+
+	<header
+		class="rs-header"
+		[ngClass]="{ mobile: layoutSize < 1 }">
+		<section class="title">
+			<span class="object-category">{{ objectDetails.modalTitle }}</span>
+		</section>
+	</header>
+	<p
+		*ngIf="objectDetails.modalDescription"
+		[innerHTML]="objectDetails.modalDescription"></p>
+	<!-- 
+	<div>
+		<span class="rs-prompt-title">
+			{{ objectDetails.modalTitle }}
+		</span>
+		
+	</div> -->
+</section>
+
+<form
+	[formGroup]="attributeForm"
+	(ngSubmit)="save()">
+	<mat-dialog-content track-scroll>
+		<!-- LOOP over attribute -->
+		<ng-container
+			*ngFor="let attribute of attributes"
+			[ngSwitch]="attribute.attributeType ?? 'input'">
+			<ng-container *ngIf="!attribute.hidden">
+				<!-- attribute ERRORS -->
+				<div
+					class="formError"
+					*ngIf="attributeForm.controls[attribute.name].dirty && attributeForm.controls[attribute.name].errors">
+					<ng-template [ngIf]="attributeForm.controls[attribute.name].errors?.['required']">
+						A
+						{{ attribute.HTMLlabel?.toLocaleLowerCase() ?? attribute.name.toLocaleLowerCase() }}
+						is required
+					</ng-template>
+					<ng-template [ngIf]="attributeForm.controls[attribute.name].errors?.['pattern']">
+						The format is incorrect.
+						<ng-container
+							*ngIf="attributeForm.controls[attribute.name].errors?.['pattern']['requiredPattern']==='^https://.*$'">
+							It must start with "https://".
+						</ng-container>
+					</ng-template>
+					<ng-template [ngIf]="attributeForm.controls[attribute.name].errors?.['maxlength']">
+						You exceeded the maximum length (
+						{{attributeForm.controls[attribute.name].errors?.['maxlength'].actualLength}}
+						/
+						{{attributeForm.controls[attribute.name].errors?.['maxlength'].requiredLength}})
+					</ng-template>
+
+					<ng-template [ngIf]="attributeForm.controls[attribute.name].errors?.['minlength']">
+						You need to reach the minimum length (
+						{{attributeForm.controls[attribute.name].errors?.['minlength'].actualLength}}
+						/
+						{{attributeForm.controls[attribute.name].errors?.['minlength'].requiredLength}})
+					</ng-template>
+
+					<ng-template [ngIf]="attributeForm.controls[attribute.name].errors?.['minNumber']">
+						{{attributeForm.controls[attribute.name].errors?.['minNumber']}}
+					</ng-template>
+					<ng-template [ngIf]="attributeForm.controls[attribute.name].errors?.['maxNumber']">
+						{{attributeForm.controls[attribute.name].errors?.['maxNumber']}}
+					</ng-template>
+
+					<ng-template [ngIf]="attributeForm.controls[attribute.name].errors?.['maxNumber']">
+						{{attributeForm.controls[attribute.name].errors?.['maxNumber']}}
+					</ng-template>
+
+					<ng-template [ngIf]="attributeForm.controls[attribute.name].errors?.['confirmationDoesNotMatch']">
+						{{attributeForm.controls[attribute.name].errors?.['confirmationDoesNotMatch'].message ?? 'Difference detected'}}
+					</ng-template>
+
+					<ng-template [ngIf]="attributeForm.controls[attribute.name].errors?.['sameValue']">
+						{{attributeForm.controls[attribute.name].errors?.['sameValue'].message ?? 'This is the same value'}}
+					</ng-template>
+
+					<ng-template [ngIf]="attributeForm.controls[attribute.name].errors?.['email']">
+						The format is incorrect
+					</ng-template>
+					<!-- {{ attributeForm.controls[attribute.name].errors | json }} -->
+				</div>
+
+				<!-- input -->
+				<mat-form-field
+					*ngSwitchCase="'input'"
+					class="rs-full-width"
+					appearance="outline">
+					<mat-label>{{ attribute.HTMLlabel }}</mat-label>
+					<input
+						matInput
+						[placeholder]="attribute.placeholder ?? ''"
+						[formControlName]="attribute.name"
+						[type]="attribute.HTMLInputSubtype ?? 'text'"
+						[pattern]="attribute.HTMLpattern ?? ''"
+						[required]="!!attribute.required" />
+					<mat-hint *ngIf="attribute.HTMLhint">{{ attribute.HTMLhint }}</mat-hint>
+				</mat-form-field>
+
+				<!-- textarea -->
+				<mat-form-field
+					*ngSwitchCase="'textarea'"
+					class="rs-full-width"
+					appearance="outline">
+					<mat-label>{{ attribute.HTMLlabel }}</mat-label>
+					<textarea
+						matInput
+						[placeholder]="attribute.placeholder ?? ''"
+						[formControlName]="attribute.name"
+						[required]="!!attribute.required"></textarea>
+					<mat-hint *ngIf="attribute.HTMLhint">{{ attribute.HTMLhint }}</mat-hint>
+				</mat-form-field>
+
+				<!-- select -->
+				<mat-form-field
+					*ngSwitchCase="'select'"
+					class="rs-full-width"
+					appearance="outline">
+					<mat-label>{{ attribute.HTMLlabel }}</mat-label>
+					<mat-select
+						[multiple]="attribute.multiple"
+						[formControlName]="attribute.name"
+						[required]="!!attribute.required">
+						<mat-option
+							*ngFor="let option of attribute.extra?.options ?? []"
+							[value]="option.value"
+							[disabled]="option.disabled === true"
+							(click)="option.onClick ? callOnClick(option.onClick, $event) : undefined"
+							>{{ option.name }}
+						</mat-option>
+					</mat-select>
+					<mat-hint *ngIf="attribute.HTMLhint">{{ attribute.HTMLhint }}</mat-hint>
+				</mat-form-field>
+
+				<!-- display text -->
+				<ng-container *ngSwitchCase="'displayText'">
+					<mat-label *ngIf="attribute.HTMLInputSubtype === 'text'; else headerTpl">{{
+						attribute.HTMLlabel
+					}}</mat-label>
+					<ng-template #headerTpl>
+						<h3 class="rs-no-margin-bottom">{{ attribute.HTMLlabel }}</h3>
+					</ng-template>
+				</ng-container>
+
+				<!-- slide toggle -->
+				<ng-container *ngSwitchCase="'slide-toggle'">
+					<mat-slide-toggle
+						[disabled]="attribute.disable === true"
+						[formControlName]="attribute.name"
+						matInput
+						>{{ attribute.HTMLlabel }}</mat-slide-toggle
+					>
+					<mat-hint *ngIf="attribute.HTMLhint">{{ attribute.HTMLhint }}</mat-hint>
+				</ng-container>
+
+				<!-- radio group -->
+				<ng-container *ngSwitchCase="'radioSelect'">
+					<div
+						class="radio-select-container"
+						[ngClass]="{ 'rs-radio-select-no-wrap': !attribute.extra?.radioSelectWrap }">
+						<mat-label>{{ attribute.HTMLlabel }}</mat-label>
+						<br />
+						<mat-radio-group
+							class="rs-full-width radio-select-radio-group"
+							[formControlName]="attribute.name"
+							[required]="!!attribute.required">
+							<mat-radio-button
+								#radioSelectRadioButton
+								[attr.data-attribute-name]="attribute.name"
+								[attr.data-option-value]="option.value"
+								class="radio-select-radio-button"
+								*ngFor="let option of attribute.extra?.options ?? []"
+								[value]="option.value"
+								[disabled]="option.disabled === true"
+								(click)="option.onClick ? callOnClick(option.onClick, $event) : undefined">
+								<ng-container *ngIf="attribute.extra?.customTemplate">
+									<ng-container
+										*ngTemplateOutlet="
+											attribute.extra!.customTemplate!;
+											context: { context: option.value }
+										">
+									</ng-container>
+								</ng-container>
+								<div *ngIf="!option.customComponent && !attribute.extra?.customTemplate">
+									{{ option.name }}
+								</div>
+							</mat-radio-button>
+						</mat-radio-group>
+						<mat-hint *ngIf="attribute.HTMLhint">{{ attribute.HTMLhint }}</mat-hint>
+					</div>
+				</ng-container>
+
+				<!-- checkbox -->
+				<ng-container *ngSwitchCase="'checkbox'">
+					<mat-checkbox [formControlName]="attribute.name">{{ attribute.HTMLlabel }}</mat-checkbox>
+
+					<explanation
+						*ngIf="attribute.explanation"
+						(click)="$event.stopPropagation()"
+						[msg]="attribute.explanation">
+					</explanation>
+					<br />
+				</ng-container>
+
+				<!-- button -->
+				<ng-container *ngSwitchCase="'button'">
+					<button
+						[disabled]="attribute.disable"
+						(click)="
+							attribute.callBack ? attribute.callBack($event, this, attribute) : undefined;
+							$event.stopPropagation()
+						"
+						type="button"
+						mat-raised-button>
+						{{ attribute.HTMLlabel }}
+						<explanation
+							*ngIf="attribute.explanation"
+							(click)="$event.stopPropagation()"
+							[msg]="attribute.explanation">
+						</explanation>
+					</button>
+					<br />
+				</ng-container>
+
+				<!-- file -->
+				<ng-container *ngSwitchCase="'file'">
+					<rumble-pwa-files-upload-control
+						[formControlName]="attribute.name"
+						[required]="attribute.required ?? false"
+						[acceptedExtensions]="attribute.extra?.acceptedExtensions"
+						[acceptedExtensionsString]="attribute.extra?.acceptedExtensionsString ?? '*/*'"
+						[maxObjectsSelected]="
+							attribute.extra?.maxObjectsSelected ?? (attribute.multiple ? -1 : 1)
+						"></rumble-pwa-files-upload-control>
+					<br />
+				</ng-container>
+
+				<!-- customComponent -->
+				<ng-container *ngSwitchCase="'customComponent'">
+					{{ attribute.HTMLlabel }}
+					<rumble-pwa-form-control-outlet
+						[formControlName]="attribute.name"
+						[component]="attribute.extra?.customComponent"
+						[propertiesMapping]="attribute.extra?.customPropertiesMapping"></rumble-pwa-form-control-outlet>
+				</ng-container>
+
+				<!-- color -->
+				<ng-container *ngSwitchCase="'color'">
+					<mat-label>{{ attribute.HTMLlabel }}</mat-label>
+					<rumble-pwa-colors-picker
+						[canYouEdit]="true"
+						(deleteColorByIndexEvent)="deleteColorByIndex(attribute.name, $event)"
+						(newColorSelectedEvent)="processColorsEvent(attribute.name, [$event])"
+						[colors]="getColors(attribute.name)"></rumble-pwa-colors-picker>
+				</ng-container>
+
+				<!-- text list control -->
+				<ng-container *ngSwitchCase="'text-list-control'">
+					<mat-label>{{ attribute.HTMLlabel }}</mat-label>
+					<rumble-pwa-text-list-control
+						[formControlName]="attribute.name"
+						[canYouEdit]="true"
+						[textListItemsAvailable]="attribute.extra?.chipOptions ?? []"
+						[placeholder]="attribute.placeholder">
+					</rumble-pwa-text-list-control>
+				</ng-container>
+
+				<!-- objectThumbnails (for object with thumbnails like images) -->
+				<ng-container *ngSwitchCase="'objectThumbnails'">
+					<mat-label>{{ attribute.HTMLlabel }}</mat-label>
+					<br />
+					<rumble-pwa-objects-picker
+						[formControlName]="attribute.name"
+						[getNewObjects$]="attribute.extra?.objectList?.getNewObjects$"
+						[displaySelectButton]="!!attribute.extra?.objectList?.displaySelectButton"
+						[selectButtonText]="attribute.extra?.objectList?.selectButtonText ?? 'Select'"
+						(selectObjectByIndexEvent)="
+							attribute.extra?.objectList?.selectCallback
+								? attribute.extra!.objectList!.selectCallback($event)
+								: undefined
+						"
+						[displayPaletteButton]="!!attribute.extra?.objectList?.displayPaletteButton"
+						(colorsEvent)="
+							attribute.extra?.objectList?.colorsCallback
+								? attribute.extra!.objectList!.colorsCallback($event)
+								: undefined
+						"
+						[maxSelectableObjects]="attribute.extra?.maxObjectsSelected ?? (attribute.multiple ? -1 : 1)"
+						[displayDeleteButton]="!!attribute.extra?.objectList?.displayDeleteButton"
+						[hideAddButton]="!!attribute.extra?.objectList?.hideAddButton"
+						[objectFit]="attribute.extra?.objectList?.objectFit ?? 'cover'">
+					</rumble-pwa-objects-picker>
+
+					<!-- <rumble-pwa-images-picker
+						[canYouEdit]="true"
+						[displaySelectButton]="false"
+						(deleteImageByIndexEvent)="deleteImageByIndex(attribute.name, $event)"
+						(needForNewFilesEvent)="processNeedForNewFilesEvent(attribute.name)"
+						[imageURLs]="getImageURLs(attribute.name)"
+						[colorThief]="!!attribute.colorThief"
+						[multiple]="!!attribute.multiple"
+						(colorsEvent)="
+							attribute.extra?.colorEventTarget
+								? processColorsEvent(attribute.extra!.colorEventTarget!, $event)
+								: undefined
+						">
+					</rumble-pwa-images-picker> -->
+				</ng-container>
+
+				<ng-container *ngIf="attribute.HTMLhint; else simpleBrTpl">
+					<br />
+					<br />
+					<br />
+				</ng-container>
+			</ng-container>
+			<!-- end of not hidden -->
+			<div
+				*ngIf="attribute.spinner && attribute.spinner.active === true"
+				class="rs-flex-centered">
+				<mat-spinner [diameter]="attribute.spinner.size"></mat-spinner>
+			</div>
+		</ng-container>
+	</mat-dialog-content>
+
+	<mat-dialog-actions
+		align="end"
+		*ngIf="!objectDetails.modalHideActions">
+		<section class="actions-container">
+			<!-- bottom actions (cancel/save) -->
+
+			<!-- cancel -->
+			<button
+				type="button"
+				mat-stroked-button
+				(click)="dismiss(); $event.preventDefault()">
+				<mat-icon>clear</mat-icon>
+				{{ objectDetails.modalCancelText ?? 'Cancel' }}
+			</button>
+
+			<!-- submit -->
+			<button
+				type="submit"
+				class="rs-yellow-btn"
+				mat-raised-button
+				(click)="save(); $event.preventDefault()"
+				[disabled]="!attributeForm.valid && !attributeForm.pristine">
+				{{ objectDetails.modalSubmitText ?? 'Submit' }}
+			</button>
+		</section>
+	</mat-dialog-actions>
+</form>
+
+<!-- tpl for extra vertical space -->
+<ng-template #simpleBrTpl><br /></ng-template>

@@ -1,0 +1,281 @@
+<!-- MENU FOR OTHER ITEMS  -->
+<div
+	[matMenuTriggerFor]="otherItemMenu"
+	#otherItemMenuTrigger="matMenuTrigger"></div>
+<mat-menu #otherItemMenu="matMenu">
+	<button
+		mat-menu-item
+		*ngFor="let availableMix of availableMixes"
+		[value]="availableMix.id"
+		(click)="selectMix(availableMix.id)">
+		{{ availableMix.name }}
+	</button>
+</mat-menu>
+
+<ng-container *ngIf="mix$$$.$ | async as mix; else noMixTpl">
+	<div class="host-container">
+		<!-- DRAWER OPEN -->
+		<nav
+			class="drawer"
+			[ngClass]="{
+				'not-shown': !menuToShow || selectedAction !== 'mix',
+				mobile: layoutSize < 2,
+				'small-drawer': menuToShow === 'sources',
+				'medium-drawer': menuToShow === 'settings'
+			}">
+			<!-- close cross -->
+			<!-- <div
+				class="drawer-close"
+				(click)="closeDrawer()">
+				<i class="material-icons-outlined">close</i>
+			</div> -->
+			<!-- switch case on menu to show -->
+			<ng-container [ngSwitch]="menuToShow">
+				<ng-container *ngSwitchCase="'sources'">
+					<br />
+					<!-- MENU SOURCE SETTINGS -->
+					<span
+						class="rs-menu-item rs-clickable rs-no-select"
+						[trackClick]="{ customTextContent: 'mix-source', customEventProperties: { source: 'interviews' } }"
+						(click)="open2ndDrawer('interviews')">
+						<div
+							class="menu-item"
+							[ngClass]="{ active: menu2ToShow === 'interviews' }">
+							<i class="material-icons-outlined">wysiwyg</i>
+							<span>Interviews</span>
+						</div>
+					</span>
+					<br />
+					<span
+						class="rs-menu-item rs-clickable rs-no-select"
+						[trackClick]="{ customTextContent: 'mix-source', customEventProperties: { source: 'files' } }"
+						(click)="open2ndDrawer('files')">
+						<div
+							class="menu-item"
+							[ngClass]="{ active: menu2ToShow === 'files' }">
+							<i class="material-icons-outlined">file_copy</i>
+							<span>Files</span>
+						</div>
+					</span>
+					<br />
+					<span
+						class="rs-menu-item rs-clickable rs-no-select"
+						[trackClick]="{ customTextContent: 'mix-source', customEventProperties: { source: 'brands' } }"
+						(click)="open2ndDrawer('brands')">
+						<div
+							class="menu-item"
+							[ngClass]="{ active: menu2ToShow === 'brands' }">
+							<i class="material-icons-outlined">format_paint</i>
+							<span>Brands</span>
+						</div>
+					</span>
+					<br />
+					<span
+						class="rs-menu-item rs-clickable rs-no-select"
+						[trackClick]="{ customTextContent: 'mix-source', customEventProperties: { source: 'jingles' } }"
+						(click)="open2ndDrawer('jingles')">
+						<div
+							class="menu-item"
+							[ngClass]="{ active: menu2ToShow === 'jingles' }">
+							<i class="material-icons-outlined">music_note</i>
+							<span>jingles</span>
+						</div>
+					</span>
+					<br />
+					<span
+						class="rs-menu-item rs-clickable rs-no-select"
+						[trackClick]="{ customTextContent: 'mix-source', customEventProperties: { source: 'favorites' } }"
+						(click)="open2ndDrawer('favorites')">
+						<div
+							class="menu-item"
+							[ngClass]="{ active: menu2ToShow === 'favorites' }">
+							<i class="material-icons-outlined">favorite</i>
+							<span>Favorites</span>
+						</div>
+					</span>
+					<br />
+				</ng-container>
+				<ng-container *ngSwitchCase="'settings'">
+					<div class="details-container">
+						<br />
+						<button
+							mat-raised-button
+							(click)="openMixPropertiesPrompt(mix.id)">
+							<mat-icon>edit</mat-icon> Rename/Edit description
+						</button>
+						<br />
+						<br />
+						<br />
+					</div>
+				</ng-container>
+			</ng-container>
+		</nav>
+		<!-- DRAWER 2 OPEN -->
+		<nav
+			class="drawer"
+			[ngClass]="{
+				'not-shown': !menu2ToShow || selected2Action !== 'mix',
+				mobile: isMobile,
+				'large-drawer':
+					menu2ToShow === 'jingles' ||
+					menu2ToShow === 'interviews' ||
+					menu2ToShow === 'favorites' ||
+					menu2ToShow === 'files' ||
+					menu2ToShow === 'brands'
+			}">
+			<!-- close cross -->
+			<div
+				class="drawer-close"
+				(click)="close2ndDrawer()">
+				<i class="material-icons-outlined">close</i>
+			</div>
+			<!-- switch case on menu to show -->
+			<ng-container [ngSwitch]="menu2ToShow">
+				<!-- jingle container -->
+				<ng-container *ngSwitchCase="'jingles'">
+					<section class="drawer-header">
+						<span class="drawer-title">Jingles</span>
+					</section>
+
+					<rumble-pwa-files-as-source
+						class="source-component"
+						[connectDropTo]="connectDropTo"
+						[tags]="['jingle']"
+						[tagValuesForNewFiles]="['jingle']"
+						[displayKindTags]="['style', 'custom']"
+						[hideColumns]="['owner', 'options', 'exported']"
+						(virtualTracksEmitter)="insertVirtualTracks($event)"></rumble-pwa-files-as-source>
+				</ng-container>
+
+				<!-- form container -->
+				<ng-container *ngSwitchCase="'interviews'">
+					<section class="drawer-header">
+						<span class="drawer-title">Interviews</span>
+					</section>
+					<rumble-pwa-forms-as-source
+						class="source-component"
+						[displayAddAllBtn]="true"
+						[connectDropTo]="connectDropTo"
+						(virtualTracksEmitter)="insertVirtualTracks($event)"></rumble-pwa-forms-as-source>
+				</ng-container>
+
+				<!-- files container -->
+				<ng-container *ngSwitchCase="'files'">
+					<section class="drawer-header">
+						<span class="drawer-title">Files</span>
+					</section>
+
+					<section>
+						Record directly a new file here
+						<explanation [msg]="'This file will be available in the file table below.'"></explanation>
+						<rumble-pwa-record-actions
+							(entityFileEvent)="fasFiles.searchValue = $event?.publicName ?? $event?.fileName ?? ''"
+							[recordingTargetName]="'mix-item-page'">
+						</rumble-pwa-record-actions>
+					</section>
+
+					<rumble-pwa-files-as-source
+						#fasFiles
+						class="source-component"
+						[connectDropTo]="connectDropTo"
+						[displayKindTags]="['style', 'custom']"
+						[hideColumns]="['owner', 'options', 'exported']"
+						(virtualTracksEmitter)="insertVirtualTracks($event)"></rumble-pwa-files-as-source>
+				</ng-container>
+
+				<ng-container *ngSwitchCase="'favorites'">
+					<section class="drawer-header">
+						<span class="drawer-title">Favorites</span>
+					</section>
+					<rumble-pwa-favorites-as-source [connectDropTo]="connectDropTo"></rumble-pwa-favorites-as-source>
+				</ng-container>
+
+				<ng-container *ngSwitchCase="'brands'">
+					<section class="drawer-header">
+						<span class="drawer-title">Brands</span>
+					</section>
+					<rumble-pwa-brands-as-source [connectDropTo]="connectDropTo"></rumble-pwa-brands-as-source>
+				</ng-container>
+				<ng-container *ngSwitchDefault> Not available yet </ng-container>
+			</ng-container>
+		</nav>
+		<!-- MAIN CONTENT -->
+		<div
+			class="body"
+			[ngClass]="{
+				'no-drawer': !menuToShow || selectedAction !== 'mix',
+				mobile: layoutSize < 2
+			}">
+			<!-- MAIN CONTENT BELOW HEADER -->
+			<section class="main-content">
+				<!-- MAIN ACTION CONTENT -->
+				<ng-container [ngSwitch]="selectedAction">
+					<!-- MAIN CREATE -->
+					<ng-container *ngSwitchCase="'mix'">
+						<p *ngIf="displayOldVersionMessage">
+							This is mix was created with a former version of the app. Please create a new mix to continue
+							editing.
+							<span
+								[routerLink]="'/dashboard/mixes'"
+								class="rs-link rs-clickable"
+								>Go to all mixes</span
+							>
+						</p>
+
+						<rumble-pwa-virtual-playlist
+							class="main-content-playlist"
+							[state]="playlistState"
+							[canDrag]="true"
+							[displayTranscript]="true"
+							[displayFavorite]="false"
+							[displayDetails]="true"
+							[displayTrackActions]="true"
+							[displayTrackPlayerActions]="true"
+							[displayUnactiveTracks]="true"
+							[displayDragHelp]="true"
+							[displaySelected]="false"
+							[displayTrackMode]="false"
+							[deleteDirectlyHoldingShiftKey]="true"
+							[connectDropTo]="connectDropTo"
+							[playlistIdentifier]="'mix-' + mix.id"
+							(dropTrackEvent)="processDropTackEvent($event)"
+							(deleteTrackEvent)="processDeleteTrackEvent($event)"
+							(toggleActiveTrackEvent)="processToggleActiveTrackEvent($event)">
+						</rumble-pwa-virtual-playlist>
+						<rumble-pwa-virtual-playbar [state]="playlistState"></rumble-pwa-virtual-playbar>
+					</ng-container>
+				</ng-container>
+			</section>
+		</div>
+	</div>
+</ng-container>
+
+<!-- ALTERNATIVE TEMPLATE IF NO MIX -->
+<ng-template #noMixTpl>
+	<!-- NO SCRIPT TPL -->
+	<button
+		mat-raised-button
+		[routerLink]="'/mixes'">
+		<mat-icon>arrow_back</mat-icon>
+		Go back to all mixes
+	</button>
+
+	<p>Mix not loaded yet.</p>
+</ng-template>
+
+<!-- TEMPLATE TO FILL THE TOP BAR -->
+<ng-template #centralTemplate>
+	<button
+		class="export-button"
+		mat-raised-button
+		(click)="openRequestExportModal()">
+		Generate a new export
+	</button>
+
+	<button
+		class="export-button"
+		mat-raised-button
+		(click)="openExportModal()">
+		Show my exports
+	</button>
+</ng-template>

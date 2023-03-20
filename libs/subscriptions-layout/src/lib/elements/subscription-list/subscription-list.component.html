@@ -1,0 +1,199 @@
+<div *ngIf="dataSource.data.length; else noDataSource">
+	<mat-form-field appearance="outline">
+		<mat-label>Filter</mat-label>
+		<input
+			matInput
+			(keyup)="applyFilter($event)"
+			placeholder="Ex. My Subscription"
+			#input />
+	</mat-form-field>
+
+	<div class="mat-elevation-z8">
+		<mat-table
+			[dataSource]="dataSource"
+			matSort>
+			<!-- name Column -->
+			<ng-container matColumnDef="id">
+				<mat-header-cell
+					*matHeaderCellDef
+					mat-sort-header>
+					Id
+				</mat-header-cell>
+				<mat-cell *matCellDef="let row">
+					{{ row.id.substring(0, 5) }}
+				</mat-cell>
+			</ng-container>
+			<!-- name Column -->
+			<ng-container matColumnDef="name">
+				<mat-header-cell
+					*matHeaderCellDef
+					mat-sort-header>
+					Title
+				</mat-header-cell>
+				<mat-cell *matCellDef="let row">
+					{{ row.name }}
+				</mat-cell>
+			</ng-container>
+			<!-- description Column -->
+			<ng-container matColumnDef="description">
+				<mat-header-cell
+					*matHeaderCellDef
+					mat-sort-header>
+					Description
+				</mat-header-cell>
+				<mat-cell *matCellDef="let row">
+					{{ row.description }}
+				</mat-cell>
+			</ng-container>
+
+			<!-- Owner Column -->
+			<ng-container matColumnDef="owner">
+				<mat-header-cell
+					*matHeaderCellDef
+					mat-sort-header>
+					Owner
+				</mat-header-cell>
+				<mat-cell *matCellDef="let row">
+					<rumble-pwa-group-item-generic [groupId]="row.ownerId"></rumble-pwa-group-item-generic>
+				</mat-cell>
+			</ng-container>
+
+			<!-- Beneficiary Column -->
+			<ng-container matColumnDef="beneficiary">
+				<mat-header-cell
+					*matHeaderCellDef
+					mat-sort-header>
+					Beneficiary
+				</mat-header-cell>
+				<mat-cell *matCellDef="let row">
+					<rumble-pwa-group-item-generic [groupId]="row.beneficiaryId"></rumble-pwa-group-item-generic>
+				</mat-cell>
+			</ng-container>
+
+			<!-- Grant mapping -->
+			<ng-container matColumnDef="grantMapping">
+				<mat-header-cell
+					*matHeaderCellDef
+					mat-sort-header>
+					Plan
+				</mat-header-cell>
+				<mat-cell *matCellDef="let row">
+					{{ row.grantMapping }}
+				</mat-cell>
+			</ng-container>
+
+			<!-- seats -->
+			<ng-container matColumnDef="seats">
+				<mat-header-cell
+					*matHeaderCellDef
+					mat-sort-header>
+					Seat(s)
+				</mat-header-cell>
+				<mat-cell *matCellDef="let row">
+					<ng-container *ngIf="row.ownerId === profile?.id; else seatDetailsHiddenTpl">
+						{{ row.usedSeats ?? 0 }}/{{ row.maxAvailableSeats ?? 0 }}
+					</ng-container></mat-cell
+				>
+				<ng-template #seatDetailsHiddenTpl
+					><explanation [matTooltip]="'This information is only available to the group owner.'"> </explanation
+				></ng-template>
+			</ng-container>
+			<!-- Minutes -->
+			<ng-container matColumnDef="minutes">
+				<mat-header-cell
+					*matHeaderCellDef
+					mat-sort-header>
+					Minutes/m
+				</mat-header-cell>
+				<mat-cell *matCellDef="let row">
+					{{ row.durationExported ?? 0 | duration: 'showUnits' }}/{{
+						row.maxDurationExported ?? 0 | duration: 'showUnits'
+					}}
+				</mat-cell>
+			</ng-container>
+
+			<ng-container matColumnDef="more">
+				<mat-header-cell *matHeaderCellDef></mat-header-cell>
+				<mat-cell *matCellDef="let element">
+					<button
+						*ngIf="element.source !== 'trial' && element.ownerId === profile?.id"
+						mat-icon-button
+						[matMenuTriggerFor]="subscriptionMenu"
+						(click)="$event.stopPropagation()">
+						<mat-icon>more_vert</mat-icon>
+					</button>
+
+					<!-- MENU candidates -->
+					<mat-menu #changeBeneficiaryMenu>
+						<!-- <button
+							*ngIf="element.kind === 'team' || element.kind === 'default'"
+							mat-menu-item
+							(click)="inviteUserPerEmailForGroup(element)">
+							<mat-icon>send</mat-icon>
+							Invite a member by mail
+						</button> -->
+						<button
+							mat-menu-item
+							(click)="createTeamAndUpdateBeneficiary(element)">
+							<mat-icon>group</mat-icon>
+							Create a new team
+						</button>
+						<ng-container *ngFor="let potentialBeneficiary of getPotentialBeneficiaries(element)">
+							<button
+								mat-menu-item
+								(click)="updateBeneficiary(potentialBeneficiary, element)">
+								<rumble-pwa-group-item-generic
+									[groupId]="potentialBeneficiary.id"></rumble-pwa-group-item-generic>
+							</button>
+						</ng-container>
+					</mat-menu>
+
+					<mat-menu #subscriptionMenu>
+						<!-- add member -->
+						<button
+							mat-menu-item
+							[matMenuTriggerFor]="changeBeneficiaryMenu">
+							<mat-icon>manage_accounts</mat-icon>
+							Change beneficiary
+						</button>
+						<!-- <button
+							mat-menu-item
+							(click)="editSubscription(element)">
+							<mat-icon>edit</mat-icon>Edit
+						</button>
+						<button
+							mat-menu-item
+							(click)="deleteSubscription(element)">
+							<mat-icon>delete</mat-icon>Delete
+						</button> -->
+					</mat-menu>
+				</mat-cell>
+			</ng-container>
+
+			<mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+			<mat-row
+				class="subscription-row rs-clickable"
+				*matRowDef="let row; columns: displayedColumns"
+				[routerLink]="row.id"></mat-row>
+
+			<!-- Row shown when there is no matching data. -->
+			<tr *matNoDataRow>
+				<td
+					class="mat-cell"
+					colspan="4">
+					No subscription matching the filter "{{ input.value }}"
+				</td>
+			</tr>
+		</mat-table>
+
+		<mat-paginator
+			pageSize="25"
+			[pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+	</div>
+</div>
+<ng-template #noDataSource>
+	<mat-card>
+		You have no subscription yet. To purchase one of our plans please visit our billing page:
+		<a [routerLink]="['/billing']">go to billing page</a>
+	</mat-card>
+</ng-template>

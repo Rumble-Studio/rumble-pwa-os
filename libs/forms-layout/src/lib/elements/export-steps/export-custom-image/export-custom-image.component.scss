@@ -1,0 +1,12 @@
+.export-container {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	margin: 0 auto;
+	.step-kind {
+		text-align: end;
+		margin-right: 10px;
+		color: hsl(44, 100%, 42%);
+	}
+}

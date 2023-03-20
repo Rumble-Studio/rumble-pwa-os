@@ -1,0 +1,29 @@
+<div class="tts-prompt">
+	<header>
+		<h2>Record some audio</h2>
+	</header>
+	<main class="main">
+		<!-- <rumble-pwa-playlist-recorder
+			#playlistRecorder
+			*ngIf="playlistId; else missingPlaylistIdTpl"
+			[playlistId]="playlistId">
+		</rumble-pwa-playlist-recorder> -->
+		NOT IMPLEMENTED YET
+
+		<ng-template #missingPlaylistIdTpl> We are missing the playlist target. </ng-template>
+	</main>
+	<footer class="footer">
+		<button
+			mat-stroked-button
+			(click)="cancel()">
+			<mat-icon>close</mat-icon>
+			Cancel
+		</button>
+		<button
+			mat-raised-button
+			(click)="submit()">
+			<mat-icon>check</mat-icon>
+			Confirm
+		</button>
+	</footer>
+</div>

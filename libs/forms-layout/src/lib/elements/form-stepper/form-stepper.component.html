@@ -1,0 +1,10 @@
+<div
+	*ngFor="let step of steps; let i = index"
+	class="mat-horizontal-stepper-content"
+	[id]="_getStepContentId(i)"
+	[@stepTransition]="_getAnimationDirection(i)"
+	(@stepTransition.done)="_animationDone.next($event)"
+	[attr.aria-labelledby]="_getStepLabelId(i)"
+	[attr.aria-expanded]="selectedIndex === i">
+	<ng-container [ngTemplateOutlet]="step.content"></ng-container>
+</div>

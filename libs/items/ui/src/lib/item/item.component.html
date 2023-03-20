@@ -1,0 +1,71 @@
+<ng-container *ngIf="item$$$.$ | async as item">
+	<div
+		class="container"
+		[ngClass]="{ vertical: layoutSize < 1 }">
+		<div class="artwork-container">
+			<image
+				*ngIf="artworkUrl"
+				[imageUrl]="artworkUrl"
+				[passive]="true"
+				[height]="'80px'"
+				[width]="'80px'"
+				[objectFit]="'contain'">
+			</image>
+		</div>
+		<div
+			class="item-container"
+			[ngClass]="{ 'flex-column': layoutSize < 1 }">
+			<div class="item-infos">
+				<span class="item-title">
+					{{ item.title }}
+				</span>
+				<span class="item-description">
+					{{ item.description }}
+				</span>
+			</div>
+			<div class="item-player">
+				<span
+					*ngIf="item.fileId; else noAudioContentTpl"
+					class="rs-full-width">
+					<rumble-pwa-file-player
+						[virtualPlaylistPrefix]="item.id + rank"
+						[connectDropTo]="[]"
+						[displayDetails]="false"
+						[fileId]="item.fileId"></rumble-pwa-file-player>
+				</span>
+				<ng-template #noAudioContentTpl>
+					<span class="rs-full-width rs-italic-centered"> No audio for this item. </span>
+				</ng-template>
+			</div>
+		</div>
+		<div
+			class="item-actions"
+			*ngIf="canEdit">
+			<button
+				mat-icon-button
+				[matMenuTriggerFor]="itemMenu"
+				(click)="$event.stopPropagation()">
+				<mat-icon>more_vert</mat-icon>
+			</button>
+
+			<mat-menu #itemMenu="matMenu">
+				<button
+					mat-menu-item
+					(click)="goToItemPage()">
+					<mat-icon>launch</mat-icon>Go to
+				</button>
+				<button
+					mat-menu-item
+					(click)="editItem()">
+					<mat-icon>edit</mat-icon>Edit
+				</button>
+				<button
+					mat-menu-item
+					*ngIf="collectionId && rank"
+					(click)="unlistItemFromCollection(collectionId, rank)">
+					<mat-icon>delete</mat-icon>Unlist
+				</button>
+			</mat-menu>
+		</div>
+	</div>
+</ng-container>

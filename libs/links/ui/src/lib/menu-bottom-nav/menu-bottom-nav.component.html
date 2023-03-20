@@ -1,0 +1,17 @@
+<div class="menu-container">
+	<ng-container *ngFor="let link of links">
+		<a
+			*ngIf="!link.superUserOnly || (link.superUserOnly && showSuperUser)"
+			[routerLink]="[link.path]"
+			[title]="link.description"
+			class="rs-menu-item">
+			<div
+				class="menu-item"
+				[routerLinkActive]="['active']"
+				[routerLinkActiveOptions]="{ exact: true }">
+				<i class="material-icons-outlined">{{ link.matIcon }}</i>
+				<span *ngIf="!compactView">{{ link.shortName }}</span>
+			</div>
+		</a>
+	</ng-container>
+</div>

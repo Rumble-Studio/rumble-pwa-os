@@ -1,0 +1,113 @@
+.group-header {
+	background-color: rgba(219, 216, 216, 0.76);
+	height: 80px;
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	padding: 10px;
+
+	.title {
+		display: flex;
+		align-items: center;
+		padding: 10px;
+		height: 100%;
+		max-width: 50%;
+
+		h2 {
+			font-weight: lighter;
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+
+		.object-category {
+			opacity: 0.25;
+			text-transform: uppercase;
+			font-size: 15px;
+		}
+	}
+}
+
+.group-editor-container {
+	display: flex;
+	width: 100%;
+	padding: 5px;
+	position: relative;
+	justify-content: center;
+}
+
+.group-card {
+	width: 80%;
+	min-width: 300px;
+	height: auto;
+	min-height: 1px;
+	overflow: hidden;
+}
+.group-tree-invisible {
+	display: none;
+}
+
+.group-tree ul,
+.group-tree li {
+	margin-top: 0;
+	margin-bottom: 0;
+	list-style-type: none;
+}
+.group-tree-node {
+	display: block;
+
+	&.custom-node {
+		display: flex;
+		flex-wrap: wrap;
+	}
+
+	.add-actions {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 10px;
+
+		.action {
+			padding: 2px 0px;
+		}
+	}
+}
+
+.group-tree-node .group-tree-node {
+	padding-left: 40px;
+}
+
+.truc {
+	border: 1px solid rgba(0, 0, 0, 0.1);
+	display: inline-flex;
+	align-items: center;
+	padding: 2px 5px 2px 15px;
+	height: 40px;
+	border-radius: 20px;
+	top: 5px;
+	position: relative;
+	max-width: 100%;
+}
+
+.truc-icon {
+	margin: 0 10px 0 0;
+}
+
+.button-add-candidate {
+	display: flex;
+	align-items: left;
+}
+
+.icon-over-icon {
+	.plus-icon {
+		position: absolute;
+		font-weight: bold;
+		font-size: 1rem;
+		left: 12px;
+		top: 5px;
+	}
+	.generic-icon {
+		font-size: 1.3rem;
+		padding-left: 5px;
+	}
+}

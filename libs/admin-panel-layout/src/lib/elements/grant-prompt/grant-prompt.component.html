@@ -1,0 +1,29 @@
+<div class="grant-prompt-container">
+	<!-- <h2>{{ data.group.name }}</h2> -->
+	<div class="grant-data">
+		<div class="section"><span class="label">ID: </span>{{ data.grant.id }}</div>
+		<div class="section">
+			<span class="label">Permission:</span>
+			<div
+				class="list"
+				*ngIf="permission">
+				<span><span class="label">ID: </span>{{ permission.id || 'no data' }}</span>
+				<span><span class="label">Name: </span>{{ permission.name || 'no data' }}</span>
+				<span><span class="label">Description</span> {{ permission.description || 'no data' }}</span>
+				<span><span class="label">Key: </span>{{ permission.key || 'no data' }}</span>
+				<span><span class="label">Enabled: </span>{{ permission.enabled || 'no data' }}</span>
+				<span><span class="label">Need group: </span>{{ permission.needGroup || 'no data' }}</span>
+			</div>
+		</div>
+		<div class="section"><span class="label">Group ID: </span>{{ data.grant.groupId || 'no data' }}</div>
+		<div class="section"><span class="label">Parameters: </span>{{ data.grant.parameters || 'no data' }}</div>
+		<div class="section"><span class="label">Method name: </span>{{ data.grant.methodName || 'no data' }}</div>
+		<button
+			mat-raised-button
+			(click)="onClose()"
+			class="close-btn">
+			<mat-icon>close</mat-icon>
+			Close
+		</button>
+	</div>
+</div>

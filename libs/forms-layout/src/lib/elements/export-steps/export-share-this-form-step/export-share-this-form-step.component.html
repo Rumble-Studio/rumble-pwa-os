@@ -1,0 +1,27 @@
+<div class="export-share-this-node-container">
+	<span class="step-kind">Sharing step</span>
+	<span class="step-title">{{ steptitle }}</span>
+	<span
+		*ngIf="stepdescription"
+		class="step-hint"
+		>{{ stepdescription }}</span
+	>
+
+	<ng-container [ngSwitch]="numberOfSharedEmails">
+		<span
+			*ngSwitchCase="0"
+			class="guest"
+			>The guest did not share the interview.</span
+		>
+		<span
+			*ngSwitchCase="1"
+			class="guest"
+			>The guest shared the interview with 1 person.</span
+		>
+		<span
+			*ngSwitchDefault
+			class="guest"
+			>The guest shared the interview with {{ numberOfSharedEmails }} people.</span
+		>
+	</ng-container>
+</div>

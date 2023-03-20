@@ -1,0 +1,15 @@
+<ng-container *ngIf="recordingSessionListItems$$$.$ | async as recordingSessionListItems; else noRecordingSessionTpl">
+	<mat-grid-list
+		cols="4"
+		rowHeight="2:1"
+		gutterSize="15px">
+		<mat-grid-tile
+			rowspan="2"
+			*ngFor="let recordingSessionListItem of recordingSessionListItems">
+			<rumble-pwa-recording-session-canvas-item
+				class="image-attribute"
+				[recordingSessionListItem]="recordingSessionListItem"></rumble-pwa-recording-session-canvas-item>
+		</mat-grid-tile>
+	</mat-grid-list>
+</ng-container>
+<ng-template #noRecordingSessionTpl>No recording session available.</ng-template>

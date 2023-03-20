@@ -1,0 +1,24 @@
+.item-editor-container {
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	// padding: 5px;
+	position: relative;
+	justify-content: center;
+	padding: 20px;
+}
+
+.item-property {
+	padding: 0 20px 20px;
+	border: 1px solid lightgrey;
+	border-radius: 10px;
+	background-color: white;
+	margin-bottom: 20px;
+}
+
+.collection-chip {
+	background-color: var(--rs-yellow-light);
+	&:hover {
+		background-color: var(--rs-yellow-light);
+	}
+}

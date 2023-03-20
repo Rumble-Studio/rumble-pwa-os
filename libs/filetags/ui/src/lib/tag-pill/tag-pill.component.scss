@@ -1,0 +1,25 @@
+:host {
+	display: inline-block;
+	margin: 4px 0;
+}
+
+.blue {
+	border-color: var(--rs-blue);
+	background-color: var(--rs-blue-lighter);
+
+	&:hover {
+		background-color: var(--rs-blue-light);
+	}
+}
+
+pill {
+	display: flex;
+	align-items: center;
+
+	mat-icon {
+		margin: 1px 2px 0 0;
+		font-size: 1.1rem;
+		height: unset;
+		width: unset;
+	}
+}

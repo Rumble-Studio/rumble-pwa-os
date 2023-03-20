@@ -1,0 +1,191 @@
+<ng-container *ngIf="domain$$$.$ | async as domain; else noDomain">
+	<header class="rs-header">
+		<button
+			class="rs-goback"
+			mat-stroked-button
+			[routerLink]="'/domains'">
+			<mat-icon>arrow_back</mat-icon>
+		</button>
+		<section class="title">
+			<h2>
+				<span class="domain-category">Domain:</span>&nbsp;<em>{{ domain.name }}</em>
+			</h2>
+		</section>
+
+		<button
+			mat-raised-button
+			class="rs-btn-new btn-edit-domain"
+			(click)="openObjectPrompt()">
+			<mat-icon>edit</mat-icon>
+		</button>
+	</header>
+
+	<div class="rs-editor-container">
+		<!-- description -->
+		<ng-container *ngIf="domain.description">
+			<div class="header">
+				<h3>Description</h3>
+			</div>
+			<div class="body">
+				{{ domain.description }}
+				<span
+					class="material-icons-outlined rs-text-smaller rs-clickable"
+					(click)="openObjectPrompt()">
+					edit
+				</span>
+			</div>
+			<hr />
+		</ng-container>
+
+		<!-- domain url -->
+		<div class="header">
+			<h3>Domain url</h3>
+		</div>
+		<div class="body">
+			<a
+				[href]="domain.url"
+				[title]="domain.hostname"
+				target="_blank">
+				<pill>{{ domain.url }} <span class="material-icons-outlined rs-text-small">open_in_new</span></pill>
+			</a>
+			<span
+				class="material-icons-outlined rs-text-smaller rs-clickable"
+				(click)="openObjectPrompt()">
+				edit
+			</span>
+		</div>
+		<hr />
+
+		<!-- DNS settings -->
+		<div class="header">
+			<h3>DNS settings</h3>
+		</div>
+
+		<div class="body">
+			<todo-open
+				[todo]="{
+					id: 'todo:dns-settings-needs-2-records',
+					title: 'Set the DNS records',
+					description:
+						'You must add 2 records to your DNS settings.<br>\
+						<ul>\
+							<li>a CNAME record: to redirect your domain (or subdomain) to Rumble app.</li>\
+							<li>a TXT record: to prove domain ownership</li>\
+						</ul>\
+						You do not need to create anything else on your domain provider.',
+					alwaysShow: true
+				}">
+			</todo-open>
+
+			<h4>1) Add the CNAME record to redirect your custom domain to Rumble app:</h4>
+
+			<todo-open
+				[todo]="{
+					id: 'todo:dns-settings-cname-record',
+					title: 'How to set one DNS record',
+					description:
+						'<p>Go to your web hosting service (e.g Hostinger, GoDaddy, OVH, Google Domains,...) or DNS service (e.g. Cloudflare, ...) and create a new DNS entry (also called DNS record).</p>\
+<p>A DNS record is made of:</p>\
+	<ul>\
+		<li>a name (can also be called a subdomain or host)</li>\
+		<li>a type (eg. CNAME, A, AAAA, TXT, ...)</li>\
+		<li>a value</li>\
+		<li>a TTL (time to live): start with 60 while configuring then you can set up to auto or 3600 for example.</li>\
+	</ul>\
+	You can see a CNAME like an implicit redirection (showing Rumble app to your visitors, but keeping your own domain in the address bar.\
+	',
+					img: '/assets/images/set-cname.gif',
+					alwaysShow: true
+				}">
+			</todo-open>
+			<mat-card>
+				<p>Name: it must match the subdomain of {{ domain.url }}</p>
+				<p>Type: <pill>CNAME</pill></p>
+				<p>Value: <pill [contentToCopy]="'wl.rumble.studio'">wl.rumble.studio</pill></p>
+				<p>TTL: <pill>60</pill></p>
+			</mat-card>
+
+			<!-- <p>
+				For example, here is a CNAME record for "participate.mywebsite.com" in Google Domains DNS settings (in French):
+			</p> -->
+			<!-- <img
+				class="rs-image-default"
+				src="/assets/images/cname-example.png" /> -->
+			<br />
+			<br />
+			<h4>2) Add the TXT record to prove domain ownership</h4>
+			<p>In order to prove you are the owner of your domain you must add a second DNS record in your DNS settings:</p>
+			<mat-card>
+				<p>
+					Name:
+					<pill
+						class="rs-clickable"
+						*ngIf="domain.txtRecordName; else txtRecordNameNotAvailableTpl"
+						[contentToCopy]="domain.txtRecordName"
+						>{{ domain.txtRecordName }}</pill
+					>
+					<ng-template #txtRecordNameNotAvailableTpl> Not available yet... </ng-template>
+				</p>
+				<p>Type: <pill>TXT</pill></p>
+				<p>
+					Value:
+					<pill
+						class="rs-clickable"
+						*ngIf="domain.txtRecordValue; else txtRecordValueNotAvailableTpl"
+						[contentToCopy]="domain.txtRecordValue"
+						>{{ domain.txtRecordValue }}</pill
+					>
+					<ng-template #txtRecordValueNotAvailableTpl> Not available yet... </ng-template>
+				</p>
+				<p>TTL: <pill>60</pill></p>
+			</mat-card>
+			<!-- <p>
+				For example, here is the result with both records for "participate.mywebsite.com" in Google Domains DNS settings
+				(in French):
+			</p> -->
+			<!-- <img
+				class="rs-image-default"
+				src="/assets/images/cname-example-2.png" /> -->
+
+			<br />
+			<h4>3) Verify your settings:</h4>
+			<p>Keep in mind that those settings can take time to propagate through the world wide web ;)</p>
+			<p>
+				<!-- should have a more explicit colors and put at the top -->
+				<span
+					[ngClass]="{
+						valid: domainValidityMessage.includes('correctly'),
+						invalid: domainValidityMessage.includes('invalid')
+					}"
+					>{{ domainValidityMessage }}</span
+				>
+				<br />
+				<button
+					mat-raised-button
+					(click)="refreshDomainValidity()">
+					Verify
+				</button>
+			</p>
+			<h4>4) Create a page</h4>
+			<p>
+				Next step, once your domain is all set, is for you to create a <em>page</em>. A page is a way to define a path
+				on top of your domain to point toward an interview of yours.
+			</p>
+			<button
+				mat-raised-button
+				[routerLink]="'/pages'">
+				Go to pages
+			</button>
+		</div>
+	</div>
+</ng-container>
+<ng-template #noDomain>
+	<button
+		mat-raised-button
+		[routerLink]="'/domains'">
+		<mat-icon>arrow_back</mat-icon>
+		Go back to all domains
+	</button>
+
+	<div class="domain-editor-container">Domain kit not available.</div>
+</ng-template>

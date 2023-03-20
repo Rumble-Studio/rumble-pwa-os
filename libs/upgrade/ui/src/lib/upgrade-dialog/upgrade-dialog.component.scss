@@ -1,0 +1,36 @@
+:host {
+	position: relative;
+}
+.confirmationTitle {
+	display: flex;
+	justify-content: center;
+	font-weight: bold;
+}
+
+.confirmationOptions {
+	display: flex;
+	justify-content: center;
+}
+
+.triangle {
+	position: absolute;
+	top: -27px;
+	left: -38px;
+	width: 0;
+	height: 0;
+	border-left: 20px solid transparent;
+	border-right: 20px solid transparent;
+	border-bottom: 20px solid var(--rs-yellow);
+	z-index: -1;
+	// rotate
+	transform: rotate(-45deg);
+	z-index: 1;
+}
+
+.action-btn {
+	margin: 0 10px;
+}
+
+.icon {
+	margin-right: 5px;
+}

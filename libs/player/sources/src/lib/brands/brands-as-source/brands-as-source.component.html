@@ -1,0 +1,131 @@
+<ng-container *ngIf="brands$ | async as brands; else noBrandsTpl">
+	<!-- form selection -->
+	<mat-form-field
+		appearance="outline"
+		class="rs-full-width">
+		<mat-label>Select a brand</mat-label>
+
+		<mat-chip-list
+			#chipList
+			aria-label="Brand selection">
+			<mat-chip
+				(removed)="removeBrand()"
+				*ngIf="!!selectedBrand">
+				{{ selectedBrand.name }}
+				<button matChipRemove>
+					<mat-icon>cancel</mat-icon>
+				</button> </mat-chip
+			><input
+				*ngIf="!selectedBrand"
+				placeholder="Ex. My brand"
+				#brandInput
+				[formControl]="brandSelectionCtrl"
+				[matAutocomplete]="auto"
+				[matChipInputFor]="chipList"
+				[matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+				(matChipInputTokenEnd)="addBrandWithInput()" />
+		</mat-chip-list>
+
+		<mat-autocomplete
+			#auto="matAutocomplete"
+			(optionSelected)="selectBrand($event)">
+			<mat-option
+				*ngFor="let brand of brands"
+				[value]="brand">
+				<mat-icon
+					class="shared-icon"
+					*ngIf="brand.ownerId !== profile?.id">
+					groups</mat-icon
+				>
+				{{ brand.name }}
+			</mat-option>
+			<mat-option (click)="createANewBrand()">New brand</mat-option>
+		</mat-autocomplete>
+	</mat-form-field>
+
+	<!-- recording sessions selection and virtual playlist-->
+	<ng-container *ngIf="selectedBrand; else noBrandSelectedTpl">
+		<button
+			class="rs-full-width"
+			mat-raised-button
+			[routerLink]="['/brands/' + selectedBrand.id]">
+			Go to this brand
+		</button>
+		<br /><br />
+
+		<ng-container *ngIf="audioPacks.length > 0; else noAudioPackTpl">
+			<mat-form-field
+				appearance="outline"
+				class="rs-full-width">
+				<mat-label>Select an audio pack</mat-label>
+
+				<mat-chip-list
+					#chipList
+					aria-label="Audio pack selection">
+					<mat-chip
+						(removed)="removeAudioPack()"
+						*ngIf="!!selectedAudioPack">
+						{{ selectedAudioPack.name }}
+						<button matChipRemove>
+							<mat-icon>cancel</mat-icon>
+						</button> </mat-chip
+					><input
+						*ngIf="!selectedAudioPack"
+						placeholder="Ex. My audio pack"
+						#brandInput
+						[formControl]="audioPackSelectionCtrl"
+						[matAutocomplete]="auto"
+						[matChipInputFor]="chipList"
+						[matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+						(matChipInputTokenEnd)="addAudioPackWithInput()" />
+				</mat-chip-list>
+
+				<mat-autocomplete
+					#auto="matAutocomplete"
+					(optionSelected)="selectAudioPack($event)">
+					<mat-option
+						*ngFor="let audioPack of audioPacks"
+						[value]="audioPack">
+						{{ audioPack.name }}
+					</mat-option>
+				</mat-autocomplete>
+			</mat-form-field>
+		</ng-container>
+		<ng-template #noAudioPackTpl>
+			<span class="builder-title">No audio pack found.</span>
+		</ng-template>
+	</ng-container>
+
+	<ng-container *ngIf="selectedAudioPack">
+		<ng-container *ngIf="selectedAudioPack.audioPackItems.length > 0; else noAudioPackItemTpl">
+			<rumble-pwa-virtual-playlist
+				[state]="state"
+				[canDrag]="true"
+				[displayTranscript]="true"
+				[displayFavorite]="true"
+				[displayDetails]="true"
+				[connectDropTo]="connectDropTo"
+				[playlistIdentifier]="virtualPlaylistId"
+				[displayTrackPlayerActions]="true"
+				[defaultNoStateMsg]="'This audio pack does not contains any audio pack items.'">
+			</rumble-pwa-virtual-playlist>
+		</ng-container>
+		<ng-template #noAudioPackItemTpl>
+			<span class="builder-title">No audio pack item found.</span>
+		</ng-template>
+	</ng-container>
+
+	<!-- when no form is selected -->
+	<ng-template #noBrandSelectedTpl>
+		<span class="builder-title">Please select a brand above.</span>
+	</ng-template>
+</ng-container>
+
+<ng-template #noBrandsTpl>
+	You have no brands yet.
+	<div
+		class="rs-cta rs-clickable"
+		(click)="createANewBrand()">
+		<span>Create a new interview</span>
+	</div>
+</ng-template>

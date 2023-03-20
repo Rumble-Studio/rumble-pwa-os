@@ -1,0 +1,72 @@
+<ng-container *ngIf="(audioPacksWithFiles$?.length ?? 0) > 0; else noAudioPacksTpl">
+	<ng-container *ngFor="let audioPackWithFiles$ of audioPacksWithFiles$">
+		<div class="audio-pack-container">
+			<div class="audio-pack-header">
+				<h4>{{ audioPackWithFiles$.audioPack.name }}</h4>
+				<button
+					[disabled]="!canYouEdit"
+					mat-icon-button
+					[matMenuTriggerFor]="groupMenu"
+					(click)="$event.stopPropagation()">
+					<mat-icon>more_vert</mat-icon>
+				</button>
+				<mat-menu #groupMenu>
+					<button
+						mat-menu-item
+						(click)="openAddAudioPackPrompt(audioPackWithFiles$.audioPack)">
+						<mat-icon>edit</mat-icon>Rename
+					</button>
+					<button
+						mat-menu-item
+						(click)="deleteAudioPack(audioPackWithFiles$.audioPack)">
+						<mat-icon>delete</mat-icon>Remove
+					</button>
+				</mat-menu>
+			</div>
+			<rumble-pwa-file-table
+				[elevatedClass]="false"
+				[files]="(audioPackWithFiles$.files | async) ?? []"
+				[displayExtraFileProperties]="true"
+				[hideColumns]="audioPackItemsColumnsHidden"
+				[topLeftActionTpl]="audioPackItemMiddleActionTpl"
+				[customMoreMenuTpl]="audioPackItemMoreMenuTpl">
+			</rumble-pwa-file-table>
+			<ng-template
+				#audioPackItemMoreMenuTpl
+				let-fileWithOwner="object">
+				<button
+					mat-icon-button
+					[matMenuTriggerFor]="audioPackItemMenu"
+					(click)="$event.stopPropagation()">
+					<mat-icon>more_vert</mat-icon>
+				</button>
+				<mat-menu #audioPackItemMenu>
+					<button
+						mat-menu-item
+						(click)="openAudioPackItemPrompt(audioPackWithFiles$.audioPack, fileWithOwner.extraId)">
+						<mat-icon>edit</mat-icon>Edit
+					</button>
+					<button
+						(click)="deleteAudioPackItem(audioPackWithFiles$.audioPack, fileWithOwner.extraId)"
+						mat-menu-item>
+						<span class="menu-btn-aligned">
+							<mat-icon>delete</mat-icon>
+							Delete
+						</span>
+					</button>
+				</mat-menu>
+			</ng-template>
+
+			<ng-template #audioPackItemMiddleActionTpl>
+				<button
+					type="button"
+					mat-raised-button
+					(click)="openAudioPackItemPrompt(audioPackWithFiles$.audioPack)">
+					<mat-icon>add</mat-icon>
+					Add audio item
+				</button>
+			</ng-template>
+		</div>
+	</ng-container>
+</ng-container>
+<ng-template #noAudioPacksTpl> No audio pack found. </ng-template>

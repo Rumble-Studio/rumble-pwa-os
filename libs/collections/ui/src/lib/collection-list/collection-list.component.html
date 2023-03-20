@@ -1,0 +1,68 @@
+<object-list
+	[objects]="collections"
+	(tableClickEvent)="processTableClick($event)"
+	[middleActionTpl]="includeArchivedToggleTpl">
+	<object-column
+		[columnId]="'title'"
+		[header]="'Title'"
+		[flex]="2">
+	</object-column>
+	<object-column
+		[columnId]="'description'"
+		[header]="'Description'">
+	</object-column>
+	<object-column
+		[columnId]="'typeId'"
+		[header]="'Type'"
+		[template]="typeTpl">
+	</object-column>
+	<ng-template
+		#typeTpl
+		let-object="object">
+		{{ object.typeId[0].toUpperCase() + object.typeId.slice(1) }}
+	</ng-template>
+
+	<object-column
+		[columnId]="'options'"
+		[flex]="0.2"
+		[template]="optionColumn">
+	</object-column>
+	<ng-template
+		let-object="object"
+		#optionColumn>
+		<button
+			mat-icon-button
+			[matMenuTriggerFor]="menu"
+			(click)="$event.stopImmediatePropagation()">
+			<mat-icon>more_vert</mat-icon>
+		</button>
+		<mat-menu #menu="matMenu">
+			<button
+				mat-menu-item
+				(click)="editCollection(object)">
+				<mat-icon>edit</mat-icon>
+				<span>Edit</span>
+			</button>
+			<button
+				mat-menu-item
+				(click)="object.state === 'archived' ? restoreCollection(object) : archiveCollection(object)">
+				<mat-icon>{{ object.state === 'archived' ? 'unarchive' : 'archive' }}</mat-icon>
+				<span>{{ object.state === 'archived' ? 'Restore' : 'Archive' }}</span>
+			</button>
+			<button
+				mat-menu-item
+				(click)="deleteCollection(object)">
+				<mat-icon class="material-icons-outlined"> delete</mat-icon>
+				<span>Delete</span>
+			</button>
+		</mat-menu>
+	</ng-template>
+</object-list>
+
+<ng-template #includeArchivedToggleTpl>
+	<mat-slide-toggle
+		*ngIf="displayArchivedToggle"
+		[(ngModel)]="displayArchivedCollections"
+		>Display archived collections</mat-slide-toggle
+	>
+</ng-template>

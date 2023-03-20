@@ -1,0 +1,103 @@
+<header class="rs-header">
+	<button
+		class="rs-goback"
+		*ngIf="layoutSize < 1"
+		mat-stroked-button
+		[routerLink]="'/dashboard'">
+		<mat-icon>arrow_back</mat-icon>
+	</button>
+	<section class="title">
+		<span class="object-category">Notes</span>
+		<button
+			(click)="openDialog()"
+			mat-raised-button
+			class="rs-btn-new"
+			data-cy="create-note-more-button">
+			<mat-icon>add</mat-icon>
+			New
+		</button>
+	</section>
+</header>
+<mat-slide-toggle [(ngModel)]="displayArchivedNotes">Display archived notes</mat-slide-toggle>
+
+<object-list
+	[objects]="notes"
+	(tableClickEvent)="processTableClick($event)">
+	<object-column
+		[columnId]="'title'"
+		[header]="'Title'"
+		[flex]="2">
+	</object-column>
+	<object-column
+		[columnId]="'description'"
+		[header]="'Description'">
+	</object-column>
+	<ng-container *ngIf="!isMobile">
+		<object-column
+			[columnId]="'body'"
+			[header]="'Body'">
+		</object-column>
+		<object-column
+			[columnId]="'timeCreation'"
+			[header]="'Creation time'"
+			[template]="timeCreationTpl">
+		</object-column>
+		<ng-template
+			#timeCreationTpl
+			let-object="object">
+			{{ object.timeCreation * 1000 | date: 'short' }}
+		</ng-template>
+
+		<object-column
+			[columnId]="'timeUpdate'"
+			[header]="'Last edited time'"
+			[template]="timeUpdateTpl">
+		</object-column>
+		<ng-template
+			#timeUpdateTpl
+			let-object="object">
+			{{ object.timeUpdate * 1000 | date: 'short' }}
+		</ng-template>
+	</ng-container>
+
+	<object-column
+		[columnId]="'options'"
+		[template]="optionColumn">
+	</object-column>
+	<ng-template
+		let-object="object"
+		#optionColumn>
+		<button
+			mat-icon-button
+			[matMenuTriggerFor]="menu"
+			(click)="$event.stopImmediatePropagation()">
+			<mat-icon>more_vert</mat-icon>
+		</button>
+		<mat-menu #menu="matMenu">
+			<button
+				mat-menu-item
+				(click)="openDialog(object)">
+				<mat-icon>edit</mat-icon>
+				<span>Edit</span>
+			</button>
+			<button
+				mat-menu-item
+				(click)="duplicateNoteWithConfirmation(object)">
+				<mat-icon>content_copy</mat-icon>
+				<span>Duplicate</span>
+			</button>
+			<button
+				mat-menu-item
+				(click)="object.state === 'archived' ? restoreNote(object) : archiveNote(object)">
+				<mat-icon>{{ object.state === 'archived' ? 'unarchive' : 'archive' }}</mat-icon>
+				<span>{{ object.state === 'archived' ? 'Restore' : 'Archive' }}</span>
+			</button>
+			<button
+				mat-menu-item
+				(click)="deleteNote(object)">
+				<mat-icon class="material-icons-outlined"> delete</mat-icon>
+				<span>Delete</span>
+			</button>
+		</mat-menu>
+	</ng-template>
+</object-list>

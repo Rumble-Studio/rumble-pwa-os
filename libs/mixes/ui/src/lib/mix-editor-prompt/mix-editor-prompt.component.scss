@@ -1,0 +1,30 @@
+.dismiss-container {
+	display: flex;
+	justify-content: flex-end;
+}
+
+.full-width {
+	width: 100%;
+}
+
+.color-selection {
+	display: flex;
+	width: 100%;
+	justify-content: center;
+	align-items: center;
+	flex-wrap: wrap;
+	.color-selector {
+		margin: 10px;
+	}
+}
+
+.margin-button {
+	margin: 5px;
+}
+
+.image-upload {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}

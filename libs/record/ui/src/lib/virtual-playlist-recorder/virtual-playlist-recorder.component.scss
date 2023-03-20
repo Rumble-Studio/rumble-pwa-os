@@ -1,0 +1,42 @@
+.mode-selector {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	// background-color: red;
+	width: 90px;
+}
+.logo-container {
+	height: 30px;
+	width: 30px;
+	background-color: inherit;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: space-around;
+	margin: 3px;
+	border: 1px solid rgba(0, 0, 0, 0.16);
+	border-radius: 3px;
+	padding: 1px;
+
+	.bar {
+		background-color: black;
+		height: 3px;
+		border-radius: 1.5px;
+		width: 100%;
+		&.yellow {
+			background-color: var(--rs-yellow-light);
+		}
+	}
+}
+.inactive {
+	opacity: 0.25;
+}
+
+.recording-mode-sentence {
+	// display: flex;
+	// flex-direction: row;
+	// justify-content: center;
+	// align-items: center;
+	color: var(--rs-yellow);
+}

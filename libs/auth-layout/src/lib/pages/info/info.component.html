@@ -1,0 +1,28 @@
+<ul class="authInfo">
+	12 oct 8h55
+	<li>
+		token: <strong>{{ token }}</strong>
+	</li>
+	<li>
+		connected: <strong>{{ connected }}</strong>
+	</li>
+	<li>
+		decoded: <strong>{{ decoded | json }}</strong>
+	</li>
+	<li>
+		due: <strong>{{ due | date: 'short' }}</strong>
+	</li>
+	<li>
+		allowPasswordChange: <strong>{{ allowPasswordChange }}</strong>
+	</li>
+</ul>
+<button (click)="openAuthDialog()">Auth dialog</button>
+
+<button
+	*ngIf="connected"
+	(click)="logout()">
+	log out
+</button>
+<br />
+<a routerLink="../login">login</a><br />
+<a routerLink="../register">register</a>

@@ -1,0 +1,48 @@
+<div
+	class="container"
+	*ngIf="imageChangedEvent">
+	<div class="controls">
+		<button
+			mat-icon-button
+			(click)="rotateLeft()">
+			<mat-icon>rotate_left</mat-icon>
+		</button>
+		<button
+			mat-icon-button
+			(click)="rotateRight()">
+			<mat-icon>rotate_right</mat-icon>
+		</button>
+		<button
+			mat-icon-button
+			(click)="flipVertical()">
+			<mat-icon>swap_vert</mat-icon>
+		</button>
+		<button
+			mat-icon-button
+			(click)="flipHorizontal()">
+			<mat-icon>swap_horiz</mat-icon>
+		</button>
+		<button
+			mat-icon-button
+			(click)="zoomIn()">
+			<mat-icon>zoom_in</mat-icon>
+		</button>
+		<button
+			mat-icon-button
+			(click)="zoomOut()">
+			<mat-icon>zoom_out</mat-icon>
+		</button>
+	</div>
+	<image-cropper
+		class="images"
+		[imageChangedEvent]="imageChangedEvent"
+		[maintainAspectRatio]="true"
+		[aspectRatio]="4 / 3"
+		format="png"
+		[transform]="transform"
+		[canvasRotation]="canvasRotation"
+		(imageCropped)="imageCropped($event)"
+		(imageLoaded)="imageLoaded()"
+		(cropperReady)="cropperReady()"
+		(loadImageFailed)="loadImageFailed()"></image-cropper>
+</div>

@@ -1,0 +1,37 @@
+<ng-container *ngIf="multipleChoicesAllowed; else radioBtnTpl">
+	<ng-container *ngFor="let option of options; let index = index">
+		<div class="option-container rs-no-select">
+			<mat-checkbox
+				class="option-checkbox"
+				#indexedCheckbox
+				[(ngModel)]="option.checked"
+				(ngModelChange)="updateAllComplete()">
+			</mat-checkbox>
+			<div
+				class="rs-clickable option-label"
+				(click)="option.checked = !option.checked; updateAllComplete()">
+				{{ option.label }}
+			</div>
+		</div>
+	</ng-container>
+</ng-container>
+<ng-template #radioBtnTpl>
+	<mat-radio-group
+		[value]="selectedItemsAsStr"
+		(change)="selectedItems$.next([$event.value])">
+		<ng-container *ngFor="let option of options; let index = index">
+			<div class="option-container rs-no-select">
+				<mat-radio-button
+					class="option-checkbox"
+					[value]="option.label"
+					(click)="selectedItemsAsStr = option.label; selectedItems$.next([option.label])">
+				</mat-radio-button>
+				<div
+					class="rs-clickable option-label"
+					(click)="selectedItems$.next([option.label]); selectedItemsAsStr = option.label">
+					{{ option.label }}
+				</div>
+			</div>
+		</ng-container>
+	</mat-radio-group>
+</ng-template>

@@ -1,0 +1,41 @@
+<div class="link-container rs-no-select">
+	<upgrade
+		#upgrade
+		(click)="$event.stopImmediatePropagation()"
+		[upgrade]="link.upgrade">
+	</upgrade>
+	<div
+		class="link rs-clickable"
+		[ngClass]="{
+			active,
+			'rs-yellow-bg':!(upgrade?.hasGrantsAndPermissions === true)
+		}"
+		[attr.data-cy]="link.path"
+		[title]="link.description"
+		[attr.data-cy-path]="link.path"
+		[attr.data-cy-menu]="menuTitle"
+		(click)="upgrade.hasGrantsAndPermissions === false ? upgrade!.doAction() : processLinkClick($event)">
+		<i class="material-icons-outlined">
+			<ng-container *ngIf="link.matIcon"> {{ link.matIcon }}</ng-container>
+			<ng-container *ngIf="link.imageUrl">
+				<img
+					[src]="link.imageUrl"
+					[width]="24"
+					[height]="24" />
+			</ng-container>
+		</i>
+
+		<span
+			*ngIf="!compactView"
+			[innerHTML]="link.name"></span>
+		<i
+			*ngIf="link.matIconSuffix"
+			class="material-icons-outlined"
+			>{{ link.matIconSuffix }}</i
+		>
+	</div>
+	<todo
+		(click)="$event.stopImmediatePropagation()"
+		*ngIf="link.todo"
+		[todo]="link.todo"></todo>
+</div>

@@ -1,0 +1,31 @@
+<div class="page">
+	<!-- header -->
+	<header>
+		<div class="logo">
+			<img
+				height="40"
+				src="/assets/classic-black.svg" />
+		</div>
+		<div class="menu-signin">
+			<p>
+				<span
+					[routerLink]="'/auth/register'"
+					class="rs-clickable link-signin"
+					>Not yet an account? <span class="rs-link">Register</span></span
+				>
+				<br />
+				<span
+					[routerLink]="'/auth/login'"
+					class="rs-clickable link-signin"
+					>Already an account? <span class="rs-link">Sign in</span></span
+				>
+			</p>
+		</div>
+	</header>
+
+	<main>
+		<rumble-pwa-tou></rumble-pwa-tou>
+	</main>
+
+	<footer></footer>
+</div>

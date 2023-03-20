@@ -1,0 +1,48 @@
+@use '@angular/material' as mat;
+
+@import '~@angular/material/theming';
+
+$custom-typography: mat-typography-config(
+	$font-family: 'inherit',
+);
+@include mat.core($custom-typography);
+
+// @include mat.core();
+
+$custom-primary: mat.define-palette(mat.$grey-palette);
+$custom-accent: mat.define-palette(mat.$blue-palette);
+
+// Define a light theme
+$light-theme: mat.define-light-theme(
+	(
+		color: (
+			primary: $custom-primary,
+			accent: $custom-accent,
+		),
+	)
+);
+
+// Define a dark theme
+$dark-theme: mat.define-dark-theme(
+	(
+		color: (
+			primary: $custom-primary,
+			accent: $custom-accent,
+		),
+	)
+);
+
+// Apply the light theme by default
+@include mat.all-component-themes($light-theme);
+
+// Apply the dark theme only when the `.dark-mode` CSS class is applied
+// to an ancestor element of the components (such as `body`).
+.dark-mode {
+	@include mat.all-component-colors($dark-theme);
+	svg {
+		fill: white;
+	}
+	.node-container {
+		background-color: var(--main-color-darker);
+	}
+}

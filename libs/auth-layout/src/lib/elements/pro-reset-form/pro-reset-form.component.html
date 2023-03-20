@@ -1,0 +1,43 @@
+<div class="pro-reset-form-container">
+	<form
+		class="form"
+		[formGroup]="resetFormGroup"
+		(ngSubmit)="$event.preventDefault(); onSubmit()">
+		<div class="input-container">
+			<span class="label">Password less connection</span>
+			<p>We will send you an email with a link to connect and set a new password.</p>
+			<input
+				class="rs-textInput"
+				formControlName="email"
+				placeholder="simone@example.com"
+				type="email"
+				name="email"
+				#inputEmail
+				(keyup)="inputEmail.value = inputEmail.value.toLowerCase()" />
+			<div
+				class="formError"
+				*ngIf="resetFormGroup.controls.email.errors">
+				<ng-template [ngIf]="resetFormGroup.controls.email.errors.required"> Email is required </ng-template>
+				<ng-template [ngIf]="resetFormGroup.controls.email.errors.email"> Check the format of your email </ng-template>
+			</div>
+		</div>
+		<div class="proFormActions">
+			<input
+				name="registerBtn"
+				class="submitBtn"
+				type="submit"
+				[disabled]="!resetFormGroup.valid"
+				value="Send Email" />
+		</div>
+	</form>
+	<span
+		[routerLink]="'/auth/connexion'"
+		[queryParams]="{ email: resetFormGroup.value.email }"
+		class="rs-clickable">
+		<span
+			class="rs-link"
+			data-cy="login-form-reset-password-link"
+			>Go back</span
+		></span
+	>
+</div>

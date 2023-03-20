@@ -1,0 +1,25 @@
+.user-line {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	padding: 0 10px;
+
+	.participant {
+		display: flex;
+		align-items: center;
+		text-overflow: ellipsis;
+		overflow: hidden;
+		width: calc(100% - 15px);
+		white-space: nowrap;
+	}
+}
+
+.user-avatar {
+	max-height: 40px;
+	max-width: 40px;
+	object-fit: contain;
+	// overflow: hidden;
+	// display: inline-block;
+	margin-right: 5px;
+}

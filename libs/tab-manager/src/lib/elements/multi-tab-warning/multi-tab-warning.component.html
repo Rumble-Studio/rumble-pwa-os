@@ -1,0 +1,37 @@
+<ng-container *ngIf="activeTab$$ | async as activeTab">
+	<div
+		class="overlay"
+		*ngIf="activeTab !== currentTab">
+		<div class="message">
+			<p>Rumble Studio is open in another tab.</p>
+			<button
+				mat-raised-button
+				(click)="useThisTab()">
+				Use this tab instead
+			</button>
+		</div>
+	</div>
+</ng-container>
+<!-- <div class="overlay">
+    <section>
+        Current tab: <br>
+        <span>{{currentTab}}</span>
+    </section>
+    <hr>
+    <section>
+        All tabs: <br>
+        <ng-container *ngIf="tabs$$|async as tabs; else noTabsTpl">
+            <ul *ngIf="tabs.length; else noTabsTpl">
+                <li *ngFor="let tab of tabs">{{tab}}</li>
+            </ul>
+        </ng-container>
+        <ng-template #noTabsTpl>No tabs yet.</ng-template>
+
+    </section>
+    <hr>
+    <section>
+        Main tab: <span *ngIf="activeTab$$|async as activeTab; else noActiveTabTpl">{{activeTab}}</span>
+        <ng-template #noActiveTabTpl>No active tab</ng-template>
+    </section>
+    <hr>
+</div> -->

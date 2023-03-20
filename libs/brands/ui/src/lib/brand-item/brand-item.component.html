@@ -1,0 +1,192 @@
+<ng-container *ngIf="brand$$$.$ | async as brand; else noBrand">
+	<header class="rs-header">
+		<button
+			class="rs-goback"
+			mat-stroked-button
+			[routerLink]="'/brands'">
+			<mat-icon>arrow_back</mat-icon>
+		</button>
+		<section class="title">
+			<h3>
+				<span class="object-category">Branding kit:</span>&nbsp;<em>{{ brand.name }}</em>
+			</h3>
+		</section>
+
+		<button
+			[disabled]="!canYouEdit"
+			mat-raised-button
+			(click)="openPromptEditor()"
+			class="rs-btn-new btn-edit-brand">
+			<mat-icon>edit</mat-icon>
+		</button>
+	</header>
+
+	<div class="rs-editor-container">
+		<!-- name -->
+		<div class="header">
+			<h3>Name</h3>
+		</div>
+		<div class="body">
+			<span
+				[ngClass]="{ 'rs-clickable': canYouEdit }"
+				(click)="canYouEdit ? openPromptEditor() : undefined">
+				{{ brand.name }}
+				<span
+					*ngIf="canYouEdit"
+					class="material-icons-outlined rs-text-smaller rs-clickable"
+					>edit</span
+				>
+			</span>
+		</div>
+		<mat-divider></mat-divider>
+
+		<!-- description -->
+		<div class="header">
+			<h3>Description</h3>
+		</div>
+		<div class="body">
+			<span
+				[ngClass]="{ 'rs-clickable': canYouEdit }"
+				(click)="canYouEdit ? openPromptEditor() : undefined">
+				{{ brand.description }}
+				<span
+					*ngIf="canYouEdit"
+					class="material-icons-outlined rs-text-smaller rs-clickable"
+					>edit</span
+				>
+			</span>
+		</div>
+		<mat-divider></mat-divider>
+
+		<!-- website -->
+		<div class="header">
+			<h3>Website</h3>
+		</div>
+		<div class="body">
+			<a
+				*ngIf="brand.domain"
+				[href]="brand.domain"
+				target="_blank">
+				<pill>
+					{{ brand.domain }}
+					<span
+						_ngcontent-lwy-c357=""
+						class="material-icons-outlined rs-text-small"
+						>open_in_new</span
+					>
+				</pill>
+			</a>
+			<span
+				*ngIf="canYouEdit"
+				(click)="openPromptEditor()"
+				class="material-icons-outlined rs-text-smaller rs-clickable"
+				>edit</span
+			>
+		</div>
+		<mat-divider></mat-divider>
+
+		<!-- logo -->
+		<div class="header">
+			<h3>
+				Logo<explanation
+					[msg]="
+						'The logo is the principal image of the branding kit. It will be used by default when using the branding kit.'
+					"></explanation>
+			</h3>
+		</div>
+		<div class="body">
+			<image
+				*ngIf="logoThumbnail?.imageUrl"
+				[imageUrl]="logoThumbnail!.imageUrl"
+				[displaySelectButton]="false"
+				[displayDeleteButton]="canYouEdit"
+				(deleteImageEvent)="deleteLogo()"
+				[displayPaletteButton]="canYouEdit"
+				(imagePaletteEvent)="processColorsEvent($event)">
+			</image>
+		</div>
+		<mat-divider></mat-divider>
+
+		<!-- Images -->
+		<div class="header">
+			<h3>Images</h3>
+		</div>
+		<div class="body">
+			<rumble-pwa-objects-picker
+				[(objectThumbnails)]="imageThumbnails"
+				[getNewObjects$]="getNewImages$"
+				[displaySelectButton]="true"
+				[selectButtonText]="'Set as logo'"
+				(selectObjectByIndexEvent)="setImageAsLogoByIndex($event)"
+				[displayPaletteButton]="true"
+				(colorsEvent)="processColorsEvent($event)"
+				[displayDeleteButton]="true"
+				[maxSelectableObjects]="-1">
+			</rumble-pwa-objects-picker>
+		</div>
+		<mat-divider></mat-divider>
+
+		<!-- Colors -->
+		<div class="header">
+			<h3>Colors</h3>
+		</div>
+		<rumble-pwa-colors-picker
+			[canYouEdit]="canYouEdit"
+			(deleteColorByIndexEvent)="deleteColor($event)"
+			(newColorSelectedEvent)="processColorsEvent([$event])"
+			[colors]="colors"></rumble-pwa-colors-picker>
+
+		<mat-divider></mat-divider>
+
+		<!-- Fonts -->
+		<div class="header">
+			<h3>Fonts</h3>
+		</div>
+		<rumble-pwa-fonts-picker
+			[canYouEdit]="canYouEdit"
+			(deleteFontEvent)="deleteFont($event)"
+			(newFont)="addNewFont($event)"
+			[fonts]="fonts">
+		</rumble-pwa-fonts-picker>
+		<mat-divider></mat-divider>
+
+		<!-- Audio packs -->
+		<div class="header">
+			<h3>Audio packs</h3>
+		</div>
+		<div class="body">
+			<div class="rs-flex-space-between">
+				<p>
+					An audio pack is a collection of audio segments. You can use them to easily find your favorite branded
+					soundtracks.
+				</p>
+				<button
+					type="button"
+					mat-raised-button
+					(click)="processOpenAudioPackPromptEvent()">
+					<mat-icon>add</mat-icon>
+					Add an audio pack
+				</button>
+			</div>
+			<rumble-pwa-audio-packs-list
+				[canYouEdit]="canYouEdit"
+				(deleteAudioPackEvent)="deleteAudioPack($event)"
+				(deleteAudioPackItemEvent)="deleteAudioPackItem($event)"
+				(openAudioPackItemPromptEvent)="processOpenAudioPackItemPromptEvent($event)"
+				(updatedAudioPackEvent)="updateAudioPack($event)"
+				(openAudioPackPromptEvent)="processOpenAudioPackPromptEvent($event)"
+				[audioPacks]="audioPacks">
+			</rumble-pwa-audio-packs-list>
+		</div>
+	</div>
+</ng-container>
+<ng-template #noBrand>
+	<button
+		mat-raised-button
+		[routerLink]="'/brands'">
+		<mat-icon>arrow_back</mat-icon>
+		Go back to all branding kits
+	</button>
+
+	<div class="brand-editor-container">Branding kit not loaded yet.</div>
+</ng-template>

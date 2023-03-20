@@ -1,0 +1,36 @@
+<h2 *ngIf="data.title">{{ data.title }}</h2>
+<form
+	[formGroup]="textForm"
+	class="rs-full-width">
+	<mat-form-field
+		class="rs-full-width"
+		appearance="outline">
+		<mat-label>{{ data.textFieldLabel ?? 'Text' }}</mat-label>
+		<input
+			matInput
+			rumblePwaAutoFocus
+			formControlName="text"
+			type="text"
+			required />
+	</mat-form-field>
+</form>
+
+<section class="rs-flex-center">
+	<!-- actions -->
+	<button
+		type="button"
+		mat-stroked-button
+		(click)="close(); $event.preventDefault()">
+		<mat-icon>clear</mat-icon>
+		Cancel
+	</button>
+
+	<button
+		type="submit"
+		mat-raised-button
+		(click)="save(); $event.preventDefault()"
+		[disabled]="!textForm.valid">
+		<mat-icon>save</mat-icon>
+		Save
+	</button>
+</section>

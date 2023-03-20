@@ -1,0 +1,200 @@
+<div>
+	<section class="table-title">
+		<ng-container [ngSwitch]="kind">
+			<ng-container *ngSwitchCase="'team'">
+				<div>
+					<h3>Teams</h3>
+					<button
+						(click)="openDialog()"
+						mat-raised-button
+						class="rs-btn-new">
+						<mat-icon>add</mat-icon>
+						New
+					</button>
+					&nbsp; &nbsp;
+					<mat-checkbox [(ngModel)]="flatten">Display nested teams</mat-checkbox>
+				</div>
+			</ng-container>
+			<ng-container *ngSwitchCase="'user'">
+				<div>
+					<h3>Contacts</h3>
+				</div>
+			</ng-container>
+			<ng-container *ngSwitchCase="'folder'">
+				<div>
+					<h3>Folders</h3>
+					<button
+						(click)="openDialog()"
+						mat-raised-button
+						class="rs-btn-new">
+						<mat-icon>add</mat-icon>
+						New
+					</button>
+					&nbsp; &nbsp;
+					<mat-checkbox [(ngModel)]="flatten">Display nested folders</mat-checkbox>
+				</div>
+			</ng-container>
+		</ng-container>
+		<!-- <mat-form-field appearance="outline">
+      <mat-label>Search</mat-label>
+      <mat-icon matPrefix>search</mat-icon>
+      <input class="search-input" matInput (keyup)="applyFilter($event)" placeholder="Ex. Public Relations" #input />
+    </mat-form-field> -->
+		<!-- <i class="material-icons-outlined">search</i> -->
+		<input
+			class="search-input"
+			(keyup)="applyFilter($event)"
+			placeholder="search"
+			#input />
+	</section>
+
+	<div
+		*ngIf="dataSource.data.length; else noDataSource"
+		class="mat-elevation-z8">
+		<table
+			mat-table
+			[dataSource]="dataSource"
+			matSort>
+			<!-- name Column -->
+			<ng-container matColumnDef="name">
+				<th
+					mat-header-cell
+					*matHeaderCellDef
+					mat-sort-header>
+					name
+				</th>
+				<td
+					mat-cell
+					*matCellDef="let row">
+					<ng-template #parentsTpl>
+						<ng-container *ngFor="let parent of showableParents(row.id).splice(0, 5)">
+							<ng-container [ngSwitch]="parent.kind">
+								<rumble-pwa-group-item-generic
+									*ngSwitchCase="'team'"
+									class="label team-label rs-clickable"
+									[routerLink]="parent.id"
+									[groupId]="parent.id">
+								</rumble-pwa-group-item-generic>
+
+								<rumble-pwa-group-item-generic
+									*ngSwitchCase="'user'"
+									class="label user-label"
+									[groupId]="parent.id">
+								</rumble-pwa-group-item-generic>
+
+								<rumble-pwa-group-item-generic
+									*ngSwitchCase="'folder'"
+									class="label folder-label rs-clickable"
+									[routerLink]="parent.id"
+									[groupId]="parent.id">
+								</rumble-pwa-group-item-generic>
+
+								<span
+									*ngSwitchDefault
+									class="label">
+									{{ parent.name }}
+								</span>
+							</ng-container>
+						</ng-container>
+						<span *ngIf="showableParents(row.id).length > 5">and more...</span>
+					</ng-template>
+
+					<span class="name-and-details">
+						<ng-container [ngSwitch]="row.kind">
+							<rumble-pwa-group-item-generic
+								*ngSwitchCase="'team'"
+								[routerLink]="row.id"
+								[groupId]="row.id"
+								class="rs-clickable"></rumble-pwa-group-item-generic>
+							<rumble-pwa-group-item-generic
+								*ngSwitchCase="'folder'"
+								[routerLink]="row.id"
+								[groupId]="row.id"
+								class="rs-clickable"></rumble-pwa-group-item-generic>
+							<rumble-pwa-group-item-generic
+								*ngSwitchCase="'user'"
+								[groupId]="row.id"></rumble-pwa-group-item-generic>
+						</ng-container>
+
+						<span class="label-container">
+							<ng-container [ngSwitch]="row.kind">
+								<!-- team (main) -->
+								<ng-container *ngSwitchCase="'team'">
+									<span class="label number-label"
+										>{{ row.childIds?.length ?? 0 }} member{{
+											(row.childIds?.length ?? 0) > 1 ? 's' : ''
+										}}</span
+									>
+									<ng-container *ngTemplateOutlet="parentsTpl"></ng-container>
+								</ng-container>
+								<!-- folder (main) -->
+								<ng-container *ngSwitchCase="'folder'">
+									<ng-container *ngTemplateOutlet="parentsTpl"></ng-container>
+								</ng-container>
+								<!-- user (main) -->
+								<ng-container *ngSwitchCase="'user'">
+									<ng-container *ngTemplateOutlet="parentsTpl"></ng-container>
+								</ng-container>
+								<ng-container *ngSwitchDefault> {{ row.kind }} not supported yet. </ng-container>
+							</ng-container>
+						</span>
+					</span>
+				</td>
+			</ng-container>
+
+			<!-- description Column -->
+			<ng-container matColumnDef="description">
+				<th
+					mat-header-cell
+					*matHeaderCellDef
+					mat-sort-header>
+					description
+				</th>
+				<td
+					mat-cell
+					*matCellDef="let row">
+					{{ row.description }}
+				</td>
+			</ng-container>
+
+			<tr
+				mat-header-row
+				*matHeaderRowDef="displayedColumns"></tr>
+			<tr
+				class="group-row"
+				mat-row
+				*matRowDef="let row; columns: displayedColumns"></tr>
+
+			<!-- Row shown when there is no matching data. -->
+			<tr
+				class="mat-row"
+				*matNoDataRow>
+				<td
+					class="mat-cell"
+					colspan="4">
+					No data matching the filter "{{ input.value }}"
+				</td>
+			</tr>
+		</table>
+		<mat-paginator
+			[pageSizeOptions]="[20, 50, 100]"
+			[pageSize]="50"
+			aria-label="Select page of groups">
+			test
+		</mat-paginator>
+	</div>
+</div>
+
+<ng-template #noDataSource>
+	<mat-card (click)="openDialog()">
+		<ng-container [ngSwitch]="kind">
+			<ng-container *ngSwitchCase="'team'">
+				You have no team yet. Click on the "New" button to create a new one!
+			</ng-container>
+			<ng-container *ngSwitchCase="'user'"> You have no contact yet. Invite people to your teams! </ng-container>
+			<ng-container *ngSwitchCase="'folder'">
+				You have no folder yet. Click on the "New" button to create a new one!
+			</ng-container>
+		</ng-container>
+	</mat-card>
+</ng-template>

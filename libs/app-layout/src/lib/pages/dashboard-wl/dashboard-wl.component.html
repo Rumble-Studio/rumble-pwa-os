@@ -1,0 +1,75 @@
+<!-- <div class="header">
+	{{ page | json }}
+</div> -->
+<div class="main">
+	<ng-container [ngSwitch]="page?.kind">
+		<ng-container *ngSwitchCase="'form'">
+			<!-- BEGINNING OF INTERVIEW KIND PAGE -->
+			<ng-container *ngIf="form$$$.$ | async as form; else noForm">
+				<ng-container *ngIf="!isOffline; else formIsOfflineTpl">
+					<rumble-pwa-form
+						[formId]="form.id"
+						[previewMode]="previewMode"
+						[providerId]="providerId"
+						[profile]="profile">
+					</rumble-pwa-form>
+				</ng-container>
+
+				<ng-template #formIsOfflineTpl>
+					<div class="alternative-content">
+						<h3>
+							<i class="material-icons-outlined">speaker_notes_off</i>
+							This interview is not accessible to the public.
+						</h3>
+					</div>
+				</ng-template>
+			</ng-container>
+			<ng-template #noForm>
+				<div
+					class="alternative-content"
+					*ngIf="formIsLoading; else notLoadingTpl">
+					Loading, please wait...
+				</div>
+				<ng-template #notLoadingTpl>
+					<div class="alternative-content">
+						<mat-icon>error_outline</mat-icon>
+						No interview available.
+					</div>
+				</ng-template>
+			</ng-template>
+			<!-- END OF INTERVIEW KIND PAGE -->
+		</ng-container>
+		<ng-container *ngSwitchCase="'brand'">brand page not implemented </ng-container>
+
+		<ng-container *ngSwitchCase="'collection'">
+			<!-- BEGINNING OF COLLECTION KIND PAGE -->
+			<ng-container *ngIf="collection$$$.$ | async as collection; else noCollection">
+				<rumble-pwa-collection-page [collectionId]="collection.id"></rumble-pwa-collection-page>
+			</ng-container>
+			<ng-template #noCollection>
+				<div
+					class="alternative-content"
+					*ngIf="collectionIsLoading; else collectionNotLoadingTpl">
+					Loading, please wait...
+				</div>
+				<ng-template #collectionNotLoadingTpl>
+					<div class="alternative-content">
+						<mat-icon>error_outline</mat-icon>
+						No collection available.
+					</div>
+				</ng-template>
+			</ng-template>
+			<!-- END OF COLLECTION KIND PAGE-->
+		</ng-container>
+
+		<ng-container *ngSwitchCase="'team'"> team page not implemented </ng-container>
+		<ng-container *ngSwitchCase="'custom'"> custom page not implemented </ng-container>
+		<ng-container *ngSwitchCase="undefined">
+			<rumble-pwa-page-not-ready
+				[pageFetched]="pageFetched"
+				[page]="page"
+				[user]="profile"></rumble-pwa-page-not-ready>
+		</ng-container>
+		<ng-container *ngSwitchDefault> This page kind is not implemented yet: {{ page?.kind }} </ng-container>
+	</ng-container>
+</div>

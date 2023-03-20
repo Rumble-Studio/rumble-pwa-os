@@ -1,0 +1,33 @@
+<div
+	class="notification-editor-container"
+	*ngIf="notification$$$.$ | async as notification">
+	<section class="notification-property">
+		<div class="notification-title">
+			<h3>{{ notification.title }}</h3>
+			<button
+				mat-raised-button
+				(click)="triggerAction(notification)">
+				Trigger action
+			</button>
+		</div>
+		<div class="property">
+			<ng-container *ngIf="(notification.description ?? '').length > 0; else noDescriptionTpl">
+				<span class="property-title">Description:</span>
+				{{ notification.description }}
+			</ng-container>
+			<ng-template #noDescriptionTpl>
+				<!-- <span> No description. </span> -->
+			</ng-template>
+		</div>
+
+		<div class="property">
+			<!-- <ng-container *ngIf="(notification.details ?? '').length > 0; else noDetailTpl">
+				<span class="property-title">Details:</span>
+				{{ notification.details | json }}
+			</ng-container> -->
+			<ng-template #noDetailTpl>
+				<!-- <span> No details. </span> -->
+			</ng-template>
+		</div>
+	</section>
+</div>

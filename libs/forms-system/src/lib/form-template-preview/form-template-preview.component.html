@@ -1,0 +1,21 @@
+<div
+	*ngIf="formTemplate"
+	class="template-container">
+	<span class="template-title">{{ formTemplate.templateName }}</span>
+
+	<ng-container *ngIf="!!formTemplate.templateDescription">
+		<span class="template-description">{{ formTemplate.templateDescription }}</span>
+	</ng-container>
+
+	<div class="steps-container">
+		<ng-container *ngIf="formTemplate.id !== 'blank-interview'; else blankInterviewTpl">
+			<ng-container *ngFor="let stepTemplate of formTemplate.stepTemplateList">
+				<div class="step">
+					<mat-icon>{{ getStepIconFromStepKind(stepTemplate.stepKind) }}</mat-icon>
+					<span>{{ getStepMenuTextFromStepKind(stepTemplate.stepKind) }}</span>
+				</div>
+			</ng-container>
+		</ng-container>
+		<ng-template #blankInterviewTpl><span class="empty-template">Empty</span></ng-template>
+	</div>
+</div>

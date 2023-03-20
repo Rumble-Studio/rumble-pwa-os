@@ -1,0 +1,96 @@
+<ng-container
+	*ngIf="plan; else planNotAvailableTpl"
+	class="pricing-card">
+	<div class="pricing-table">
+		<!-- Table Head -->
+
+		<h2>{{ plan.name }}</h2>
+		<h5>{{ plan.description }}</h5>
+		<span *ngIf="(subscriptions$$$.value?.length ?? 0) > 1">You have multiple subscriptions matching this plan:</span>
+		<span *ngIf="subscriptions$$$.value?.length === 1">You have one active subscription matching this plan:</span>
+
+		<div
+			class="pricing-label rs-clickable"
+			*ngFor="let subscription of subscriptions$$$.value"
+			[routerLink]="['/subscriptions', subscription.id]">
+			{{ subscription.name }}
+		</div>
+		<!-- Features -->
+		<div class="pricing-features">
+			<div
+				*ngFor="let feature of plan.features"
+				class="feature"
+				[ngClass]="{ notAvailable: !feature.available }">
+				<span>
+					{{ feature.name }}
+				</span>
+				<span class="feature-unit">{{ feature.unit ?? '' }}</span>
+			</div>
+			<hr />
+			<div
+				*ngFor="let feature of alwaysIncludedFeatures"
+				class="feature"
+				[ngClass]="{ notAvailable: !feature.available }">
+				<span>
+					{{ feature.name }}
+				</span>
+				<span class="feature-unit">{{ feature.unit ?? '' }}</span>
+			</div>
+		</div>
+		<!-- Price -->
+		<ng-container *ngIf="(subscriptions$$$.value?.length ?? 0) > 0; else noSubscriptionsTpl">
+			<!-- if we have already some subscriptions -->
+			<ng-container *ngFor="let subscription of subscriptions$$$.value; let index = index">
+				<ng-container *ngIf="subscription.source !== 'appsumo'">
+					<!-- loop over subs -->
+					<br />
+					Price for "{{ subscription.name }}":
+					<ng-container *ngTemplateOutlet="subscriptionPriceDetail; context: { source: subscription.source }">
+					</ng-container>
+					<!-- if not the last subscription -->
+					<ng-container *ngIf="index < (subscriptions$$$.value?.length ?? 0) - 1">
+						<hr />
+					</ng-container>
+				</ng-container>
+			</ng-container>
+		</ng-container>
+		<ng-template #noSubscriptionsTpl>
+			<!-- if we don't have any subscriptions -->
+			<ng-container *ngTemplateOutlet="subscriptionPriceDetail; context: { source: undefined }"> </ng-container>
+		</ng-template>
+		<ng-template
+			#subscriptionPriceDetail
+			let-source="source">
+			<!-- main template for any sub -->
+			<ng-container *ngIf="plan.priceLine?.perMonth; else noPriceDetailsTpl">
+				<!-- if we have a priceLine detail -->
+				<ng-container [ngSwitch]="source">
+					<ng-container *ngSwitchCase="'appsumo'">
+						<div class="price-tag"><span class="bigTaco">🌮</span>lifetime license</div>
+					</ng-container>
+					<ng-container *ngSwitchDefault>
+						<div class="price-tag">
+							<span class="symbol">{{ plan.priceLine?.perMonth.currency }}</span>
+							<span class="amount">{{ plan.priceLine?.perMonth.amount }}</span>
+							<span class="after">/month</span>
+							<div class="pricing-label rs-no-select">Tax excl.</div>
+						</div>
+					</ng-container>
+				</ng-container>
+			</ng-container>
+			<ng-template #noPriceDetailsTpl>No price details</ng-template>
+		</ng-template>
+
+		<!-- Button -->
+		<a
+			*ngIf="showMoreDetailsBtn"
+			class="price-button"
+			href="#"
+			>More details</a
+		>
+		<ng-content></ng-content>
+	</div>
+</ng-container>
+<ng-template #planNotAvailableTpl>
+	<div class="pricing-table">Plan "{{ grantMapping }}" not available...</div>
+</ng-template>

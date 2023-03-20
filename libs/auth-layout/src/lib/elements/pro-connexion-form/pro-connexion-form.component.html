@@ -1,0 +1,53 @@
+<div class="pro-login-form-container">
+	<form
+		class="form"
+		[formGroup]="connexionFormGroup"
+		(ngSubmit)="onSubmit()">
+		<div class="input-container">
+			<span class="label">Your email</span>
+			<input
+				class="rs-textInput"
+				formControlName="email"
+				placeholder="simone@example.com"
+				type="email"
+				name="email"
+				data-cy="login-email"
+				#inputEmail
+				(keyup)="inputEmail.value = inputEmail.value.toLowerCase()" />
+			<div
+				class="formError"
+				*ngIf="connexionFormGroup.controls.email.errors">
+				<ng-template [ngIf]="connexionFormGroup.controls.email.errors.required"> Email is required </ng-template>
+				<ng-template [ngIf]="connexionFormGroup.controls.email.errors.email">
+					Check the format of your email
+				</ng-template>
+			</div>
+		</div>
+
+		<div class="proFormActions">
+			<!-- <input
+				name="loginBtn"
+				class="submitBtn"
+				type="submit"
+				[disabled]="loading || !(connexionFormGroup.valid || connexionFormGroup.controls.email.pristine)"
+				value="Proceed" /> -->
+			<input
+				name="loginBtn"
+				class="submitBtn"
+				type="submit"
+				[disabled]="!(connexionFormGroup.valid || connexionFormGroup.controls.email.pristine)"
+				value="Proceed" />
+		</div>
+	</form>
+	<span
+		[routerLink]="'../password-forgotten'"
+		[queryParams]="{ email: connexionFormGroup.value.email }"
+		class="rs-clickable"
+		>Password problem?
+		<span
+			class="rs-link"
+			data-cy="login-form-reset-password-link"
+			>Reset it</span
+		></span
+	>
+</div>

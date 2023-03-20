@@ -1,0 +1,69 @@
+<header class="rs-header">
+	<section class="title">
+		<span class="object-category">Billing</span>
+	</section>
+</header>
+
+<ng-container
+	name="plan selection"
+	*ngIf="profile?.emailValidated; else validationEmailTpl">
+	<ng-container *ngIf="profile?.stripeCustomerId">
+		<h4>Manage your subscriptions and payment information</h4>
+		<button
+			mat-raised-button
+			(click)="openStripePortal()">
+			Payment portal
+		</button>
+		<explanation [msg]="'We use the Stripe to manage our payments and subscriptions by credit card.'"></explanation>
+	</ng-container>
+	<div class="plans-container">
+		<ng-container *ngFor="let plan of plans">
+			<ng-container
+				*ngIf="
+					(plan.metadata.displayInApp ?? 'false') === 'true' &&
+					((plan.metadata.onlyForActiveUsers ?? 'false') === 'true' ? matchSubscriptionAndPlan(plan.id) : true)
+				">
+				<rumble-pwa-plan-item
+					*ngIf="plan.metadata.grantsMapping"
+					[grantMapping]="plan.metadata.grantsMapping">
+					<ng-container *ngFor="let priceData of plan.prices; let priceIndex = index">
+						<div
+							class="price-btn-container"
+							*ngIf="(priceData.metadata.displayInApp ?? 'false') === 'true'">
+							<!-- <span>{{ displayPrice(priceData) }}</span> <br /> -->
+							<button
+								*ngIf="!matchSubscriptionAndPrice(priceData.id); else subscribedTpl"
+								mat-raised-button
+								(click)="goToPlanPaymentPage(priceData.id)">
+								Subscribe at {{ displayPrice(priceData) }}
+							</button>
+							<ng-template #subscribedTpl
+								><button
+									mat-raised-button
+									*ngIf="profile?.stripeCustomerId"
+									(click)="openStripePortal()">
+									Manage
+								</button></ng-template
+							>
+						</div>
+					</ng-container></rumble-pwa-plan-item
+				>
+			</ng-container>
+		</ng-container>
+	</div>
+</ng-container>
+<ng-template
+	name="validate email"
+	#validationEmailTpl>
+	<p>
+		To subscribe to any plan you must first validate your email <em>{{ profile?.email }}</em
+		>.
+	</p>
+	<button
+		mat-raised-button
+		(click)="sendValidationEmail()"
+		type="button"
+		data-cy="send-validation-email">
+		<mat-label> Send a new validation email </mat-label>
+	</button>
+</ng-template>

@@ -1,0 +1,377 @@
+<!--   PAGE   -->
+<!-- <ng-container *ngIf="componentReady; else componentLoadingTpl"> -->
+<!-- HEADER (top bar) -->
+<header *ngIf="layoutProps.displayHeader">
+	<!-- left header -->
+	<div class="left-header">
+		<!-- burger -->
+		<div
+			*ngIf="layoutProps.displayBurgerMenu === true || (layoutProps.displayBurgerMenu === 'auto' && !isDesktop)"
+			class="header-burger-menu">
+			<button
+				mat-button
+				[matMenuTriggerFor]="burgerMenu"
+				#burgerMenuTrigger="matMenuTrigger">
+				<mat-icon>{{ burgerMenuTrigger.menuOpen ? 'close' : 'menu' }}</mat-icon>
+			</button>
+		</div>
+		<div
+			[matMenuTriggerFor]="burgerMenu"
+			#burgerMenuTriggerHidden="matMenuTrigger"></div>
+
+		<!-- path -->
+		<div class="header-path rs-no-selet">
+			<span
+				class="header-path-segment"
+				*ngFor="let pageSegment of layoutProps.pageSegments"
+				[routerLink]="pageSegment.link ?? undefined"
+				(click)="processPageClick(pageSegment)"
+				[innerHTML]="pageSegment.title"
+				[matTooltip]="pageSegment.tooltip ?? ''">
+				></span
+			>
+		</div>
+	</div>
+
+	<!-- center header -->
+	<div class="center-header">
+		<!-- logo -->
+		<div
+			*ngIf="layoutProps.displayLogo || layoutRepository.centralTemplate"
+			class="header-main-logo">
+			<ng-container
+				*ngIf="layoutRepository.centralTemplate; else logoTpl"
+				[ngTemplateOutlet]="layoutRepository.centralTemplate"></ng-container>
+			<ng-template #logoTpl>
+				<img
+					class="rs-clickable"
+					[src]="layoutSize < 1 ? '/assets/yellow-transparent.png' : '/assets/classic.svg'"
+					[routerLink]="'/'"
+					alt="" />
+			</ng-template>
+		</div>
+	</div>
+
+	<!-- right header -->
+	<div class="right-header">
+		<!-- app sumo details -->
+		<div class="header-basic-action">
+			<ng-container *ngIf="hasAppSumoSubscription">
+				<a
+					*ngIf="appSumoUpgradeUrl"
+					[href]="appSumoUpgradeUrl"
+					class="with-margin"
+					target="_blank">
+					<button
+						mat-raised-button
+						[matTooltip]="'60-day money back guarantee. Upgrade now with zero risk.'">
+						<span *ngIf="!isMobile; else changePlanMobileTpl">Change plan 🌮</span>
+						<ng-template #changePlanMobileTpl>Plan 🌮</ng-template>
+					</button>
+				</a>
+
+				<a
+					href="https://appsumo.com/products/rumble-studio#reviews"
+					target="_blank"
+					class="with-margin"
+					rel="noopener noreferrer">
+					<button mat-raised-button>
+						<span *ngIf="!isMobile; else leaveReviewMobileTpl">Leave a review 🌮</span>
+						<ng-template #leaveReviewMobileTpl>Review 🌮</ng-template>
+					</button>
+				</a>
+			</ng-container>
+			<!-- <ng-template #noAppSumoSubscriptionTpl>
+				<ng-container *ngIf="appSumoTimeLeft > 0; else goToDealTpl">
+					<span
+						*ngIf="!isMobile"
+						class="lifetime-deal-countdown"
+						>🚀 Lifetime deal in: ⏳{{ appSumoTimeLeft | duration: 'showUnits' }}</span
+					>
+				</ng-container>
+
+				<ng-template #goToDealTpl>
+					<a
+						href="https://www.rumble.studio/appsumo"
+						class="with-margin"
+						target="_blank">
+						<button
+							mat-raised-button
+							[matTooltip]="
+								'🌮 Get lifetime access to Rumble for as little as $59, limited time offer, so hurry! 🌮'
+							">
+							🔔 Lifetime deal 🥳
+						</button>
+					</a>
+				</ng-template>
+			</ng-template> -->
+		</div>
+
+		<!-- notification icon -->
+		<div class="header-basic-action rs-clickable">
+			<span
+				*ngIf="numberOfNotificationsUnseen > 0; else noNotificationIconTpl"
+				class="with-margin"
+				[matBadge]="numberOfNotificationsUnseen"
+				matBadgeColor="warn"
+				[matMenuTriggerFor]="notificationmenu"
+				><mat-icon>notifications_active</mat-icon></span
+			>
+			<ng-template #noNotificationIconTpl>
+				<mat-icon
+					class="with-margin"
+					[matMenuTriggerFor]="notificationmenu"
+					(menuOpened)="refreshNotifications()"
+					>notifications_none</mat-icon
+				>
+			</ng-template>
+		</div>
+
+		<!-- user avatar with menu -->
+		<div class="header-main-account">
+			<span class="image-todo-container">
+				<span class="lang">{{ 'LANG' | transloco }}</span>
+
+				<img
+					[matMenuTriggerFor]="menu"
+					class="profile-picture rs-clickable"
+					*ngIf="filesRepository.convertRSurlToUrl$(profilePictureUrl) | async as imgUrl; else noProfilePictureUrlTpl"
+					[src]="imgUrl"
+					alt="" />
+				<ng-template #noProfilePictureUrlTpl>
+					<span
+						[matMenuTriggerFor]="menu"
+						class="profile-picture-text rs-clickable"
+						data-cy="open-menu"
+						>{{ profile?.fullName?.substring(0, 1) || '' }}
+					</span>
+				</ng-template>
+
+				<todo
+					[todo]="{
+						id: 'todo:main-avatar-details',
+						title: 'Account settings',
+						description:
+							'Here you can reset the different helpers like this one, access your account settings, change your password, and more.',
+						priority: 0
+					}">
+				</todo>
+			</span>
+		</div>
+	</div>
+</header>
+
+<!-- main content (ROUTER AND NAV) -->
+<main
+	[ngClass]="{
+		footerHidden: layoutProps.displayFooter === false,
+		headerHidden: layoutProps.displayHeader === false
+	}">
+	<!-- menu on the left -->
+	<nav *ngIf="layoutProps.displaySidebarLeft === true || (layoutProps.displaySidebarLeft === 'auto' && isDesktop)">
+		<ng-container *ngTemplateOutlet="menusContainer"></ng-container>
+	</nav>
+	<div class="main-content">
+		<router-outlet></router-outlet>
+		<!-- <router-outlet *ngIf="!this.layoutProps.cnamed; else cnamedTpl"></router-outlet> -->
+		<!-- <ng-template #cnamedTpl>
+				<router-outlet name="cnamed"></router-outlet>
+			</ng-template> -->
+	</div>
+</main>
+<!-- FOOTER -->
+<footer *ngIf="layoutProps.displayFooter">
+	footer
+	<!-- <rumble-pwa-menu-bottom-nav
+			[links]="getLinksByTarget('creation')"
+			[showSuperUser]="isSuperuser"></rumble-pwa-menu-bottom-nav> -->
+</footer>
+<!-- absolute player -->
+<rumble-pwa-global-player
+	*ngIf="layoutProps.displayGlobalPlayer === true"
+	mwlResizable
+	[validateResize]="validate"
+	[enableGhostResize]="true"
+	(resizeEnd)="updateGlobalPlayerHeight($event)"
+	[cdkDragFreeDragPosition]="globalPlayerDragPosition"
+	(resetPosition)="globalPlayerDragPosition = { x: 0, y: 0 }"
+	cdkDrag>
+	<div style="cursor: move; display: block">
+		<mat-icon cdkDragHandle>control_camera</mat-icon>
+	</div>
+</rumble-pwa-global-player>
+<!-- absolute file upload popup -->
+<rumble-pwa-file-upload-popup></rumble-pwa-file-upload-popup>
+<!-- </ng-container> -->
+
+<!--   TEMPLATES   -->
+
+<!-- loading template -->
+<ng-template #componentLoadingTpl>
+	<mat-spinner
+		diameter="200"
+		class="spinner"></mat-spinner>
+</ng-template>
+
+<!-- menu template -->
+<ng-template #menusContainer>
+	<div class="menus-container">
+		<!-- add create interview button -->
+		<ng-container *ngIf="can$('menu-display-form') | async">
+			<div
+				class="cta rs-clickable"
+				(click)="createANewForm()">
+				<todo
+					[todo]="{
+						id: 'todo:create-interview-from-dash',
+						title: 'Create an interview',
+						description: 'You can quickly create a new interview directly from the left menu.',
+						priority: 1
+					}">
+				</todo>
+				<span data-cy="create-interview">New interview</span>
+			</div>
+		</ng-container>
+		<ng-container *ngFor="let linkCategorie of layoutProps.linkCategories">
+			<ng-container *ngIf="getLinksByTarget(linkCategorie.target).length > 0">
+				<ng-container [ngSwitch]="linkCategorie.target">
+					<!-- add quota details -->
+					<ng-container *ngSwitchCase="'billing'">
+						<mat-expansion-panel
+							[expanded]="!linkCategorie.collapsed"
+							class="mat-elevation-z0 rs-expansion-panel-menu rs-no-select">
+							<mat-expansion-panel-header (click)="$event.stopPropagation()">
+								<mat-panel-title>
+									<span class="menu-title">{{ linkCategorie.displayedTitle }}</span>
+								</mat-panel-title>
+							</mat-expansion-panel-header>
+							<rumble-pwa-menu-side-nav
+								*ngIf="!linkCategorie.target.includes('top')"
+								[links]="getLinksByTarget(linkCategorie.target)"
+								[showSuperUser]="isSuperuser"></rumble-pwa-menu-side-nav>
+
+							<p
+								class="quota-details"
+								*ngIf="maxDurationExported > 0"
+								[matTooltip]="
+									'You have already exported ' +
+									toMinuteStr(durationExported) +
+									' minutes out of ' +
+									toMinuteStr(maxDurationExported) +
+									'.'
+								">
+								<mat-progress-bar
+									mode="determinate"
+									[value]="100 * (durationExported / maxDurationExported)">
+								</mat-progress-bar>
+								<span
+									>{{ durationExported | duration: 'showUnits' }}/{{
+										maxDurationExported | duration: 'showUnits'
+									}}</span
+								>
+							</p>
+							<p
+								class="quota-details"
+								*ngIf="maxSeats > 0"
+								[matTooltip]="'You are using ' + usedSeats + ' out of ' + maxSeats + ' seat(s).'">
+								<mat-progress-bar
+									mode="determinate"
+									[color]="'var(--rs-yellow)'"
+									[value]="100 * (usedSeats / maxSeats)">
+								</mat-progress-bar>
+								<span>{{ usedSeats }}/{{ maxSeats }} seat{{ maxSeats > 1 ? 's' : '' }}</span>
+							</p>
+						</mat-expansion-panel>
+					</ng-container>
+					<ng-container *ngSwitchCase="'top'"></ng-container>
+					<ng-container *ngSwitchDefault>
+						<ng-container *ngIf="linkCategorie.collapsible; else notCollapsibleTpl">
+							<mat-expansion-panel
+								class="mat-elevation-z0 rs-expansion-panel-menu rs-no-select"
+								[expanded]="!linkCategorie.collapsed">
+								<mat-expansion-panel-header (click)="$event.stopPropagation()">
+									<span class="menu-title">{{ linkCategorie.displayedTitle }}</span>
+								</mat-expansion-panel-header>
+								<rumble-pwa-menu-side-nav
+									[links]="getLinksByTarget(linkCategorie.target)"
+									[showSuperUser]="isSuperuser"
+									[showSupportUser]="isSupportUser"></rumble-pwa-menu-side-nav>
+							</mat-expansion-panel>
+						</ng-container>
+						<ng-template #notCollapsibleTpl>
+							<span class="menu-title">{{ linkCategorie.displayedTitle }}</span>
+							<rumble-pwa-menu-side-nav
+								[links]="getLinksByTarget(linkCategorie.target)"
+								[showSuperUser]="isSuperuser"
+								[showSupportUser]="isSupportUser"></rumble-pwa-menu-side-nav>
+						</ng-template>
+					</ng-container>
+				</ng-container>
+			</ng-container>
+		</ng-container>
+	</div>
+</ng-template>
+
+<!--   MENUS   -->
+
+<!-- burgerMenu -->
+<mat-menu
+	#burgerMenu="matMenu"
+	[yPosition]="'below'">
+	<div class="burger-menu">
+		<ng-container *ngTemplateOutlet="menusContainer"></ng-container>
+	</div>
+	<!-- <ng-container *ngTemplateOutlet="menusContainer"></ng-container> -->
+</mat-menu>
+
+<!-- notification menu -->
+<mat-menu
+	#notificationmenu="matMenu"
+	class="notification-menu"
+	(closed)="notificationMenuClosed()">
+	<ng-container *ngIf="lastNotifications.length > 0; else noNotificationTpl">
+		<div class="notifications-preview-container">
+			<ng-container *ngFor="let notification of lastNotifications">
+				<rumble-pwa-notification-preview
+					(click)="processNotificationClick(notification)"
+					class="rs-clickable"
+					[notification]="notification"
+					[profileId]="profile?.id"></rumble-pwa-notification-preview>
+			</ng-container>
+		</div>
+		<div class="bottom-actions">
+			<span
+				#refreshBtn
+				class="notification-btn rs-clickable rs-no-select"
+				(click)="refreshNotifications(); $event.stopImmediatePropagation()">
+				<!-- refreshBtn.style.visibility = 'hidden' -->
+				<mat-icon>refresh</mat-icon>
+				Refresh
+			</span>
+			<span
+				class="notification-btn rs-clickable rs-no-select"
+				[routerLink]="'./notifications'">
+				View all notifications <mat-icon>arrow_right_alt</mat-icon>
+			</span>
+		</div>
+	</ng-container>
+	<ng-template #noNotificationTpl>
+		<div class="bottom-actions no-notification">No notification.</div>
+	</ng-template>
+</mat-menu>
+
+<!-- user menu -->
+<mat-menu
+	#menu="matMenu"
+	class="rs-account-menu">
+	<span class="profile-name"> {{ profile?.fullName?.substring(0, 100) || '' }}&nbsp;{{ profile?.email || '' }} </span>
+	<hr />
+	<rumble-pwa-menu-side-nav
+		[links]="getLinksByTarget('top')"
+		[showSuperUser]="isSuperuser"
+		[showSupportUser]="isSupportUser"
+		[menuTitle]="'top-menu'">
+	</rumble-pwa-menu-side-nav>
+	<hr />
+	<span class="git-log"> Updated at {{ gitLogs[0].date | date: 'dd/MM/yyyy HH:mm' }} </span>
+</mat-menu>
